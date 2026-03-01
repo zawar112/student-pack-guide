@@ -1,0 +1,2243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Student Pack — Revenue OS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg: #080c14;
+    --bg2: #0d1420;
+    --bg3: #111a2e;
+    --panel: #0f1928;
+    --border: #1e3050;
+    --border2: #243a5e;
+    --text: #c8d8f0;
+    --text2: #7a9bbf;
+    --text3: #4a6a8f;
+    --accent: #00d4ff;
+    --accent2: #0099cc;
+    --green: #00ff88;
+    --green2: #00cc6a;
+    --gold: #ffc830;
+    --red: #ff4466;
+    --purple: #9966ff;
+    --orange: #ff7730;
+    --glow: 0 0 20px rgba(0,212,255,0.15);
+    --glow-green: 0 0 20px rgba(0,255,136,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,12,20,0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 56px;
+    min-height: 56px;
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .logo span { color: var(--green); }
+
+  /* Desktop nav */
+  nav {
+    display: flex;
+    gap: 0.2rem;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+  }
+
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.6rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-btn:hover { color: var(--text); background: var(--bg3); }
+  .nav-btn.active { color: var(--accent); background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); }
+
+  .total-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--green);
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Hamburger button — hidden on desktop */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    flex-shrink: 0;
+    min-width: 42px;
+    min-height: 42px;
+    align-items: center;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile drawer */
+  .mobile-drawer {
+    display: none;
+    position: fixed;
+    top: 56px;
+    left: 0; right: 0;
+    background: rgba(8,12,20,0.99);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    flex-direction: column;
+    padding: 0.75rem;
+    gap: 0.4rem;
+    max-height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+
+  .mobile-drawer.open { display: flex; }
+
+  .mobile-drawer .nav-btn {
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    width: 100%;
+  }
+
+  .mobile-drawer .nav-btn.active {
+    border-color: rgba(0,212,255,0.2);
+  }
+
+  .mobile-drawer .total-badge {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    nav { display: none; }
+    .total-badge.desktop-badge { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  @media (min-width: 769px) {
+    .mobile-drawer { display: none !important; }
+    .hamburger { display: none !important; }
+  }
+
+  /* Main layout */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* Section header */
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .section-header h1 .hi { color: var(--accent); }
+  .section-header p {
+    color: var(--text2);
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Cards grid */
+  .grid { display: grid; gap: 1rem; }
+  .grid-2 { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+  /* Tool card */
+  .tool-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .tool-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: var(--glow); }
+  .tool-card:hover::before { opacity: 1; }
+  .tool-card.activated { border-color: rgba(0,255,136,0.3); background: rgba(0,255,136,0.03); }
+  .tool-card.activated::before { background: linear-gradient(90deg, transparent, var(--green), transparent); opacity: 1; }
+
+  .tool-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .tool-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .tool-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green);
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+
+  .tool-desc {
+    font-size: 0.78rem;
+    color: var(--text2);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  .tool-offer {
+    font-size: 0.72rem;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .tool-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tag {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .tag-infra { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+  .tag-backend { background: rgba(153,102,255,0.1); color: var(--purple); border: 1px solid rgba(153,102,255,0.2); }
+  .tag-frontend { background: rgba(255,119,48,0.1); color: var(--orange); border: 1px solid rgba(255,119,48,0.2); }
+  .tag-devops { background: rgba(255,200,48,0.1); color: var(--gold); border: 1px solid rgba(255,200,48,0.2); }
+  .tag-learn { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .tag-revenue { background: rgba(255,68,102,0.1); color: var(--red); border: 1px solid rgba(255,68,102,0.2); }
+  .tag-security { background: rgba(255,68,102,0.1); color: var(--red); border: 1px solid rgba(255,68,102,0.2); }
+  .tag-monitor { background: rgba(0,153,204,0.1); color: var(--accent2); border: 1px solid rgba(0,153,204,0.2); }
+  .tag-design { background: rgba(255,119,48,0.1); color: var(--orange); border: 1px solid rgba(255,119,48,0.2); }
+  .tag-data { background: rgba(153,102,255,0.1); color: var(--purple); border: 1px solid rgba(153,102,255,0.2); }
+  .tag-career { background: rgba(255,200,48,0.1); color: var(--gold); border: 1px solid rgba(255,200,48,0.2); }
+  .tag-iot { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .tag-productivity { background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+
+  .activate-btn {
+    width: 100%;
+    padding: 0.4rem;
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .activate-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .activate-btn.active-state { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.05); }
+
+  /* Category headers */
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .cat-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text3);
+    background: var(--bg3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+  }
+
+  .cat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    margin-left: auto;
+  }
+
+  /* Dashboard hero */
+  .hero {
+    background: linear-gradient(135deg, var(--bg3) 0%, rgba(0,212,255,0.05) 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+  .hero h1 .green { color: var(--green); }
+
+  .hero p {
+    color: var(--text2);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .stat-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--bg3);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  /* Blueprint generator */
+  .generator {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .generator h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+  }
+
+  .form-group select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+  }
+
+  .form-group select:focus { border-color: var(--accent); }
+
+  .gen-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    color: var(--bg);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .gen-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,212,255,0.3); }
+
+  .blueprint-output {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    display: none;
+  }
+
+  .blueprint-output.show { display: block; animation: fadeIn 0.4s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .bp-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .bp-section h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .week-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: var(--panel);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .week-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    height: fit-content;
+  }
+
+  .week-content { flex: 1; }
+  .week-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .week-detail { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+
+  /* App ideas */
+  .idea-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s;
+  }
+
+  .idea-card:hover { border-color: var(--border2); box-shadow: var(--glow); }
+
+  .idea-header {
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .idea-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .idea-meta { flex: 1; }
+  .idea-name { font-weight: 700; font-size: 0.9rem; }
+  .idea-pitch { font-size: 0.75rem; color: var(--text2); margin-top: 0.2rem; }
+
+  .idea-revenue {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--green);
+    background: rgba(0,255,136,0.08);
+    border: 1px solid rgba(0,255,136,0.2);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  .idea-body {
+    padding: 0 1rem 1rem;
+    display: none;
+  }
+
+  .idea-body.open { display: block; animation: fadeIn 0.3s ease; }
+
+  .idea-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.78rem;
+    align-items: flex-start;
+  }
+
+  .idea-row-label {
+    color: var(--text3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.65rem;
+    min-width: 100px;
+    padding-top: 0.1rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .idea-row-val { color: var(--text2); line-height: 1.5; }
+
+  /* Workflow section */
+  .workflow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .workflow-step {
+    display: flex;
+    gap: 1.5rem;
+    cursor: pointer;
+  }
+
+  .step-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .step-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text3);
+    background: var(--bg3);
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+
+  .step-connector {
+    width: 2px;
+    flex: 1;
+    min-height: 20px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  .workflow-step.active .step-dot {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    box-shadow: 0 0 12px rgba(0,212,255,0.2);
+  }
+
+  .step-content {
+    flex: 1;
+    padding: 0 0 1.5rem;
+  }
+
+  .step-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    padding-top: 0.4rem;
+    color: var(--text2);
+  }
+
+  .workflow-step.active .step-title { color: var(--text); }
+
+  .step-detail {
+    display: none;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .workflow-step.active .step-detail { display: block; animation: fadeIn 0.3s ease; }
+
+  .prompt-box {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    line-height: 1.6;
+    margin: 0.75rem 0;
+    position: relative;
+  }
+
+  .prompt-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 0.5rem;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .copy-btn {
+    position: absolute;
+    top: 0.5rem; right: 0.5rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Value tracker */
+  .tracker-hero {
+    background: linear-gradient(135deg, rgba(0,255,136,0.05), rgba(0,212,255,0.05));
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .big-counter {
+    font-family: 'Space Mono', monospace;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+    margin: 1rem 0;
+    text-shadow: 0 0 40px rgba(0,255,136,0.3);
+  }
+
+  .tracker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .tracker-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tracker-item:hover { border-color: var(--border2); }
+  .tracker-item.claimed { border-color: rgba(0,255,136,0.3); background: rgba(0,255,136,0.03); }
+
+  .tracker-check {
+    width: 22px; height: 22px;
+    border: 2px solid var(--border2);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .tracker-item.claimed .tracker-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--bg);
+    font-size: 0.7rem;
+  }
+
+  .tracker-name { font-size: 0.85rem; font-weight: 700; flex: 1; }
+  .tracker-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green);
+  }
+
+  /* 90 day plan */
+  .plan-timeline {
+    position: relative;
+  }
+
+  .month-block {
+    margin-bottom: 2rem;
+  }
+
+  .month-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    padding: 0.3rem 0.75rem;
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .milestone {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .milestone:hover { border-color: var(--border2); }
+  .milestone.done { border-color: rgba(0,255,136,0.3); background: rgba(0,255,136,0.02); }
+
+  .milestone-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+  .milestone-content { flex: 1; }
+  .milestone-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .milestone-detail { font-size: 0.78rem; color: var(--text2); line-height: 1.5; }
+  .milestone-tools { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+  .milestone-tool {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.35rem;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text3);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Prompt library */
+  .prompt-search {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .prompt-search input {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    outline: none;
+  }
+
+  .prompt-search input:focus { border-color: var(--accent); }
+  .prompt-search input::placeholder { color: var(--text3); }
+
+  .prompt-filter {
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .prompt-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
+  }
+
+  .prompt-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.2s;
+  }
+
+  .prompt-card:hover { border-color: var(--border2); }
+
+  .prompt-phase {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    font-family: 'Space Mono', monospace;
+    margin-bottom: 0.4rem;
+  }
+
+  .prompt-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.5rem; }
+
+  .prompt-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.6rem 0.8rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .prompt-text:hover { border-color: var(--accent); }
+
+  /* Tabs for sub-sections */
+  .sub-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .sub-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text3);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .sub-tab:hover { color: var(--text); }
+  .sub-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .sub-content { display: none; }
+  .sub-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    main { padding: 0.75rem; }
+    .hero { padding: 1.25rem; }
+    .hero h1 { font-size: 1.5rem; }
+    .big-counter { font-size: 2rem; }
+    .stats-row { gap: 0.75rem; flex-wrap: wrap; }
+    .stat-val { font-size: 1.3rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .generator { padding: 1rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .prompt-cards { grid-template-columns: 1fr; }
+    .tracker-grid { grid-template-columns: 1fr; }
+    .prompt-search { flex-direction: column; }
+    .section-header h1 { font-size: 1.4rem; }
+    .tracker-hero { padding: 1.25rem; }
+    .cat-header h2 { font-size: 0.95rem; }
+    .workflow-step { gap: 0.75rem; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--panel);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.3s;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .chip-green { background: rgba(0,255,136,0.08); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .chip-blue { background: rgba(0,212,255,0.08); color: var(--accent); border: 1px solid rgba(0,212,255,0.2); }
+  .chip-gold { background: rgba(255,200,48,0.08); color: var(--gold); border: 1px solid rgba(255,200,48,0.2); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">STUDENT<span>PACK</span> OS</div>
+
+  <!-- Desktop nav -->
+  <nav id="mainNav">
+    <button class="nav-btn active" onclick="showSection('dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showSection('tools')">All Tools</button>
+    <button class="nav-btn" onclick="showSection('blueprint')">Blueprint</button>
+    <button class="nav-btn" onclick="showSection('ideas')">App Ideas</button>
+    <button class="nav-btn" onclick="showSection('workflow')">AI Workflow</button>
+    <button class="nav-btn" onclick="showSection('tracker')">Value Tracker</button>
+    <button class="nav-btn" onclick="showSection('plan')">90-Day Plan</button>
+    <button class="nav-btn" onclick="showSection('prompts')">Prompts</button>
+  </nav>
+
+  <div class="total-badge desktop-badge" id="headerBadge">$0 Claimed</div>
+
+  <!-- Mobile hamburger -->
+  <button class="hamburger" id="hamburgerBtn" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <button class="nav-btn active" onclick="showSection('dashboard');closeDrawer()">🏠 Dashboard</button>
+  <button class="nav-btn" onclick="showSection('tools');closeDrawer()">🛠 All Tools</button>
+  <button class="nav-btn" onclick="showSection('blueprint');closeDrawer()">⚡ Blueprint Generator</button>
+  <button class="nav-btn" onclick="showSection('ideas');closeDrawer()">💡 App Ideas</button>
+  <button class="nav-btn" onclick="showSection('workflow');closeDrawer()">🤖 AI Workflow</button>
+  <button class="nav-btn" onclick="showSection('tracker');closeDrawer()">💰 Value Tracker</button>
+  <button class="nav-btn" onclick="showSection('plan');closeDrawer()">📅 90-Day Plan</button>
+  <button class="nav-btn" onclick="showSection('prompts');closeDrawer()">📋 Prompt Library</button>
+  <div class="total-badge" id="mobileHeaderBadge">$0 / $50,000+ Claimed</div>
+</div>
+
+<main>
+
+<!-- DASHBOARD SECTION -->
+<div class="section active" id="section-dashboard">
+  <div class="hero">
+    <h1>Turn Free Tools Into<br><span class="green">Real Revenue</span><span class="accent">.</span></h1>
+    <p>You have access to $50,000+ in free developer resources through the GitHub Student Developer Pack. This dashboard shows you exactly how to use them — with Claude AI and Cursor — to build and monetize apps.</p>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-val">90+</div>
+        <div class="stat-label">Free Tools</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="dashValue">$0</div>
+        <div class="stat-label">Value Claimed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val" id="dashClaimed">0</div>
+        <div class="stat-label">Tools Activated</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">∞</div>
+        <div class="stat-label">Revenue Potential</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+    <div class="tool-card" onclick="showSection('tools')">
+      <div class="tool-header">
+        <div class="tool-name">🛠 All 90+ Tools</div>
+        <div class="tool-value">$50K+</div>
+      </div>
+      <div class="tool-desc">Browse every tool in the pack organized by category — infrastructure, backend, frontend, DevOps, learning, and more.</div>
+    </div>
+    <div class="tool-card" onclick="showSection('blueprint')">
+      <div class="tool-header">
+        <div class="tool-name">⚡ App Blueprint Generator</div>
+        <div class="tool-value">AI-Powered</div>
+      </div>
+      <div class="tool-desc">Pick your app type, audience, and revenue model. Get a full build plan using only your free pack resources + Claude + Cursor.</div>
+    </div>
+    <div class="tool-card" onclick="showSection('ideas')">
+      <div class="tool-header">
+        <div class="tool-name">💡 10 Revenue App Ideas</div>
+        <div class="tool-value">Pre-Built</div>
+      </div>
+      <div class="tool-desc">10 detailed, ready-to-build app concepts with full tech stacks, Claude AI integration plans, and monetization strategies.</div>
+    </div>
+    <div class="tool-card" onclick="showSection('workflow')">
+      <div class="tool-header">
+        <div class="tool-name">🤖 Claude + Cursor Workflow</div>
+        <div class="tool-value">8 Phases</div>
+      </div>
+      <div class="tool-desc">The exact step-by-step workflow for using Claude AI and Cursor AI together at every phase of app development.</div>
+    </div>
+    <div class="tool-card" onclick="showSection('tracker')">
+      <div class="tool-header">
+        <div class="tool-name">💰 Value Tracker</div>
+        <div class="tool-value">Live</div>
+      </div>
+      <div class="tool-desc">Check off tools as you claim them. Track your total unlocked value in real time and see what's left to activate.</div>
+    </div>
+    <div class="tool-card" onclick="showSection('prompts')">
+      <div class="tool-header">
+        <div class="tool-name">📋 Prompt Library</div>
+        <div class="tool-value">40+ Prompts</div>
+      </div>
+      <div class="tool-desc">Ready-to-use Claude prompts for every phase of development — architecture, APIs, UI, monetization, marketing, and debugging.</div>
+    </div>
+  </div>
+
+  <!-- Top picks -->
+  <div class="cat-header">
+    <h2>🔥 Top Revenue-Enabling Tools</h2>
+    <div class="cat-count">Start here</div>
+  </div>
+  <div class="grid grid-3">
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">💳 Stripe</div><div class="tool-value">$1K Free</div></div>
+      <div class="tool-offer">Waived transaction fees on first $1,000 revenue</div>
+      <div class="tool-desc">The best payment infrastructure. Zero fees on your first $1K means you keep 100% of early revenue. Use with Claude to build subscription billing.</div>
+      <div class="tool-tags"><span class="tag tag-revenue">Revenue</span><span class="tag tag-backend">Payments</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">🌊 DigitalOcean</div><div class="tool-value">$200 Credit</div></div>
+      <div class="tool-offer">$200 in platform credit for 1 year</div>
+      <div class="tool-desc">Deploy your app, API, or database. Enough credit to run a production app for a year while you get to revenue.</div>
+      <div class="tool-tags"><span class="tag tag-infra">Infra</span><span class="tag tag-backend">Hosting</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">☁️ Microsoft Azure</div><div class="tool-value">$100 Credit</div></div>
+      <div class="tool-offer">$100 credit + 25+ free Azure services</div>
+      <div class="tool-desc">Run serverless functions, AI services, databases, and more. Pair with Claude for intelligent app features at near-zero cost.</div>
+      <div class="tool-tags"><span class="tag tag-infra">Infra</span><span class="tag tag-backend">AI</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">🍃 MongoDB</div><div class="tool-value">$50 Credit</div></div>
+      <div class="tool-offer">$50 Atlas credit + Compass + $150 certification</div>
+      <div class="tool-desc">The go-to database for SaaS apps. Atlas handles scale. Use Claude to design your schema and Cursor to write all your queries.</div>
+      <div class="tool-tags"><span class="tag tag-backend">Database</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">🐙 GitHub Copilot Pro</div><div class="tool-value">Free</div></div>
+      <div class="tool-offer">Free Copilot Pro while you're a student</div>
+      <div class="tool-desc">AI code completion in your editor. Combined with Cursor + Claude, you have a full AI development team at your fingertips.</div>
+      <div class="tool-tags"><span class="tag tag-devops">AI Dev</span></div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-header"><div class="tool-name">📦 Appwrite</div><div class="tool-value">$160/mo Free</div></div>
+      <div class="tool-offer">Education plan — 10 projects, Pro limits, free</div>
+      <div class="tool-desc">Open-source backend-as-a-service. Auth, database, storage, functions — everything to build a production app without a dedicated backend engineer.</div>
+      <div class="tool-tags"><span class="tag tag-backend">Backend</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL TOOLS SECTION -->
+<div class="section" id="section-tools">
+  <div class="section-header">
+    <h1>All <span class="hi">Tools</span> & Resources</h1>
+    <p>Every resource in the GitHub Student Developer Pack, organized by category. Click any tool to activate it and track your claimed value.</p>
+  </div>
+
+  <!-- Infrastructure & Hosting -->
+  <div class="cat-header">
+    <h2>☁️ Infrastructure & Hosting</h2>
+    <div class="cat-count">6 tools</div>
+    <div class="cat-value">$300+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-infra"></div>
+
+  <!-- Backend & Database -->
+  <div class="cat-header">
+    <h2>🗄 Backend & Database</h2>
+    <div class="cat-count">7 tools</div>
+    <div class="cat-value">$260+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-backend"></div>
+
+  <!-- Payments & Revenue -->
+  <div class="cat-header">
+    <h2>💳 Payments & Revenue</h2>
+    <div class="cat-count">2 tools</div>
+    <div class="cat-value">$1,100+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-revenue"></div>
+
+  <!-- Frontend & Design -->
+  <div class="cat-header">
+    <h2>🎨 Frontend & Design</h2>
+    <div class="cat-count">9 tools</div>
+    <div class="cat-value">$500+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-frontend"></div>
+
+  <!-- DevOps & CI/CD -->
+  <div class="cat-header">
+    <h2>⚙️ DevOps, CI/CD & Testing</h2>
+    <div class="cat-count">8 tools</div>
+    <div class="cat-value">$1,000+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-devops"></div>
+
+  <!-- Monitoring & Analytics -->
+  <div class="cat-header">
+    <h2>📊 Monitoring, Analytics & Observability</h2>
+    <div class="cat-count">8 tools</div>
+    <div class="cat-value">$3,600+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-monitor"></div>
+
+  <!-- Security & Secrets -->
+  <div class="cat-header">
+    <h2>🔒 Security, Secrets & Passwords</h2>
+    <div class="cat-count">5 tools</div>
+    <div class="cat-value">$500+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-security"></div>
+
+  <!-- Data Science & ML -->
+  <div class="cat-header">
+    <h2>🧪 Data Science, ML & Scientific Computing</h2>
+    <div class="cat-count">5 tools</div>
+    <div class="cat-value">$400+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-data"></div>
+
+  <!-- Domain & Launch -->
+  <div class="cat-header">
+    <h2>🌐 Domains, Deployment & Launch</h2>
+    <div class="cat-count">6 tools</div>
+    <div class="cat-value">$200+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-domain"></div>
+
+  <!-- Git & Version Control -->
+  <div class="cat-header">
+    <h2>🔀 Git, Version Control & IDEs</h2>
+    <div class="cat-count">8 tools</div>
+    <div class="cat-value">$800+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-git"></div>
+
+  <!-- Productivity -->
+  <div class="cat-header">
+    <h2>📅 Productivity & Project Management</h2>
+    <div class="cat-count">6 tools</div>
+    <div class="cat-value">$300+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-productivity"></div>
+
+  <!-- Learning & Certifications -->
+  <div class="cat-header">
+    <h2>📚 Learning, Courses & Certifications</h2>
+    <div class="cat-count">12 tools</div>
+    <div class="cat-value">$2,000+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-learn"></div>
+
+  <!-- Mobile & Cross-Platform -->
+  <div class="cat-header">
+    <h2>📱 Mobile & Cross-Platform Dev</h2>
+    <div class="cat-count">4 tools</div>
+    <div class="cat-value">$300+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-mobile"></div>
+
+  <!-- Career & Community -->
+  <div class="cat-header">
+    <h2>🎓 Career, Community & Certification</h2>
+    <div class="cat-count">6 tools</div>
+  </div>
+  <div class="grid grid-3" id="cat-career"></div>
+
+  <!-- IoT & Hardware -->
+  <div class="cat-header">
+    <h2>🔌 IoT & Hardware</h2>
+    <div class="cat-count">2 tools</div>
+    <div class="cat-value">$150+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-iot"></div>
+
+  <!-- Specialized -->
+  <div class="cat-header">
+    <h2>🔧 Specialized & Niche Tools</h2>
+    <div class="cat-count">8 tools</div>
+    <div class="cat-value">$500+ value</div>
+  </div>
+  <div class="grid grid-3" id="cat-specialized"></div>
+
+</div>
+
+<!-- BLUEPRINT SECTION -->
+<div class="section" id="section-blueprint">
+  <div class="section-header">
+    <h1>App <span class="hi">Blueprint</span> Generator</h1>
+    <p>Select your parameters and get a complete, actionable build plan using your free pack resources + Claude + Cursor.</p>
+  </div>
+
+  <div class="generator">
+    <h2>Configure Your App</h2>
+    <p style="color:var(--text2); font-size:0.85rem; margin-top:0.3rem;">Answer 3 questions to get your personalized blueprint.</p>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>App Type</label>
+        <select id="bpType">
+          <option value="saas">SaaS (Subscription)</option>
+          <option value="marketplace">Marketplace</option>
+          <option value="api">API Product</option>
+          <option value="mobile">Mobile App</option>
+          <option value="extension">Browser Extension</option>
+          <option value="dashboard">Data Dashboard</option>
+          <option value="aiwrapper">AI Wrapper / Tool</option>
+          <option value="automation">Automation Tool</option>
+          <option value="localization">Localization / Translation SaaS</option>
+          <option value="analytics">Analytics Tool</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Target Audience</label>
+        <select id="bpAudience">
+          <option value="devs">Developers</option>
+          <option value="students">Students</option>
+          <option value="smb">Small Businesses</option>
+          <option value="creators">Content Creators</option>
+          <option value="researchers">Researchers / Data Scientists</option>
+          <option value="agencies">Agencies</option>
+          <option value="founders">Startup Founders</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Revenue Model</label>
+        <select id="bpRevenue">
+          <option value="subscription">Monthly Subscription</option>
+          <option value="usage">Usage-Based</option>
+          <option value="freemium">Freemium + Paid Tiers</option>
+          <option value="onetime">One-Time Purchase</option>
+          <option value="api">API Monetization</option>
+          <option value="marketplace">Marketplace Commission</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="gen-btn" onclick="generateBlueprint()">⚡ Generate Blueprint</button>
+
+    <div class="blueprint-output" id="blueprintOutput"></div>
+  </div>
+</div>
+
+<!-- APP IDEAS SECTION -->
+<div class="section" id="section-ideas">
+  <div class="section-header">
+    <h1>Revenue <span class="hi">App Ideas</span></h1>
+    <p>10 detailed, ready-to-build concepts. Each uses only your free pack resources, Claude AI, and Cursor. Click to expand.</p>
+  </div>
+  <div id="ideasContainer"></div>
+</div>
+
+<!-- WORKFLOW SECTION -->
+<div class="section" id="section-workflow">
+  <div class="section-header">
+    <h1>Claude + Cursor <span class="hi">Workflow</span></h1>
+    <p>The exact 8-phase workflow for using Claude AI and Cursor AI together to build, ship, and monetize your app.</p>
+  </div>
+
+  <div class="workflow-steps" id="workflowSteps"></div>
+</div>
+
+<!-- VALUE TRACKER SECTION -->
+<div class="section" id="section-tracker">
+  <div class="section-header">
+    <h1>Value <span class="hi">Tracker</span></h1>
+    <p>Check off tools as you claim them. Watch your total free value grow in real time.</p>
+  </div>
+
+  <div class="tracker-hero">
+    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--text3); font-family:'Space Mono',monospace;">Total Value Claimed</div>
+    <div class="big-counter" id="bigCounter">$0</div>
+    <div style="color:var(--text2); font-size:0.85rem;" id="claimedCount">0 of 90+ tools activated</div>
+    <div style="max-width:400px; margin:1rem auto 0;">
+      <div class="progress-wrap">
+        <div class="progress-bar" id="trackerProgress" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tracker-grid" id="trackerGrid"></div>
+</div>
+
+<!-- 90 DAY PLAN SECTION -->
+<div class="section" id="section-plan">
+  <div class="section-header">
+    <h1>90-Day <span class="hi">Launch Plan</span></h1>
+    <p>From zero to first paying customer in 90 days using only your pack tools, Claude, and Cursor. Click milestones to mark them done.</p>
+  </div>
+
+  <div class="plan-timeline" id="planTimeline"></div>
+</div>
+
+<!-- PROMPT LIBRARY SECTION -->
+<div class="section" id="section-prompts">
+  <div class="section-header">
+    <h1>Claude <span class="hi">Prompt Library</span></h1>
+    <p>40+ ready-to-use prompts for every development phase. Click any prompt to copy it.</p>
+  </div>
+
+  <div class="prompt-search">
+    <input type="text" id="promptSearch" placeholder="Search prompts..." oninput="filterPrompts()">
+    <select class="prompt-filter" id="promptFilter" onchange="filterPrompts()">
+      <option value="">All Phases</option>
+      <option value="architecture">Architecture</option>
+      <option value="database">Database</option>
+      <option value="api">API</option>
+      <option value="frontend">Frontend</option>
+      <option value="backend">Backend Logic</option>
+      <option value="monetization">Monetization</option>
+      <option value="marketing">Marketing</option>
+      <option value="debugging">Debugging</option>
+      <option value="devops">DevOps</option>
+      <option value="testing">Testing</option>
+      <option value="growth">Growth</option>
+    </select>
+  </div>
+
+  <div class="prompt-cards" id="promptCards"></div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const ALL_TOOLS = [
+  // INFRASTRUCTURE
+  { name: "DigitalOcean", cat: "infra", value: "$200", offer: "$200 credit for 1 year", desc: "Deploy apps, databases, and APIs on simple cloud infrastructure. Perfect for hosting your SaaS MVP.", tags: ["infra", "backend"], revenue: true },
+  { name: "Microsoft Azure", cat: "infra", value: "$100+", offer: "$100 credit + 25+ free services (age 18+)", desc: "Cloud compute, serverless functions, AI services, storage — Microsoft's full cloud stack for free.", tags: ["infra", "backend"], revenue: true },
+  { name: "Microsoft Azure (13-17)", cat: "infra", value: "Free", offer: "App Services, Functions, MySQL, DevOps — no credit card", desc: "For students aged 13-17. Core Azure services with no credit card required.", tags: ["infra"] },
+  { name: "Heroku", cat: "infra", value: "$312/yr", offer: "$13/month credit for 24 months", desc: "The easiest platform to deploy, scale, and manage apps. Great for rapid iteration and MVP launches.", tags: ["infra"] },
+  { name: "GitHub Codespaces", cat: "infra", value: "Free Pro", offer: "Free Pro-level Codespaces access", desc: "Instant cloud dev environments. Code, test, and deploy from any machine. Works with Cursor.", tags: ["infra", "devops"] },
+  { name: "LocalStack", cat: "infra", value: "Free", offer: "Free license for LocalStack's AWS emulator", desc: "Emulate 80+ AWS services locally. Build and test cloud apps without connecting to AWS or spending a dime.", tags: ["infra", "backend"] },
+
+  // BACKEND & DATABASE
+  { name: "MongoDB", cat: "backend", value: "$200", offer: "$50 Atlas credit + Compass + $150 certification", desc: "Document database built for modern apps. Atlas scales from MVP to millions of users seamlessly.", tags: ["backend"] },
+  { name: "Appwrite", cat: "backend", value: "$1,920/yr", offer: "Education plan — 10 projects at Pro limits ($160/mo value)", desc: "Open-source BaaS: auth, database, storage, cloud functions. Build complete backends without infrastructure management.", tags: ["backend"] },
+  { name: "Testmail", cat: "backend", value: "Free", offer: "Free Essential plan while a student", desc: "Unlimited email addresses for automated email testing. Essential for apps with email flows.", tags: ["backend"] },
+  { name: "Requestly", cat: "backend", value: "$270", offer: "Professional plan free for 1 year", desc: "Intercept, modify, and mock HTTP requests. Indispensable for API development, testing, and debugging.", tags: ["backend", "devops"] },
+  { name: "Pageclip", cat: "backend", value: "Free", offer: "Free basic plan while a student", desc: "Backend form handling for static sites. Add contact forms, waitlists, and lead capture without a backend.", tags: ["backend", "frontend"] },
+  { name: "Doppler", cat: "backend", value: "Free Team", offer: "Free Doppler Team subscription while a student", desc: "Sync secrets and environment variables across all environments and team members. Never leak API keys.", tags: ["backend", "security"] },
+  { name: "ConfigCat", cat: "backend", value: "Free", offer: "1,000 feature flags, unlimited users free", desc: "Feature flags for safe deployments. Ship new features to specific users without redeploying.", tags: ["backend", "devops"] },
+
+  // REVENUE & PAYMENTS
+  { name: "Stripe", cat: "revenue", value: "$1,000", offer: "Waived transaction fees on first $1,000 revenue", desc: "The payment infrastructure of the internet. Keep 100% of your first $1,000 in revenue — zero fees. Use Claude to build your billing logic.", tags: ["revenue"] },
+  { name: "Blockchair", cat: "revenue", value: "Free", offer: "100,000 free API requests", desc: "Professional blockchain API supporting Bitcoin, Ethereum, and 15+ chains. Build crypto payment apps or blockchain analytics tools.", tags: ["revenue", "data"] },
+
+  // FRONTEND & DESIGN
+  { name: "Bootstrap Studio", cat: "frontend", value: "Free", offer: "Free license while a student", desc: "Visual web design tool using Bootstrap. Build responsive landing pages and web apps without writing raw HTML/CSS.", tags: ["frontend"] },
+  { name: "Polypane", cat: "frontend", value: "Free 1yr", offer: "Free individual plan for 1 year", desc: "Developer browser that shows your app on multiple screen sizes simultaneously. Catch responsive design bugs instantly.", tags: ["frontend", "devops"] },
+  { name: "Icons8", cat: "frontend", value: "Free 3mo", offer: "3-month subscription: icons, photos, illustrations, music", desc: "Millions of icons, UI illustrations, and stock photos. Make your app look professional without hiring a designer.", tags: ["frontend", "design"] },
+  { name: "IconScout", cat: "frontend", value: "Free 1yr", offer: "60 premium icons from selected contributors monthly, 1 year", desc: "4.9M+ icons, illustrations, 3D assets, and Lottie animations. Use in web and mobile apps.", tags: ["frontend", "design"] },
+  { name: "Octicons", cat: "frontend", value: "Free", offer: "GitHub's open-source icon library via Figma", desc: "GitHub's official icon system. Clean, consistent, and free. Perfect for developer-focused apps.", tags: ["frontend", "design"] },
+  { name: "Visme", cat: "frontend", value: "Free 3mo", offer: "3 months free Starter plan", desc: "Create pitch decks, data visualizations, and branded content. Useful for marketing your app and pitching investors.", tags: ["frontend", "design"] },
+  { name: "Themeisle / Neve", cat: "frontend", value: "Free 1yr", offer: "Free year of Neve Agency WordPress theme", desc: "Build a stunning landing page or blog on WordPress. Great for content-led growth strategies.", tags: ["frontend"] },
+  { name: "Vaadin", cat: "frontend", value: "Free Pro", offer: "Free Pro subscription license for commercial components", desc: "Java-based Progressive Web App framework. Build enterprise-grade web UIs without JavaScript frameworks.", tags: ["frontend"] },
+  { name: "ToDiagram", cat: "frontend", value: "Free Pro", offer: "Pro plan: full editor, 10 cloud docs, no data limits", desc: "Turn JSON, YAML, CSV, and XML into editable diagrams. Build data visualization tools and system mappers.", tags: ["frontend", "data"] },
+
+  // DEVOPS & TESTING
+  { name: "Travis CI", cat: "devops", value: "Free", offer: "Free private builds while a student", desc: "Continuous integration for all your repos. Automate tests and deployments on every push.", tags: ["devops"] },
+  { name: "BrowserStack", cat: "devops", value: "Free 1yr", offer: "Free Automate Mobile Plan — 1 parallel, 1 user, 1 year", desc: "Real device cloud with 2,000+ browsers and devices. Test your app on real iOS/Android without owning devices.", tags: ["devops"] },
+  { name: "LambdaTest", cat: "devops", value: "Free 1yr", offer: "Free Live plan for 1 year — 2,000+ browsers", desc: "Cross-browser and cross-device testing platform. Run automated Selenium and Cypress tests in the cloud.", tags: ["devops"] },
+  { name: "Imgbot", cat: "devops", value: "Free", offer: "Free optimization for all public and private repos", desc: "GitHub App that auto-compresses images in your repos. Improve page load speed and Core Web Vitals automatically.", tags: ["devops"] },
+  { name: "DeepScan", cat: "devops", value: "Free 6mo", offer: "Free 6-month trial for students", desc: "Static analysis for JavaScript that catches runtime errors before production. 25+ language rules for React, Vue, Angular.", tags: ["devops"] },
+  { name: "CodeScene", cat: "devops", value: "Free", offer: "Free student account to analyze private GitHub repos", desc: "Code health and technical debt analysis. Identifies hotspots, coupling, and complexity before they become problems.", tags: ["devops"] },
+  { name: "Codecov", cat: "devops", value: "Free", offer: "Free access for public and private repos", desc: "Code coverage reporting integrated into your CI pipeline. Ensure your test coverage never regresses.", tags: ["devops"] },
+  { name: "Zyte / Scrapy Cloud", cat: "devops", value: "Free", offer: "1 free forever Scrapy Cloud unit, unlimited requests, 120 day retention", desc: "Run web crawlers at scale. Build data scraping pipelines for lead generation, price monitoring, or research apps.", tags: ["devops", "data"] },
+
+  // MONITORING & ANALYTICS
+  { name: "Datadog", cat: "monitor", value: "$3,600", offer: "Pro Account with 10 servers, free for 2 years", desc: "Industry-leading infrastructure monitoring, APM, and logs. Know exactly what's happening in your app at all times.", tags: ["monitor"] },
+  { name: "New Relic", cat: "monitor", value: "$3,600/yr", offer: "Free New Relic while a student ($300/month value)", desc: "Full observability platform — traces, metrics, logs, errors. Get the monitoring setup of a $10M startup, for free.", tags: ["monitor"] },
+  { name: "Sentry", cat: "monitor", value: "Free", offer: "50K errors, 100K transactions, 1GB attachments, 500 replays", desc: "Error tracking across every language and framework. Know when something breaks before your users tell you.", tags: ["monitor"] },
+  { name: "Honeybadger", cat: "monitor", value: "Free 1yr", offer: "Free Small account for 1 year", desc: "Exception, uptime, and cron monitoring. Lightweight alternative to Sentry with a great UX.", tags: ["monitor"] },
+  { name: "Blackfire", cat: "monitor", value: "Free", offer: "Free Developer subscription", desc: "PHP code performance profiler. Find and fix performance bottlenecks before they kill your app's UX.", tags: ["monitor"] },
+  { name: "SimpleAnalytics", cat: "monitor", value: "Free 1yr", offer: "Starter plan free for 1 year — 100K page views/month", desc: "Privacy-friendly, GDPR-compliant analytics. See your traffic without selling your users' data.", tags: ["monitor"] },
+  { name: "Appfigures", cat: "monitor", value: "Free 1yr", offer: "Free universal analytics for 1 year", desc: "App Store intelligence — track downloads, revenue, ratings, and reviews across iOS and Android.", tags: ["monitor"] },
+  { name: "DevCycle", cat: "monitor", value: "Free 1yr", offer: "Free 1 year Starter: unlimited seats, flags, and usage", desc: "Feature flag management built for developers. Ship features safely with instant rollbacks and A/B testing.", tags: ["monitor", "devops"] },
+
+  // SECURITY
+  { name: "1Password", cat: "security", value: "Free 1yr", offer: "1Password free for 1 year including Developer Tools", desc: "The gold standard password manager with secret automation, SSH key management, and team sharing.", tags: ["security", "productivity"] },
+  { name: "Dashlane", cat: "security", value: "Free 6mo", offer: "Dashlane Premium free for 6 months", desc: "Password manager with dark web monitoring and VPN. Keep your development credentials secure.", tags: ["security"] },
+  { name: "Doppler", cat: "security", value: "Free Team", offer: "Free Doppler Team while a student", desc: "Secrets manager — sync API keys and environment variables across all environments without .env file chaos.", tags: ["security", "backend"] },
+  { name: "AstraSecurity", cat: "security", value: "Free 6mo", offer: "6 months website firewall & malware scanner", desc: "Application firewall and malware detection. Protect your launched app from day one.", tags: ["security"] },
+  { name: "Termius", cat: "security", value: "Free", offer: "Free Termius Pro and Team features while a student", desc: "SSH client for desktop and mobile. Securely manage your cloud servers with synced credentials.", tags: ["security", "devops"] },
+
+  // DATA SCIENCE & ML
+  { name: "DataCamp", cat: "data", value: "Free 3mo", offer: "3 months free DataCamp subscription", desc: "350+ data science courses. Learn Python, R, SQL, ML, and AI to build smarter apps or pivot to data roles.", tags: ["data", "learn"] },
+  { name: "Deepnote", cat: "data", value: "Free Team", offer: "Free Team plan — 30-day history, 5GB RAM, premium integrations", desc: "Collaborative Jupyter-compatible notebooks in the cloud. Perfect for data science apps and ML prototyping.", tags: ["data"] },
+  { name: "SQLGate", cat: "data", value: "Free 1yr", offer: "Access to Standard Subscription features for 1 year", desc: "Powerful multi-database SQL IDE. Write, debug, and optimize queries across MySQL, PostgreSQL, and more.", tags: ["data", "backend"] },
+  { name: "PopSQL", cat: "data", value: "Free", offer: "Free Premium subscription while a student", desc: "Modern collaborative SQL editor. Write queries, visualize data, and share dashboards with your team.", tags: ["data"] },
+  { name: "Camber", cat: "data", value: "Free", offer: "200 CPU hours, 75GB storage, 200 LLM messages/month", desc: "AI-powered cloud platform for scientific computing and data analysis. Run ML models and simulations at scale.", tags: ["data", "infra"] },
+  { name: "CARTO", cat: "data", value: "Free 2yr", offer: "Free account with more storage, Location Data Services, 2 years", desc: "Geospatial data analysis and mapping platform. Build location-based apps, delivery trackers, and market analysis tools.", tags: ["data", "frontend"] },
+
+  // DOMAINS & DEPLOYMENT
+  { name: "Namecheap", cat: "domain", value: "Free", offer: ".me domain free for 1 year + free SSL certificate", desc: "Your first domain and SSL. Launch yourapp.me for free and make it production-ready from day one.", tags: ["infra"] },
+  { name: "Name.com", cat: "domain", value: "Free", offer: "Free domain with .live, .studio, .software, .app, .dev extensions", desc: "A premium domain extension for your project. .dev and .app are perfect for developer-focused products.", tags: ["infra"] },
+  { name: ".TECH Domain", cat: "domain", value: "Free", offer: "One standard .TECH domain free for 1 year", desc: "A bold, tech-forward domain extension that signals what you're building.", tags: ["infra"] },
+  { name: "GitHub Pages", cat: "domain", value: "Free", offer: "1 site per account + unlimited project sites", desc: "Host your landing page, documentation, or portfolio for free. Deploy directly from GitHub repos.", tags: ["infra", "devops"] },
+  { name: "Heroku (Deploy)", cat: "domain", value: "$312", offer: "$13/month for 24 months in platform credit", desc: "Deploy web apps, APIs, and workers with a single git push. No infrastructure management required.", tags: ["infra"] },
+  { name: "Xojo", cat: "domain", value: "Free Pro", offer: "Free Xojo Pro license while a student", desc: "Cross-platform development for Desktop, Mobile, Web, and Raspberry Pi using one codebase.", tags: ["frontend", "mobile"] },
+
+  // GIT & IDEs
+  { name: "GitHub Pro", cat: "git", value: "Free", offer: "Free GitHub Pro while a student", desc: "Private repos, advanced code insights, GitHub Actions minutes, and Packages storage.", tags: ["devops"] },
+  { name: "GitHub Copilot Pro", cat: "git", value: "Free", offer: "Free Copilot Pro while a student", desc: "AI pair programmer with autocomplete, chat, and multi-file edits. Your always-available coding assistant.", tags: ["devops"] },
+  { name: "GitHub Desktop", cat: "git", value: "Free", offer: "Open source, free for everyone", desc: "Visual Git client that makes branching, committing, and pull requests accessible for everyone.", tags: ["devops"] },
+  { name: "GitHub Codespaces (IDE)", cat: "git", value: "Free Pro", offer: "Free Pro-level cloud dev environments", desc: "Full VS Code environment in the browser. No local setup needed. Pair with Cursor for AI-assisted development.", tags: ["devops"] },
+  { name: "GitLens / GitKraken", cat: "git", value: "Free 6mo", offer: "GitKraken Student plan: free 6 months, then 80% off", desc: "The best visual Git client for Windows, Mac, and Linux. Deep GitHub integration for PR management.", tags: ["devops"] },
+  { name: "Tower", cat: "git", value: "Free", offer: "Free Tower Pro license while a student", desc: "Professional Git client for Mac and Windows. Undo, stash, branch, and resolve conflicts visually.", tags: ["devops"] },
+  { name: "JetBrains", cat: "git", value: "Free", offer: "Free JetBrains IDE subscription, renewable annually", desc: "IntelliJ IDEA, PyCharm, WebStorm, and 10+ other professional IDEs. The best IDEs for serious developers.", tags: ["devops"] },
+  { name: "Visual Studio Code", cat: "git", value: "Free", offer: "Free coding packs for Java, Python, and .NET", desc: "Microsoft's lightweight, extensible code editor. Combine with Cursor AI for a complete AI coding environment.", tags: ["devops"] },
+
+  // PRODUCTIVITY
+  { name: "Notion", cat: "productivity", value: "Free", offer: "Education plan with AI responses — everything in Plus", desc: "All-in-one workspace for notes, wikis, project management, and databases. Your startup's operating system.", tags: ["productivity"] },
+  { name: "Notion Template Collection", cat: "productivity", value: "Free", offer: "CS dashboards, hackathon planners, portfolio builders", desc: "GitHub + Notion templates specifically for students: course dashboards, hackathon organizers, and portfolio templates.", tags: ["productivity"] },
+  { name: "DailyBot", cat: "productivity", value: "Free 6mo", offer: "DailyBot Business plan free for 10 users, 6 months", desc: "Automate standups, retrospectives, and surveys in Slack or Teams. Run your team like a remote-first startup.", tags: ["productivity"] },
+  { name: "PomoDone", cat: "productivity", value: "Free 2yr", offer: "PomoDone Lite plan free for 2 years", desc: "Pomodoro timer that integrates with Trello, Asana, and Jira. Stay focused during deep work coding sessions.", tags: ["productivity"] },
+  { name: "HazeOver (Mac)", cat: "productivity", value: "Free", offer: "Free app license including minor updates", desc: "Mac app that dims inactive windows to help you focus on what you're coding. Subtly powerful.", tags: ["productivity"] },
+  { name: "SlideCoach", cat: "productivity", value: "Free", offer: "2,000 credits (40 AI presentation sessions) for 1 year", desc: "AI presentation coach. Practice your investor pitch, product demo, or conference talk before you go live.", tags: ["productivity", "career"] },
+
+  // LEARNING
+  { name: "FrontendMasters", cat: "learn", value: "Free 6mo", offer: "Free 6 months access to all courses and workshops", desc: "In-depth JavaScript, React, Node.js, CSS, and full-stack engineering courses from industry experts.", tags: ["learn"] },
+  { name: "Educative", cat: "learn", value: "Free 6mo", offer: "6 months free — 70+ courses on Web Dev, Python, ML, Java + 30% off", desc: "Interactive browser-based courses with hands-on coding playgrounds. Learn by doing, not just watching.", tags: ["learn"] },
+  { name: "Scrimba", cat: "learn", value: "Free 1mo", offer: "1 month free Pro — 40+ courses with interactive scrims", desc: "Learn JavaScript, CSS, React, Python — with interactive videos where you can edit code inside the tutorial.", tags: ["learn"] },
+  { name: "Codedex", cat: "learn", value: "Free 6mo", offer: "6 months free Codédex Club premium membership", desc: "Learn Python, HTML, CSS, JavaScript, React, Git, and Command Line with a gamified, Gen Z-friendly approach.", tags: ["learn"] },
+  { name: "GoRails", cat: "learn", value: "Free 1yr", offer: "Free access to all videos for 12 months", desc: "Video tutorials for Ruby, Rails, Turbo, Stimulus, and Hotwire. Build modern web apps with Rails quickly.", tags: ["learn"] },
+  { name: "SymfonyCasts", cat: "learn", value: "Free 3mo", offer: "Free 3-month subscription", desc: "Master Symfony and PHP with video tutorials and coding challenges. Build performant PHP web apps.", tags: ["learn"] },
+  { name: "DataCamp (Learn)", cat: "learn", value: "Free 3mo", offer: "3 months free access to DataCamp courses", desc: "Data fluency for developers. Learn SQL, Python for data, machine learning, and AI in bite-sized courses.", tags: ["learn", "data"] },
+  { name: "AlgoExpert", cat: "learn", value: "Free + 10%", offer: "20 free coding questions + 10% off all products", desc: "Elite coding interview prep. 165 hand-picked questions with video explanations to land top engineering jobs.", tags: ["learn", "career"] },
+  { name: "InterviewCake", cat: "learn", value: "Free 1wk", offer: "1 week full access to coding interview prep course", desc: "Teaches you to think algorithmically, not just memorize solutions. Great for building problem-solving skills.", tags: ["learn", "career"] },
+  { name: "Microsoft Visual Studio Dev Essentials", cat: "learn", value: "Free", offer: "VS Community, Pluralsight training, 1yr Azure ($200 credit first month)", desc: "Microsoft's complete developer package: IDE, cloud credit, and online training through Pluralsight.", tags: ["learn"] },
+  { name: "GitHub Foundations Certification", cat: "learn", value: "Free", offer: "Prep course bundle: DataCamp, GitHub, Azure resources", desc: "Everything to prepare for and pass the GitHub Foundations Certification exam.", tags: ["learn", "career"] },
+  { name: "GitHub Certification Voucher", cat: "learn", value: "Free", offer: "1 free exam voucher for Foundations or Copilot certification (expires June 2026)", desc: "Validate your GitHub skills with an official credential. Recognized by employers worldwide.", tags: ["learn", "career"] },
+
+  // MOBILE
+  { name: "NativeScript", cat: "mobile", value: "Free", offer: "Free NativeScript for mobile app development", desc: "Build truly native iOS and Android apps with JavaScript, TypeScript, Vue, or Angular. One codebase, two platforms.", tags: ["mobile", "frontend"] },
+  { name: "WorkingCopy", cat: "mobile", value: "Free", offer: "All Pro features free while a student", desc: "The best Git client for iPhone and iPad. Push code, manage branches, and review PRs from your phone.", tags: ["mobile", "devops"] },
+  { name: "Appfigures (Mobile)", cat: "mobile", value: "Free 1yr", offer: "Universal analytics and performance reports for 1 year", desc: "Track app store performance: downloads, revenue, ratings across iOS, Android, and Mac App Store.", tags: ["mobile", "monitor"] },
+  { name: "LambdaTest (Mobile)", cat: "mobile", value: "Free 1yr", offer: "Free Live plan — test on real mobile browsers", desc: "Test your mobile web app on real browsers across Android and iOS devices without owning them.", tags: ["mobile", "devops"] },
+
+  // CAREER
+  { name: "GitHub Campus Experts", cat: "career", value: "Free", offer: "Apply to become a Campus Expert and build your community", desc: "GitHub's student leadership program. Get training, resources, and recognition for building your campus tech community.", tags: ["career"] },
+  { name: "GitHub Community Exchange", cat: "career", value: "Free", offer: "Open source project exposure and collaboration", desc: "Share your student projects, find collaborators, and discover open source opportunities within GitHub Global Campus.", tags: ["career"] },
+  { name: "OpenSauced", cat: "career", value: "Free", offer: "Included in Intro to Open Source experience bundle", desc: "Measure and showcase your open source contributions. Build a public portfolio of your GitHub activity.", tags: ["career"] },
+  { name: "Visme (Pitch)", cat: "career", value: "Free 3mo", offer: "3 months free Starter plan for presentations", desc: "Build stunning pitch decks, portfolios, and case studies. Essential for presenting your app to investors or employers.", tags: ["career", "design"] },
+  { name: "InterviewCake (Career)", cat: "career", value: "Free 1wk", offer: "1 week full access to interview prep course", desc: "Get ready for software engineering interviews at top companies. Learn data structures and algorithms deeply.", tags: ["career", "learn"] },
+  { name: "AlgoExpert (Career)", cat: "career", value: "Free + 10%", offer: "20 free practice questions + 10% discount", desc: "The most polished coding interview platform with video explanations from FAANG engineers.", tags: ["career", "learn"] },
+
+  // IOT
+  { name: "Arduino", cat: "iot", value: "Free 6mo", offer: "6 months Arduino Cloud + discounts on hardware", desc: "Build IoT projects, smart devices, and hardware prototypes. Combine with Azure IoT for cloud-connected devices.", tags: ["iot"] },
+  { name: "Adafruit", cat: "iot", value: "Free 1yr", offer: "1 year Adafruit IO+ + discounts on hardware", desc: "Hardware and IoT platform for makers. Build sensors, wearables, and connected devices with open-source hardware.", tags: ["iot"] },
+
+  // SPECIALIZED
+  { name: "POEditor", cat: "specialized", value: "Free 1yr", offer: "Free Plus Plan for 1 year — localization management", desc: "Manage app translations at scale. If you target multiple languages, POEditor makes localization professional and efficient.", tags: ["backend"] },
+  { name: "Requstely (API)", cat: "specialized", value: "$270", offer: "Professional plan free for 1 year", desc: "Mock APIs for development, intercept requests, redirect traffic. Build and test APIs without waiting for the real backend.", tags: ["backend", "devops"] },
+  { name: "HackMIT", cat: "specialized", value: "Free", offer: "Included in Hackathon in the Cloud experience", desc: "Resources and tools for organizing and running hackathons. Build your reputation as a community organizer.", tags: ["career"] },
+  { name: "Scrimba (Interactive)", cat: "specialized", value: "Free 1mo", offer: "1 month Pro — interactive coding courses", desc: "The only platform where you can pause a video and edit the code. Best for visual learners building frontend skills.", tags: ["learn"] },
+  { name: "Deepnote (Science)", cat: "specialized", value: "Free", offer: "Free Team plan: Snowflake, BigQuery, Redshift integrations", desc: "Data notebooks with premium cloud integrations. Connect to enterprise data warehouses for serious analytics apps.", tags: ["data"] },
+  { name: "GitHub Actions", cat: "specialized", value: "Free", offer: "Included with GitHub Pro — CI/CD pipelines", desc: "Automate testing, building, and deploying with workflows triggered by GitHub events. The backbone of modern DevOps.", tags: ["devops"] },
+  { name: "Travis CI (OSS)", cat: "specialized", value: "Free", offer: "Free private builds while a student", desc: "Hosted CI/CD that integrates directly with GitHub. Set up automated testing in minutes.", tags: ["devops"] },
+  { name: "Codecov (Coverage)", cat: "specialized", value: "Free", offer: "Free coverage on public and private repos", desc: "Never merge code that breaks test coverage. Codecov comments on every PR with coverage diff reports.", tags: ["devops"] },
+];
+
+// Tracker items (selected key tools)
+const TRACKER_ITEMS = ALL_TOOLS.map(t => ({ name: t.name, value: t.value, cat: t.cat }));
+
+// ============================================================
+// STATE
+// ============================================================
+let activated = JSON.parse(localStorage.getItem('sdp_activated') || '{}');
+let claimedTracker = JSON.parse(localStorage.getItem('sdp_tracker') || '{}');
+let milestonesDone = JSON.parse(localStorage.getItem('sdp_milestones') || '{}');
+
+function saveState() {
+  localStorage.setItem('sdp_activated', JSON.stringify(activated));
+  localStorage.setItem('sdp_tracker', JSON.stringify(claimedTracker));
+  localStorage.setItem('sdp_milestones', JSON.stringify(milestonesDone));
+}
+
+// ============================================================
+// HAMBURGER DRAWER
+// ============================================================
+function toggleDrawer() {
+  const drawer = document.getElementById('mobileDrawer');
+  const btn = document.getElementById('hamburgerBtn');
+  drawer.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function closeDrawer() {
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('hamburgerBtn').classList.remove('open');
+}
+
+// Close drawer on outside tap
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('mobileDrawer');
+  const btn = document.getElementById('hamburgerBtn');
+  if (drawer.classList.contains('open') && !drawer.contains(e.target) && !btn.contains(e.target)) {
+    closeDrawer();
+  }
+});
+
+// ============================================================
+// NAV
+// ============================================================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.includes("'" + id + "'")) b.classList.add('active');
+  });
+  window.scrollTo(0, 0);
+}
+
+// ============================================================
+// TOOLS RENDER
+// ============================================================
+function renderTools() {
+  const cats = {
+    infra: 'cat-infra', backend: 'cat-backend', revenue: 'cat-revenue',
+    frontend: 'cat-frontend', devops: 'cat-devops', monitor: 'cat-monitor',
+    security: 'cat-security', data: 'cat-data', domain: 'cat-domain',
+    git: 'cat-git', productivity: 'cat-productivity', learn: 'cat-learn',
+    mobile: 'cat-mobile', career: 'cat-career', iot: 'cat-iot',
+    specialized: 'cat-specialized'
+  };
+
+  Object.keys(cats).forEach(cat => {
+    const container = document.getElementById(cats[cat]);
+    if (!container) return;
+    const tools = ALL_TOOLS.filter(t => t.cat === cat);
+    container.innerHTML = tools.map(t => toolCard(t)).join('');
+  });
+}
+
+function toolCard(t) {
+  const isOn = activated[t.name];
+  const tagHtml = t.tags.map(tag => `<span class="tag tag-${tag}">${tag}</span>`).join('');
+  return `
+    <div class="tool-card ${isOn ? 'activated' : ''}" id="card-${esc(t.name)}">
+      <div class="tool-header">
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-value">${t.value}</div>
+      </div>
+      <div class="tool-offer">${t.offer}</div>
+      <div class="tool-desc">${t.desc}</div>
+      <div class="tool-tags">${tagHtml}</div>
+      <button class="activate-btn ${isOn ? 'active-state' : ''}" onclick="toggleTool('${esc(t.name)}')">
+        ${isOn ? '✓ Activated' : '+ Add to My Stack'}
+      </button>
+    </div>`;
+}
+
+function esc(s) { return s.replace(/'/g, "\\'"); }
+
+function toggleTool(name) {
+  activated[name] = !activated[name];
+  saveState();
+  renderTools();
+  updateStats();
+  showToast(activated[name] ? `✓ ${name} activated!` : `${name} removed`);
+}
+
+function updateStats() {
+  const count = Object.values(activated).filter(Boolean).length;
+  document.getElementById('dashClaimed').textContent = count;
+  document.getElementById('dashValue').textContent = '$' + (count * 450).toLocaleString();
+  const badgeText = `$${(count*450).toLocaleString()} Claimed`;
+  document.getElementById('headerBadge').textContent = badgeText;
+  document.getElementById('mobileHeaderBadge').textContent = badgeText + ' / $50,000+ Available';
+}
+
+// ============================================================
+// BLUEPRINT GENERATOR
+// ============================================================
+const BLUEPRINTS = {
+  saas: {
+    stack: ["DigitalOcean (hosting)", "MongoDB (database)", "Appwrite (auth + backend)", "Stripe (billing)", "Sentry (errors)", "Datadog (monitoring)", "SimpleAnalytics (traffic)", "GitHub Actions (CI/CD)", "Namecheap (domain + SSL)"],
+    claude: ["Generate PRD and user stories", "Design database schema", "Write authentication logic", "Build subscription billing flows", "Create API documentation"],
+    cursor: ["Scaffold project structure", "Implement auth from spec", "Write payment integration code", "Generate API endpoint handlers"],
+    weeks: [
+      { title: "Week 1-2: Foundation", detail: "Use Claude to write your PRD. Use Cursor to scaffold the project. Set up MongoDB on Atlas, deploy to DigitalOcean, configure Doppler for secrets." },
+      { title: "Week 3-4: Core Features", detail: "Build your core feature with Cursor using Claude's architecture spec. Integrate Appwrite auth. Write tests, set up Travis CI." },
+      { title: "Week 5-6: Billing & Launch", detail: "Integrate Stripe with Claude's help. Set up Sentry for error tracking. Deploy landing page on GitHub Pages. Get your first beta users." },
+      { title: "Week 7-8: Revenue", detail: "Launch publicly. Drive traffic. Monitor with Datadog and New Relic. Iterate based on SimpleAnalytics data. Target first $100 MRR." },
+    ],
+    revenue: "$500–5,000/month MRR in 6 months with 20–100 paying customers"
+  },
+  aiwrapper: {
+    stack: ["Microsoft Azure (AI services + hosting)", "Appwrite (backend)", "Stripe (payments)", "GitHub Pages (landing)", "Sentry (monitoring)", "SimpleAnalytics"],
+    claude: ["Design the AI prompt architecture", "Write the system prompt for your wrapper", "Build user-facing UI copy", "Generate pricing strategy"],
+    cursor: ["Build the API middleware", "Create the React/HTML frontend", "Implement rate limiting logic"],
+    weeks: [
+      { title: "Week 1-2: AI Core", detail: "Use Claude to design your prompt system. Integrate with Azure AI or Claude API via Cursor. Build the core transformation logic." },
+      { title: "Week 3-4: Product Layer", detail: "Build user-facing UI with Cursor. Add auth via Appwrite. Set up usage tracking and rate limiting." },
+      { title: "Week 5-6: Monetization", detail: "Add Stripe for usage-based or subscription billing. Launch on Product Hunt and relevant communities." },
+      { title: "Week 7-8: Scale", detail: "Monitor with Sentry. A/B test pricing. Build referral program. Target 50 paying users at $15-29/month." },
+    ],
+    revenue: "$750–7,500/month with 50–250 users at $15-29/month"
+  },
+  api: {
+    stack: ["DigitalOcean (infrastructure)", "MongoDB (data store)", "Stripe (API key billing)", "Datadog (API monitoring)", "GitHub Pages (docs)", "Blockchair (if crypto data)"],
+    claude: ["Design API spec (OpenAPI)", "Write documentation", "Generate SDK code", "Design rate limiting strategy"],
+    cursor: ["Implement all endpoints", "Write authentication middleware", "Build developer dashboard"],
+    weeks: [
+      { title: "Week 1-2: API Design", detail: "Use Claude to design your OpenAPI spec. Build core endpoints with Cursor. Deploy on DigitalOcean with MongoDB." },
+      { title: "Week 3-4: Developer Experience", detail: "Build docs site on GitHub Pages. Generate SDKs with Claude + Cursor. Add API key management." },
+      { title: "Week 5-6: Billing", detail: "Integrate Stripe for usage-based billing. Add rate limiting. Set up Datadog for API monitoring and alerting." },
+      { title: "Week 7-8: Growth", detail: "Submit to API marketplaces. Target developers on Twitter/X and Discord. Aim for 20 developers paying $10-49/month." },
+    ],
+    revenue: "$200–4,900/month with 20–100 developers paying per request"
+  }
+};
+
+function generateBlueprint() {
+  const type = document.getElementById('bpType').value;
+  const audience = document.getElementById('bpAudience').value;
+  const revenue = document.getElementById('bpRevenue').value;
+
+  const bp = BLUEPRINTS[type] || BLUEPRINTS['saas'];
+  const output = document.getElementById('blueprintOutput');
+
+  output.innerHTML = `
+    <div class="bp-section">
+      <h3>🏗 Recommended Tech Stack (Pack Resources Only)</h3>
+      ${bp.stack.map(s => `<div class="week-item"><div class="week-num">TOOL</div><div class="week-content"><div class="week-detail">${s}</div></div></div>`).join('')}
+    </div>
+    <div class="bp-section">
+      <h3>🤖 Claude AI Responsibilities</h3>
+      ${bp.claude.map(c => `<div class="week-item"><div class="week-num">CLAUDE</div><div class="week-content"><div class="week-detail">${c}</div></div></div>`).join('')}
+    </div>
+    <div class="bp-section">
+      <h3>⚡ Cursor AI Responsibilities</h3>
+      ${bp.cursor.map(c => `<div class="week-item"><div class="week-num">CURSOR</div><div class="week-content"><div class="week-detail">${c}</div></div></div>`).join('')}
+    </div>
+    <div class="bp-section">
+      <h3>📅 8-Week Build Roadmap</h3>
+      ${bp.weeks.map(w => `<div class="week-item"><div class="week-num">⏱</div><div class="week-content"><div class="week-title">${w.title}</div><div class="week-detail">${w.detail}</div></div></div>`).join('')}
+    </div>
+    <div class="bp-section">
+      <h3>💰 Revenue Projection</h3>
+      <div class="week-item">
+        <div class="week-num">$$$</div>
+        <div class="week-content">
+          <div class="week-title">Target: ${bp.revenue}</div>
+          <div class="week-detail">Revenue model: <strong>${revenue}</strong> | Audience: <strong>${audience}</strong>. Use Stripe's $1K fee waiver to keep 100% of your first month's revenue.</div>
+        </div>
+      </div>
+    </div>`;
+
+  output.classList.add('show');
+  output.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ============================================================
+// APP IDEAS
+// ============================================================
+const APP_IDEAS = [
+  {
+    icon: "📄", name: "AI Resume & Cover Letter Builder", pitch: "Generate tailored resumes and cover letters with Claude in seconds",
+    revenue: "$15-29/mo", model: "Freemium SaaS",
+    problem: "Job seekers spend hours tailoring resumes. Claude can do it in 30 seconds from a job description.",
+    stack: "Appwrite (auth + DB) + DigitalOcean (hosting) + Stripe (billing) + GitHub Pages (landing) + Namecheap (domain)",
+    claude: "Generate tailored resumes from job descriptions. Write Claude API calls to match skills to requirements and produce ATS-optimized content.",
+    cursor: "Build the React UI, implement Appwrite auth, wire Claude API calls, build PDF export functionality.",
+    time: "3 weeks to MVP", target: "$500 MRR in 90 days with 35 paying users"
+  },
+  {
+    icon: "🌍", name: "SaaS Localization Platform", pitch: "Connect apps to translators and manage i18n files automatically",
+    revenue: "$29-99/mo", model: "B2B SaaS",
+    problem: "Small dev teams can't afford enterprise localization tools. POEditor + Claude = smart affordable alternative.",
+    stack: "POEditor API + MongoDB + DigitalOcean + Stripe + Doppler (secrets) + Travis CI (CI/CD)",
+    claude: "Suggest translation improvements, detect missing strings, auto-translate drafts using its multilingual capability.",
+    cursor: "Build the file parser for .json/.po files, webhook integrations, and the translation management dashboard.",
+    time: "4 weeks to MVP", target: "$2,000 MRR in 90 days with 20 business customers"
+  },
+  {
+    icon: "📊", name: "App Store Intelligence Tool", pitch: "Track competitor app ratings, reviews, and rankings automatically",
+    revenue: "$19-79/mo", model: "Subscription SaaS",
+    problem: "Mobile developers have no affordable way to monitor competitors or their own app performance trends.",
+    stack: "Appfigures API + MongoDB + Deepnote (data analysis) + Datadog (monitoring) + Stripe + SimpleAnalytics",
+    claude: "Analyze review sentiment, summarize competitor strategy, generate weekly intelligence reports for subscribers.",
+    cursor: "Build the data pipeline, dashboard UI, automated email digest system, and API integrations.",
+    time: "4 weeks", target: "$1,500 MRR with 20–30 indie app developers"
+  },
+  {
+    icon: "🗺", name: "Location Intelligence SaaS", pitch: "Visualize customer and competitor location data on interactive maps",
+    revenue: "$49-199/mo", model: "B2B SaaS",
+    problem: "Small businesses need geographic insights but can't afford enterprise tools like Esri.",
+    stack: "CARTO (geospatial) + MongoDB + DigitalOcean + Stripe + Datadog + GitHub Pages",
+    claude: "Interpret geographic patterns, generate plain-English insights from spatial data, suggest expansion targets.",
+    cursor: "Build the map interface, data upload pipeline, report generator, and team collaboration features.",
+    time: "5 weeks", target: "$3,000 MRR with 15–30 business customers at $100+/month"
+  },
+  {
+    icon: "🔗", name: "API Aggregator & Connector", pitch: "Connect any two APIs without code using a visual workflow builder",
+    revenue: "Usage-based ($0.001/request)", model: "API Monetization",
+    problem: "Non-technical founders and marketers can't connect apps without Zapier's expensive per-task pricing.",
+    stack: "DigitalOcean (infra) + MongoDB (workflows) + Stripe (usage billing) + Datadog (API monitoring) + Blockchair (crypto webhooks)",
+    claude: "Generate API integration code, write documentation, suggest workflow templates from natural language descriptions.",
+    cursor: "Build the workflow engine, visual node editor, webhook handlers, and API key management system.",
+    time: "6 weeks", target: "$2,000 MRR with 40+ users at $50 average spend"
+  },
+  {
+    icon: "📬", name: "Developer Newsletter & Community Tool", pitch: "Help developer communities publish newsletters and track growth",
+    revenue: "$9-49/mo", model: "Freemium SaaS",
+    problem: "Open source maintainers want to build communities but have no dedicated tool for developer audiences.",
+    stack: "Testmail (email automation) + MongoDB + GitHub Pages + Stripe + SimpleAnalytics + POEditor (i18n)",
+    claude: "Write newsletter content, summarize GitHub activity into readable updates, generate community digest copy.",
+    cursor: "Build the subscriber management dashboard, editor, email template system, and analytics dashboard.",
+    time: "3 weeks", target: "$800 MRR with 90 paying communities at $9/month"
+  },
+  {
+    icon: "🧪", name: "Cross-Browser Test Automation SaaS", pitch: "Run browser tests against BrowserStack/LambdaTest from a simple dashboard",
+    revenue: "$29-99/mo", model: "Subscription SaaS",
+    problem: "Small teams know they should test cross-browser but the setup overhead stops them from doing it.",
+    stack: "BrowserStack API + LambdaTest API + Travis CI + MongoDB + DigitalOcean + Stripe + Sentry",
+    claude: "Generate Selenium/Cypress test code from plain English descriptions, analyze test failure patterns.",
+    cursor: "Build the test runner, visual test report dashboard, CI/CD integration connectors, and Slack alerts.",
+    time: "4 weeks", target: "$1,500 MRR with 15–30 dev teams"
+  },
+  {
+    icon: "🔐", name: "Secrets & Configuration Manager", pitch: "A simpler Doppler alternative for indie developers and small teams",
+    revenue: "$9-29/mo", model: "Freemium SaaS",
+    problem: "Solo developers struggle with secret management across local, staging, and production environments.",
+    stack: "Doppler API + MongoDB + DigitalOcean + Stripe + AstraSecurity (firewall) + 1Password (dev tools integration)",
+    claude: "Audit for exposed secrets, generate security best practice guides, explain config to non-technical founders.",
+    cursor: "Build CLI tool, web dashboard, team permission system, and integrations with GitHub Actions.",
+    time: "3 weeks", target: "$600 MRR with 70 solo developers and small teams"
+  },
+  {
+    icon: "📈", name: "Web Scraping & Data Delivery SaaS", pitch: "Schedule web scrapes and deliver clean JSON data to any destination",
+    revenue: "$29-199/mo", model: "Usage-Based SaaS",
+    problem: "Businesses want data from websites but don't have engineers to build and maintain scrapers.",
+    stack: "Zyte/Scrapy Cloud (scraping) + MongoDB + DigitalOcean + Stripe + Datadog + Requestly (API mocking for dev)",
+    claude: "Write Scrapy spiders from URL + description, clean and structure scraped data, detect schema changes.",
+    cursor: "Build the scheduling UI, data transformation pipeline, webhook delivery system, and customer dashboard.",
+    time: "4 weeks", target: "$2,500 MRR with 25 business customers paying $100/month"
+  },
+  {
+    icon: "🎯", name: "Feature Flag & A/B Testing Platform", pitch: "Manage feature releases and run experiments without complex setup",
+    revenue: "$19-79/mo", model: "SaaS",
+    problem: "ConfigCat and LaunchDarkly are either too limited (free) or too expensive (enterprise) for indie SaaS.",
+    stack: "ConfigCat API + DevCycle API + MongoDB + DigitalOcean + Stripe + SimpleAnalytics + Sentry",
+    claude: "Analyze experiment results, suggest statistical significance, generate feature rollout strategies.",
+    cursor: "Build the flag management UI, SDK wrappers, analytics integration, and team collaboration features.",
+    time: "5 weeks", target: "$2,000 MRR with 25–40 SaaS companies as customers"
+  }
+];
+
+function renderIdeas() {
+  const container = document.getElementById('ideasContainer');
+  container.innerHTML = APP_IDEAS.map((idea, i) => `
+    <div class="idea-card" style="margin-bottom:0.75rem;">
+      <div class="idea-header" onclick="toggleIdea(${i})">
+        <div class="idea-icon" style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.2);">${idea.icon}</div>
+        <div class="idea-meta">
+          <div class="idea-name">${idea.name}</div>
+          <div class="idea-pitch">${idea.pitch}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem;">
+          <div class="idea-revenue">${idea.revenue}</div>
+          <div style="font-size:0.65rem;color:var(--text3);font-family:'Space Mono',monospace;">${idea.model}</div>
+        </div>
+      </div>
+      <div class="idea-body" id="idea-${i}">
+        <div style="border-top:1px solid var(--border);padding-top:1rem;">
+          <div class="idea-row"><div class="idea-row-label">Problem</div><div class="idea-row-val">${idea.problem}</div></div>
+          <div class="idea-row"><div class="idea-row-label">Tech Stack</div><div class="idea-row-val">${idea.stack}</div></div>
+          <div class="idea-row"><div class="idea-row-label">Claude AI</div><div class="idea-row-val" style="color:var(--accent);">${idea.claude}</div></div>
+          <div class="idea-row"><div class="idea-row-label">Cursor AI</div><div class="idea-row-val" style="color:var(--purple);">${idea.cursor}</div></div>
+          <div class="idea-row"><div class="idea-row-label">MVP Time</div><div class="idea-row-val">${idea.time}</div></div>
+          <div class="idea-row"><div class="idea-row-label">Revenue Target</div><div class="idea-row-val" style="color:var(--green);">${idea.target}</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleIdea(i) {
+  const body = document.getElementById('idea-' + i);
+  body.classList.toggle('open');
+}
+
+// ============================================================
+// WORKFLOW
+// ============================================================
+const WORKFLOW_STEPS = [
+  {
+    num: "01", title: "Planning & Architecture",
+    detail: "Use Claude to transform your idea into a concrete spec. Paste your idea and ask for a complete PRD, user stories, and technical architecture decision.",
+    claudePrompt: "I want to build [app idea]. Target audience: [audience]. Revenue model: [model]. Please write a complete Product Requirements Document with: executive summary, user personas, core features (MVP only), technical architecture recommendation using free tools, and a data model.",
+    cursorTip: "Open a new project in Cursor. Paste Claude's architecture doc as a README. Cursor will use it as context for all subsequent code generation.",
+    tools: ["Notion (organize spec)", "GitHub (create repo)", "Deepnote (data modeling)"]
+  },
+  {
+    num: "02", title: "Environment Setup",
+    detail: "Configure your entire dev environment using your free pack tools. Cursor + Copilot + Codespaces = maximum speed.",
+    claudePrompt: "Generate a complete project setup script for a [tech stack] application. Include: package.json, directory structure, environment variable list (for Doppler), GitHub Actions CI workflow, and Docker compose for local development.",
+    cursorTip: "Use Cursor's 'Generate from description' to scaffold your entire project structure in minutes from Claude's spec.",
+    tools: ["GitHub Codespaces (cloud IDE)", "Doppler (secrets)", "Travis CI (CI/CD)", "Termius (SSH to servers)"]
+  },
+  {
+    num: "03", title: "Backend Development",
+    detail: "Build your API, database, and auth using Appwrite and MongoDB. Use Claude for logic, Cursor to write the actual code.",
+    claudePrompt: "Design a REST API for [feature]. Include: endpoint definitions, request/response schemas, authentication approach using JWT, error handling patterns, and MongoDB document schemas. Write it as an OpenAPI 3.0 spec.",
+    cursorTip: "Paste Claude's OpenAPI spec into Cursor and use Ctrl+K to generate all route handlers, controllers, and middleware at once.",
+    tools: ["MongoDB Atlas (database)", "Appwrite (auth + storage)", "Doppler (env vars)", "Requestly (API mocking)"]
+  },
+  {
+    num: "04", title: "Frontend Development",
+    detail: "Build a polished UI using Bootstrap Studio, Icons8, and IconScout assets. Use Claude for component logic, Cursor to implement it.",
+    claudePrompt: "Design a [component name] React component for [app context]. Include: component props interface, state management logic, responsive CSS, accessibility attributes, and loading/error states. Use Tailwind CSS classes.",
+    cursorTip: "Use Cursor's multi-file edit to implement Claude's component design across multiple files simultaneously. Use Polypane to see all screen sizes at once.",
+    tools: ["Bootstrap Studio (design)", "Polypane (responsive testing)", "Icons8 (icons + illustrations)", "IconScout (assets)"]
+  },
+  {
+    num: "05", title: "Testing & Quality",
+    detail: "Ensure your app works on all browsers and devices using BrowserStack and LambdaTest. Use Codecov to track test coverage.",
+    claudePrompt: "Write comprehensive Jest unit tests for [function/component]. Include: happy path tests, edge cases, error handling tests, and mocks for external dependencies. Aim for 90%+ coverage.",
+    cursorTip: "After Claude writes test cases, use Cursor to implement them. Then run BrowserStack's automated tests to catch cross-browser issues.",
+    tools: ["BrowserStack (real device testing)", "LambdaTest (cross-browser)", "Codecov (coverage)", "DeepScan (static analysis)", "CodeScene (tech debt)"]
+  },
+  {
+    num: "06", title: "Deployment & CI/CD",
+    detail: "Deploy to DigitalOcean with automated CI/CD via GitHub Actions. Set up your domain with Namecheap and SSL.",
+    claudePrompt: "Write a complete GitHub Actions workflow for a [stack] app that: runs tests, builds a Docker image, pushes to a registry, deploys to DigitalOcean via SSH, and sends a Slack notification on success or failure.",
+    cursorTip: "Paste Claude's GitHub Actions YAML into Cursor. Use Cursor to debug any syntax issues and add environment-specific configurations.",
+    tools: ["DigitalOcean (hosting)", "GitHub Actions (CI/CD)", "Namecheap (domain + SSL)", "Travis CI (CI)", "Imgbot (image optimization)"]
+  },
+  {
+    num: "07", title: "Monitoring & Observability",
+    detail: "Set up comprehensive monitoring from day one. Know about problems before your users do.",
+    claudePrompt: "Design an observability strategy for [app]. Include: what metrics to track in Datadog, what errors to alert on in Sentry, what business events to log, and a runbook for the 3 most common failure modes.",
+    cursorTip: "Use Cursor to implement Sentry SDK integration and Datadog APM instrumentation across your codebase in a single session.",
+    tools: ["Datadog (infrastructure)", "New Relic (APM)", "Sentry (errors)", "Honeybadger (uptime)", "SimpleAnalytics (traffic)"]
+  },
+  {
+    num: "08", title: "Revenue & Growth",
+    detail: "Integrate Stripe, track metrics, and drive growth. Use Claude to analyze data and Cursor to ship experiments fast.",
+    claudePrompt: "I launched [app] 30 days ago. Revenue: $[X]. Users: [Y]. Churn: [Z]%. Top requested features: [list]. Analyze this and give me: 3 growth experiments to run this week, a pricing optimization strategy, and a 30-day roadmap to double revenue.",
+    cursorTip: "Use Cursor to rapidly implement A/B tests and new features. Use DevCycle feature flags to safely roll out to subsets of users.",
+    tools: ["Stripe (payments)", "DevCycle (feature flags)", "Appfigures (analytics)", "SimpleAnalytics (web)", "Visme (pitch decks)"]
+  }
+];
+
+function renderWorkflow() {
+  const container = document.getElementById('workflowSteps');
+  container.innerHTML = WORKFLOW_STEPS.map((step, i) => `
+    <div class="workflow-step ${i === 0 ? 'active' : ''}" id="step-${i}" onclick="activateStep(${i})">
+      <div class="step-line">
+        <div class="step-dot">${step.num}</div>
+        ${i < WORKFLOW_STEPS.length - 1 ? '<div class="step-connector"></div>' : ''}
+      </div>
+      <div class="step-content">
+        <div class="step-title">${step.title}</div>
+        <div class="step-detail">
+          <p style="color:var(--text2);font-size:0.82rem;line-height:1.6;margin-bottom:1rem;">${step.detail}</p>
+          <div class="prompt-label">Claude AI Prompt</div>
+          <div class="prompt-box" onclick="copyText(this, '${esc(step.claudePrompt)}')">
+            <button class="copy-btn">Copy</button>
+            ${step.claudePrompt}
+          </div>
+          <div class="prompt-label" style="margin-top:0.75rem;">Cursor AI Tip</div>
+          <div style="background:rgba(153,102,255,0.05);border:1px solid rgba(153,102,255,0.2);border-radius:6px;padding:0.75rem;font-size:0.78rem;color:var(--text2);line-height:1.6;">${step.cursorTip}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.75rem;">
+            ${step.tools.map(t => `<span class="milestone-tool">${t}</span>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function activateStep(i) {
+  document.querySelectorAll('.workflow-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + i).classList.add('active');
+}
+
+// ============================================================
+// VALUE TRACKER
+// ============================================================
+function renderTracker() {
+  const grid = document.getElementById('trackerGrid');
+  grid.innerHTML = ALL_TOOLS.map(t => {
+    const isClaimed = claimedTracker[t.name];
+    return `
+      <div class="tracker-item ${isClaimed ? 'claimed' : ''}" onclick="toggleTracker('${esc(t.name)}')">
+        <div class="tracker-check">${isClaimed ? '✓' : ''}</div>
+        <div class="tracker-name">${t.name}</div>
+        <div class="tracker-val">${t.value}</div>
+      </div>`;
+  }).join('');
+  updateTrackerStats();
+}
+
+function toggleTracker(name) {
+  claimedTracker[name] = !claimedTracker[name];
+  saveState();
+  renderTracker();
+}
+
+function updateTrackerStats() {
+  const count = Object.values(claimedTracker).filter(Boolean).length;
+  const total = ALL_TOOLS.length;
+  const pct = Math.round((count / total) * 100);
+  document.getElementById('bigCounter').textContent = '$' + (count * 500).toLocaleString();
+  document.getElementById('claimedCount').textContent = `${count} of ${total} tools activated`;
+  document.getElementById('trackerProgress').style.width = pct + '%';
+}
+
+// ============================================================
+// 90 DAY PLAN
+// ============================================================
+const PLAN = [
+  {
+    month: "Month 1 — Build (Days 1-30)",
+    milestones: [
+      { icon: "🎯", title: "Day 1: Choose Your Idea", detail: "Pick one idea from this dashboard. Use Claude to validate it with a 10-question market research prompt. Don't overthink it.", tools: ["Claude AI", "Notion"] },
+      { icon: "🌐", title: "Day 2-3: Claim Your Domain", detail: "Register your .me domain on Namecheap (free), activate free SSL. Set up GitHub repo. Create Notion workspace for the project.", tools: ["Namecheap", "GitHub Pro", "Notion"] },
+      { icon: "⚙️", title: "Day 4-7: Dev Environment", detail: "Set up Codespaces + VS Code + Cursor. Configure Doppler for secrets. Initialize MongoDB Atlas cluster. Deploy hello-world to DigitalOcean.", tools: ["GitHub Codespaces", "Cursor AI", "Doppler", "MongoDB", "DigitalOcean"] },
+      { icon: "🏗", title: "Day 8-14: Build Backend", detail: "Use Claude to spec your API. Use Cursor to build all endpoints. Integrate Appwrite for auth. Set up Travis CI for automated testing.", tools: ["Claude AI", "Cursor AI", "Appwrite", "Travis CI"] },
+      { icon: "🎨", title: "Day 15-21: Build Frontend", detail: "Design in Bootstrap Studio. Implement with Cursor. Source assets from Icons8 and IconScout. Test responsively in Polypane.", tools: ["Bootstrap Studio", "Cursor AI", "Icons8", "Polypane"] },
+      { icon: "💳", title: "Day 22-28: Add Payments", detail: "Integrate Stripe with Claude's billing logic. Implement free trial flow. Set up webhook handlers for subscription events.", tools: ["Stripe", "Claude AI", "Cursor AI"] },
+      { icon: "🚀", title: "Day 29-30: Soft Launch", detail: "Deploy to production. Set up Sentry for error tracking. Launch landing page on GitHub Pages. Get 10 beta users.", tools: ["Sentry", "GitHub Pages", "DigitalOcean"] },
+    ]
+  },
+  {
+    month: "Month 2 — Iterate (Days 31-60)",
+    milestones: [
+      { icon: "👥", title: "Day 31-35: Get 25 Beta Users", detail: "Post in relevant communities, subreddits, Discord servers. Offer lifetime deal to first 10 users. Collect feedback systematically in Notion.", tools: ["Notion", "SimpleAnalytics", "GitHub Pages"] },
+      { icon: "🔧", title: "Day 36-45: Fix & Improve", detail: "Use Claude to analyze user feedback and prioritize improvements. Use Cursor to ship fixes fast. Monitor errors in Sentry, performance in New Relic.", tools: ["Sentry", "New Relic", "Cursor AI", "Claude AI"] },
+      { icon: "📊", title: "Day 46-50: Setup Monitoring", detail: "Configure Datadog dashboards for key metrics. Set up Honeybadger uptime monitoring. Enable SimpleAnalytics for traffic insights.", tools: ["Datadog", "Honeybadger", "SimpleAnalytics"] },
+      { icon: "💬", title: "Day 51-55: Collect Testimonials", detail: "Interview your best beta users. Collect quotes and case studies. Use Claude to write compelling testimonial copy for your landing page.", tools: ["Claude AI", "GitHub Pages"] },
+      { icon: "🧪", title: "Day 56-60: Test & Harden", detail: "Run cross-browser tests on BrowserStack and LambdaTest. Check code coverage with Codecov. Run CodeScene analysis and fix top technical debt.", tools: ["BrowserStack", "LambdaTest", "Codecov", "CodeScene"] },
+    ]
+  },
+  {
+    month: "Month 3 — Revenue (Days 61-90)",
+    milestones: [
+      { icon: "🎉", title: "Day 61-65: Public Launch", detail: "Launch on Product Hunt with a polished post. Post a detailed build-in-public thread. Submit to relevant directories and newsletters.", tools: ["GitHub Pages", "Visme", "SimpleAnalytics"] },
+      { icon: "💰", title: "Day 66-70: Convert to Paid", detail: "End beta trials. Move users to paid plans. Use Stripe's $1K fee waiver — you keep 100% of your first $1,000 in revenue.", tools: ["Stripe", "Claude AI"] },
+      { icon: "📈", title: "Day 71-75: Growth Experiments", detail: "Use DevCycle feature flags for A/B testing. Run 3 pricing experiments. Use Claude to analyze cohort data from Datadog.", tools: ["DevCycle", "Datadog", "Claude AI"] },
+      { icon: "🔁", title: "Day 76-80: Reduce Churn", detail: "Implement automated onboarding emails via Testmail. Add in-app tooltips. Create a help center with GitHub Pages.", tools: ["Testmail", "GitHub Pages", "Notion"] },
+      { icon: "🏆", title: "Day 81-90: First $500 MRR", detail: "Target 20-35 paying customers at $15-25/month. Reinvest in paid acquisition. Apply for startup programs using your revenue as proof of traction.", tools: ["Stripe", "Appfigures", "Datadog"] },
+    ]
+  }
+];
+
+function renderPlan() {
+  const timeline = document.getElementById('planTimeline');
+  timeline.innerHTML = PLAN.map(month => `
+    <div class="month-block">
+      <div class="month-label">${month.month}</div>
+      ${month.milestones.map((m, i) => {
+        const key = month.month + i;
+        const done = milestonesDone[key];
+        return `
+          <div class="milestone ${done ? 'done' : ''}" onclick="toggleMilestone('${esc(key)}', this)">
+            <div class="milestone-icon">${done ? '✅' : m.icon}</div>
+            <div class="milestone-content">
+              <div class="milestone-title">${m.title}</div>
+              <div class="milestone-detail">${m.detail}</div>
+              <div class="milestone-tools">${m.tools.map(t => `<span class="milestone-tool">${t}</span>`).join('')}</div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function toggleMilestone(key, el) {
+  milestonesDone[key] = !milestonesDone[key];
+  saveState();
+  renderPlan();
+}
+
+// ============================================================
+// PROMPT LIBRARY
+// ============================================================
+const PROMPTS = [
+  { phase: "architecture", title: "Full PRD Generator", text: "I want to build [describe your app in 2-3 sentences]. Target audience: [audience]. Write a complete Product Requirements Document with: executive summary, user personas, core MVP features (max 5), technical architecture using free cloud services, data model, and success metrics." },
+  { phase: "architecture", title: "Tech Stack Decision", text: "I'm building a [app type] for [audience] with a [revenue model] model. Compare 3 possible tech stacks and recommend the best one based on: time to MVP, scalability, cost after student credits expire, and your ability to help me build it." },
+  { phase: "architecture", title: "API Design Spec", text: "Design a REST API for [feature]. Include: OpenAPI 3.0 spec with all endpoints, request/response schemas, authentication method, rate limiting strategy, error codes, and example curl commands for every endpoint." },
+  { phase: "database", title: "MongoDB Schema Designer", text: "Design MongoDB document schemas for [app name]. Include: all collections, field names and types, indexes for common queries, relationships between collections, and example documents. Consider: user isolation, soft deletes, and audit trails." },
+  { phase: "database", title: "SQL Query Optimizer", text: "I have this SQL query that's running slowly: [paste query]. Analyze it, explain why it's slow, rewrite it optimized, suggest indexes to add, and explain the performance difference." },
+  { phase: "database", title: "Data Migration Plan", text: "I need to migrate data from [source schema] to [target schema]. Write a complete migration plan with: data transformation logic, rollback strategy, zero-downtime migration approach, validation checks, and the actual migration script." },
+  { phase: "api", title: "Authentication System", text: "Write complete authentication middleware for [framework] using JWT tokens. Include: registration, login, logout, password reset, email verification, and refresh token logic. Use [Appwrite/MongoDB] as the data store. Include all error handling." },
+  { phase: "api", title: "Stripe Billing Integration", text: "Write complete Stripe integration for a [subscription/usage-based] SaaS app in [language]. Include: customer creation, subscription management, webhook handler for all payment events, failed payment recovery logic, and a billing portal redirect." },
+  { phase: "api", title: "Rate Limiting Middleware", text: "Write rate limiting middleware for [framework] that limits API requests by: IP address, API key, and user ID. Use Redis/MongoDB for storage. Include different limits for free vs paid tiers, and proper 429 responses with Retry-After headers." },
+  { phase: "frontend", title: "SaaS Dashboard UI", text: "Design a React dashboard for [app]. Include: sidebar navigation, stats cards with trend indicators, a data table with sorting/filtering/pagination, a chart component, and user avatar dropdown. Use Tailwind CSS. Make it look like Linear or Vercel's dashboard." },
+  { phase: "frontend", title: "Pricing Page", text: "Write a complete pricing page component for [app] with 3 tiers: Free, Pro at $[X]/month, and Team at $[Y]/month. Include: feature comparison table, monthly/annual toggle with savings badge, FAQ section, and a Stripe checkout integration button." },
+  { phase: "frontend", title: "Landing Page Copy", text: "Write complete landing page copy for [app]: hero headline + subheadline (test 3 variants), 3 feature sections with user benefit framing, social proof section, FAQ (7 questions), and 3 CTA variations. Write for conversion, not creativity." },
+  { phase: "frontend", title: "Onboarding Flow", text: "Design a user onboarding flow for [app] that gets users to their 'aha moment' in under 5 minutes. Include: welcome screen, 3-step setup wizard, first value action, and empty state with suggested first action. Write the copy and React component structure." },
+  { phase: "backend", title: "Webhook Handler", text: "Write a complete webhook handler for [service: Stripe/GitHub/etc]. Include: signature verification, event type routing, idempotency handling to prevent duplicate processing, error handling with retry logic, and logging for debugging." },
+  { phase: "backend", title: "Background Job System", text: "Design a background job system for [task] using [Node.js/Python]. Include: job queue setup, retry logic with exponential backoff, dead letter queue, job scheduling, monitoring hooks for Datadog, and a dashboard to view job status." },
+  { phase: "backend", title: "Multi-tenant Architecture", text: "Explain how to implement multi-tenancy for a SaaS app using [stack]. Should I use separate databases, schemas, or row-level isolation? Show me the implementation for each approach, including the tradeoffs for a startup scaling from 0 to 1,000 tenants." },
+  { phase: "monetization", title: "Pricing Strategy", text: "I'm building [app] for [audience]. Current free users: [X]. Features they use most: [list]. Propose 3 pricing strategies with specific price points, feature gates, and the psychological rationale for each. Which maximizes revenue at my current stage?" },
+  { phase: "monetization", title: "Freemium Conversion", text: "Analyze my freemium funnel: [X] signups, [Y] active users, [Z] conversions to paid. What are the top 3 reasons users aren't upgrading? Suggest 5 specific product changes, 3 email sequences, and 2 pricing experiments to increase my conversion rate." },
+  { phase: "monetization", title: "Usage-Based Pricing", text: "Help me design a usage-based pricing model for [app]. What metric should I charge for? How do I set the price per unit? What's a good free tier limit to drive adoption? Show me the math for what I need to hit $1K, $5K, and $10K MRR." },
+  { phase: "marketing", title: "Product Hunt Launch", text: "Write everything I need for a Product Hunt launch of [app]: tagline (5 variations, max 60 chars), description (260 chars), full product description, 5 first comments from the maker, answers to the 10 most common Product Hunt questions, and a launch day checklist." },
+  { phase: "marketing", title: "Cold Email Sequence", text: "Write a 5-email cold outreach sequence for [app] targeting [audience]. Each email should: be under 150 words, have one clear CTA, and feel personal not salesy. Include subject lines for each. Write for a [founder/student] sending to [job title] at [company type]." },
+  { phase: "marketing", title: "Content Marketing Plan", text: "Create a 30-day content marketing plan for [app] targeting [audience]. Include: 4 blog post titles with outlines, 8 Twitter/X thread ideas, 4 Reddit posts for relevant communities, 2 guest post pitches, and a LinkedIn strategy. Focus on topics where I have unique insight." },
+  { phase: "debugging", title: "Error Analysis", text: "I'm getting this error in production: [paste error + stack trace]. The relevant code is: [paste code]. Explain: what caused this error, why it only appeared in production, how to fix it now, and how to prevent this class of error in the future." },
+  { phase: "debugging", title: "Performance Diagnosis", text: "My [API endpoint / page load] is taking [X]ms. Here's the relevant code: [paste]. Analyze the performance bottleneck, suggest optimizations in order of impact, and show me the optimized code. Target: under [Y]ms response time." },
+  { phase: "debugging", title: "Memory Leak Hunter", text: "My Node.js app's memory usage grows from 200MB to 2GB over 24 hours. Here's my main process code: [paste]. Identify likely memory leak causes, show how to profile it using Node's built-in tools, and give me the fixes." },
+  { phase: "devops", title: "GitHub Actions Workflow", text: "Write a complete GitHub Actions CI/CD workflow for a [stack] app that: runs tests on pull requests, builds and pushes a Docker image, deploys to DigitalOcean via SSH on merge to main, runs DB migrations safely, and posts a Slack notification with the deploy summary." },
+  { phase: "devops", title: "Docker Configuration", text: "Write an optimized Dockerfile and docker-compose.yml for [app] with: multi-stage build to minimize image size, non-root user for security, health checks, a local dev setup with hot reload, and a production setup with proper env var handling." },
+  { phase: "testing", title: "Test Suite Generator", text: "Write a comprehensive test suite for [function/component] in [Jest/pytest/etc]. Include: unit tests for all branches, integration tests for database interactions, mock implementations for external APIs, and edge case tests. Aim for 95%+ coverage." },
+  { phase: "testing", title: "Load Testing Script", text: "Write a k6 load testing script for my [app] API. Test: [list endpoints]. Simulate: 100 concurrent users for 5 minutes, then ramp to 500 users. Assert: p95 response time under 500ms, zero 5xx errors. Include thresholds and a summary report." },
+  { phase: "growth", title: "Churn Analysis", text: "My SaaS has [X]% monthly churn. Here's what I know about churned users: [data]. Analyze the likely root causes, rank them by impact, and give me: 5 product changes to reduce churn, a win-back email sequence, and an exit survey to run." },
+  { phase: "growth", title: "Referral Program Design", text: "Design a referral program for [app]. Include: incentive structure (what's worth giving for a referral?), referral tracking implementation, email templates for the referrer and referred user, fraud prevention measures, and the expected impact on CAC." },
+  { phase: "growth", title: "Investor Update Email", text: "Write a monthly investor update for [app]. Include: key metrics (MRR, growth rate, churn, users), top 3 wins, top 3 challenges with how I'm addressing them, key hires or milestones, and a specific ask. Keep it under 400 words. Be honest, not just positive." },
+];
+
+function renderPrompts() {
+  filterPrompts();
+}
+
+function filterPrompts() {
+  const search = document.getElementById('promptSearch').value.toLowerCase();
+  const phase = document.getElementById('promptFilter').value;
+  const container = document.getElementById('promptCards');
+
+  const filtered = PROMPTS.filter(p => {
+    const matchSearch = !search || p.title.toLowerCase().includes(search) || p.text.toLowerCase().includes(search);
+    const matchPhase = !phase || p.phase === phase;
+    return matchSearch && matchPhase;
+  });
+
+  container.innerHTML = filtered.map(p => `
+    <div class="prompt-card">
+      <div class="prompt-phase">${p.phase}</div>
+      <div class="prompt-title">${p.title}</div>
+      <div class="prompt-text" onclick="copyText(this, '${esc(p.text)}')" title="Click to copy">
+        ${p.text.length > 200 ? p.text.substring(0, 200) + '...' : p.text}
+      </div>
+      <button onclick="copyPrompt('${esc(p.text)}')" style="width:100%;padding:0.4rem;background:none;border:1px solid var(--border2);color:var(--text3);font-family:'Space Mono',monospace;font-size:0.7rem;border-radius:4px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">Copy Prompt</button>
+    </div>`).join('');
+}
+
+function copyPrompt(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Prompt copied!'));
+}
+
+function copyText(el, text) {
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!'));
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  renderTools();
+  renderIdeas();
+  renderWorkflow();
+  renderTracker();
+  renderPlan();
+  renderPrompts();
+  updateStats();
+}
+
+init();
+</script>
+</body>
+</html>
