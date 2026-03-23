@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareReady Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --teal: #2d7a6a; --teal-mid: #4a9e8c; --teal-pale: #e8f4f1;
+      --amber: #c8773a; --amber-pale: #fdf0e6;
+      --canvas: #f7f5f1; --white: #ffffff;
+      --border: #ddd8d0; --text: #2a2a2a; --muted: #6b6b6b;
+      --ok: #1f9f67;
+      --bad: #b74646;
+      --shadow: 0 8px 24px rgba(22, 28, 24, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: var(--text);
+      background: var(--canvas);
+      height: 100%;
+    }
+
+    .dy * {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace !important;
+      letter-spacing: .05em;
+      word-spacing: .1em;
+      line-height: 1.8;
+    }
+
+    h1, h2, h3, h4, .serif {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 10px 16px;
+      min-height: 70px;
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .brand .acc { color: var(--teal); }
+
+    .tb-center {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .prog-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 250px;
+      flex: 1;
+    }
+
+    .prog {
+      width: 100%;
+      height: 11px;
+      border-radius: 999px;
+      background: #ebe8e2;
+      overflow: hidden;
+      border: 1px solid #dfd9ce;
+    }
+
+    .prog > span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal), var(--amber));
+      transition: width .25s ease;
+    }
+
+    .prog-txt {
+      font-size: .82rem;
+      color: var(--muted);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    .long-warn {
+      font-weight: 600;
+      color: var(--amber);
+      font-size: .82rem;
+      display: none;
+    }
+
+    .btn,
+    .tab,
+    .chip,
+    .tone-pill,
+    .mob-tab {
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text);
+      border-radius: 8px;
+      font: inherit;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .btn {
+      padding: 7px 10px;
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+
+    .btn:hover,
+    .tab:hover,
+    .chip:hover,
+    .tone-pill:hover,
+    .mob-tab:hover {
+      border-color: var(--teal-mid);
+    }
+
+    .btn.teal { background: var(--teal); color: #fff; border-color: var(--teal); }
+    .btn.amber { background: var(--amber-pale); color: #7f4a22; border-color: #dfb28f; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 0;
+      flex: 1;
+      margin-top: 70px;
+      min-height: 0;
+    }
+
+    .sidebar,
+    .preview {
+      overflow: auto;
+      min-height: 0;
+      height: calc(100vh - 70px);
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--border);
+      background: #fbfaf7;
+      padding: 14px 14px 90px;
+      position: relative;
+    }
+
+    .preview {
+      padding: 16px;
+      background: #f0ede7;
+    }
+
+    .stab-wrap {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .tab {
+      padding: 8px 8px;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+
+    .tab.on { background: var(--teal-pale); border-color: var(--teal); color: var(--teal); }
+
+    .autosave {
+      margin: 10px 0 14px;
+      padding: 8px 10px;
+      border: 1px solid #d0e5dc;
+      border-radius: 8px;
+      background: #f1fbf6;
+      color: #276f4f;
+      font-size: .8rem;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #2ab169;
+      display: inline-block;
+    }
+
+    .pane { display: none; }
+    .pane.on { display: block; }
+
+    .acc {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .acc-h {
+      width: 100%;
+      border: 0;
+      background: #fff;
+      font: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 12px 12px;
+      color: #615f58;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+    }
+
+    .acc.op .acc-h {
+      color: var(--teal);
+      border-bottom-color: #e7ecea;
+      background: #fcfdfc;
+    }
+
+    .acc-b { padding: 12px; }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .field { margin-bottom: 10px; }
+
+    label {
+      display: block;
+      font-size: .79rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #4d4b46;
+      position: relative;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: 9px 10px;
+      font: inherit;
+      font-size: .9rem;
+      background: var(--white);
+      color: var(--text);
+      outline: none;
+    }
+
+    textarea { min-height: 100px; resize: vertical; }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(45, 122, 106, .12);
+    }
+
+    .hint {
+      margin-top: 4px;
+      font-size: .75rem;
+      color: var(--muted);
+    }
+
+    .hint.ok { color: var(--ok); font-weight: 600; }
+    .hint.bad { color: var(--bad); font-weight: 600; }
+
+    .banner {
+      border: 1px solid #c8e8e2;
+      background: linear-gradient(90deg, var(--teal-pale), var(--amber-pale));
+      padding: 10px;
+      border-radius: 8px;
+      color: #295a50;
+      font-size: .82rem;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .warn {
+      border: 1px solid #f0c9aa;
+      background: var(--amber-pale);
+      color: #8f5527;
+      padding: 9px;
+      border-radius: 8px;
+      font-size: .82rem;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .chip,
+    .tone-pill {
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: .78rem;
+    }
+
+    .chip.on,
+    .tone-pill.on {
+      background: var(--teal-pale);
+      border-color: var(--teal);
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .entry-card {
+      background: var(--canvas);
+      border: 1px solid #e4ded4;
+      border-radius: 9px;
+      padding: 10px 10px 10px 32px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .entry-card .drag {
+      position: absolute;
+      left: 9px;
+      top: 11px;
+      color: #7b786f;
+      font-size: 1rem;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .entry-card.dg {
+      opacity: .5;
+      outline: 2px dashed var(--teal-mid);
+    }
+
+    .entry-card.do {
+      border: 2px dashed var(--teal);
+      background: #f5fcfa;
+    }
+
+    .entry-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .tip {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #bfb9af;
+      color: #6e6a62;
+      font-size: .66rem;
+      margin-left: 4px;
+      cursor: help;
+    }
+
+    .tipbox {
+      display: none;
+      position: absolute;
+      width: 190px;
+      background: #222;
+      color: #fff;
+      border-radius: 6px;
+      padding: 7px;
+      font-size: .72rem;
+      line-height: 1.35;
+      left: -80px;
+      top: 20px;
+      z-index: 20;
+    }
+
+    .tip:hover .tipbox { display: block; }
+
+    .comp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .ai-panel {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin-top: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 -2px 12px rgba(20, 26, 21, 0.05);
+    }
+
+    .ai-title {
+      font-weight: 700;
+      font-size: .86rem;
+      margin-bottom: 8px;
+      color: #43403a;
+    }
+
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .pv-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .pv-lbl {
+      font-size: .84rem;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: #68645e;
+      font-weight: 700;
+    }
+
+    .pv-tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .warn-long {
+      border: 1px solid #efc8a8;
+      background: var(--amber-pale);
+      color: #8b5428;
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: .82rem;
+      display: none;
+    }
+
+    .paper {
+      background: #fff;
+      max-width: 920px;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 26px 30px;
+      min-height: 82vh;
+    }
+
+    .tpl1 { border-top: 4px solid transparent; border-image: linear-gradient(90deg, var(--teal), var(--amber)) 1; }
+
+    .r-name {
+      margin: 0;
+      color: #1f2b28;
+      font-size: 2rem;
+      line-height: 1.05;
+    }
+
+    .r-role {
+      margin: 4px 0 12px;
+      color: var(--teal);
+      font-weight: 700;
+      font-size: 1.04rem;
+    }
+
+    .r-contact {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: .85rem;
+      color: #58554f;
+      margin-bottom: 16px;
+    }
+
+    .sec-h {
+      color: var(--teal);
+      border-bottom: 1px solid #d9ece7;
+      padding-bottom: 4px;
+      margin: 18px 0 10px;
+      font-size: 1rem;
+      letter-spacing: .02em;
+    }
+
+    .comp-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .cc {
+      background: #f2fbf8;
+      border: 1px solid #dbede7;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: .84rem;
+    }
+
+    .skills-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sb {
+      border-radius: 999px;
+      border: 1px solid #b9ddd4;
+      color: #1f6e5d;
+      background: #f2fbf8;
+      font-size: .78rem;
+      padding: 6px 9px;
+    }
+
+    .item {
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #e2ddd2;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .it-h {
+      font-weight: 700;
+      font-size: .95rem;
+      color: #2b2a27;
+      margin-bottom: 4px;
+    }
+
+    .it-sub {
+      color: #5f5c56;
+      font-size: .84rem;
+      margin-bottom: 5px;
+    }
+
+    .duties {
+      margin: 0;
+      padding-left: 18px;
+      color: #393834;
+      font-size: .84rem;
+      line-height: 1.45;
+    }
+
+    .tpl2 {
+      padding: 0;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 82vh;
+    }
+
+    .tpl2-left {
+      background: #2f7d6d;
+      color: #f1fffb;
+      padding: 22px;
+    }
+
+    .tpl2-right { padding: 24px; }
+
+    .tpl2 h1,
+    .tpl2 h2,
+    .tpl2 h3 { color: inherit; }
+
+    .tpl2 .side-h {
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 16px 0 7px;
+      opacity: .92;
+      border-bottom: 1px solid rgba(255, 255, 255, .22);
+      padding-bottom: 4px;
+    }
+
+    .tpl2 .side-txt { font-size: .84rem; line-height: 1.45; opacity: .95; }
+
+    .tpl2 .side-skill {
+      display: block;
+      font-size: .8rem;
+      margin-bottom: 4px;
+      opacity: .96;
+    }
+
+    .tpl2 .sec-h { color: var(--teal); }
+
+    .tpl3 {
+      border-top: 0;
+      box-shadow: var(--shadow);
+      padding: 34px 40px;
+    }
+
+    .tpl3 .r-name {
+      font-weight: 400;
+      letter-spacing: .01em;
+    }
+
+    .tpl3 .sec-h {
+      border: 0;
+      color: #4e4b45;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin-top: 24px;
+    }
+
+    .tpl3 .skills-badges {
+      display: block;
+      columns: 2;
+      gap: 18px;
+    }
+
+    .tpl3 .skills-badges .sb {
+      display: block;
+      background: transparent;
+      border: 0;
+      color: #393632;
+      padding: 0;
+      margin-bottom: 5px;
+      font-size: .84rem;
+      border-radius: 0;
+    }
+
+    .tpl3 .skills-badges .sb::before { content: '— '; }
+
+    .letter, .email, .ref {
+      line-height: 1.55;
+      font-size: .94rem;
+      color: #33312e;
+    }
+
+    .subject {
+      border-left: 4px solid var(--teal);
+      padding: 6px 10px;
+      background: #f3fbf8;
+      margin: 10px 0 14px;
+      font-weight: 700;
+    }
+
+    .mail-head {
+      border: 1px solid #ddd8cf;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .mail-row {
+      display: grid;
+      grid-template-columns: 85px 1fr;
+      border-bottom: 1px solid #eee8de;
+      font-size: .84rem;
+    }
+
+    .mail-row:last-child { border-bottom: 0; }
+
+    .mail-k {
+      background: #f7f3ed;
+      font-weight: 700;
+      padding: 8px;
+      color: #5f5a53;
+    }
+
+    .mail-v { padding: 8px; }
+
+    .mob-tabs {
+      display: none;
+      position: fixed;
+      z-index: 45;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      gap: 8px;
+    }
+
+    .mob-tab {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: .82rem;
+      font-weight: 700;
+    }
+
+    .mob-tab.on {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: var(--teal-pale);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 20, 17, .42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 80;
+    }
+
+    .modal.on { display: flex; }
+
+    .modal-card {
+      width: min(720px, 100%);
+      max-height: 84vh;
+      overflow: auto;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      position: relative;
+    }
+
+    .modal-card.small { width: min(560px, 100%); }
+
+    .x {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: 1px solid var(--border);
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .score {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: var(--teal);
+      margin: 0 0 10px;
+    }
+
+    .spin {
+      width: 22px;
+      height: 22px;
+      border: 3px solid #d8d8d8;
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: rot .8s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes rot { to { transform: rotate(360deg); } }
+
+    .list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+
+    .res-links a {
+      color: #0e5f4f;
+      text-decoration: none;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .res-links a:hover { text-decoration: underline; }
+
+    .chk {
+      border: 1px solid #e7e1d7;
+      background: #fcfbf9;
+      padding: 9px;
+      border-radius: 8px;
+      margin-bottom: 7px;
+      font-size: .86rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .chk.ok { border-color: #c7ead8; background: #f2fbf6; color: #1f7f56; }
+    .chk.bad { border-color: #efd0d0; background: #fff7f7; color: #a34646; }
+
+    .muted { color: var(--muted); }
+
+    .hide { display: none !important; }
+
+    .dk body,
+    .dk html { background: #1a2520; color: #e5ebe8; }
+
+    .dk .topbar,
+    .dk .mob-tabs,
+    .dk .sidebar,
+    .dk .paper,
+    .dk .modal-card,
+    .dk .ai-panel,
+    .dk .acc,
+    .dk .mail-k,
+    .dk .mail-head,
+    .dk .mail-row,
+    .dk .autosave {
+      background: #243028;
+      color: #e6ece9;
+      border-color: #394741;
+    }
+
+    .dk .workspace,
+    .dk .preview { background: #1a2520; }
+
+    .dk input,
+    .dk select,
+    .dk textarea,
+    .dk .btn,
+    .dk .tab,
+    .dk .chip,
+    .dk .tone-pill,
+    .dk .mob-tab {
+      background: #1f2a24;
+      color: #e7edea;
+      border-color: #48564f;
+    }
+
+    .dk .acc-h { background: #243028; color: #b9c8c1; }
+    .dk .acc.op .acc-h { color: #84c8b8; border-color: #34443d; }
+    .dk .entry-card { background: #202b25; border-color: #3b4742; }
+    .dk .sec-h, .dk .r-role, .dk .brand .acc { color: #73b9a9; }
+    .dk .warn-long, .dk .warn { background: #443224; border-color: #5c4430; color: #edc19b; }
+    .dk .banner { background: linear-gradient(90deg, #274238, #4c3a29); color: #dceee7; border-color: #4e5e58; }
+    .dk .comp-cards .cc { background: #20352f; border-color: #365149; }
+    .dk .sb { background: #223a33; border-color: #406258; color: #bfe7dc; }
+
+    @media (max-width: 860px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        min-height: 64px;
+        padding: 10px 12px;
+      }
+
+      .tb-center { display: none; }
+
+      .mob-tabs {
+        display: flex;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+        margin-top: 112px;
+      }
+
+      .sidebar,
+      .preview {
+        height: calc(100vh - 112px);
+      }
+
+      .sidebar.hide-mobile,
+      .preview.hide-mobile {
+        display: none;
+      }
+
+      .preview {
+        padding: 10px;
+      }
+
+      .paper {
+        padding: 16px;
+        min-height: auto;
+      }
+
+      .tpl2 {
+        grid-template-columns: 1fr;
+      }
+
+      .tpl2-left,
+      .tpl2-right {
+        padding: 16px;
+      }
+
+      .entry-row,
+      .grid2,
+      .comp-grid,
+      .comp-cards,
+      .ai-grid,
+      .stab-wrap,
+      .mail-row {
+        grid-template-columns: 1fr;
+      }
+
+      .mail-k { border-bottom: 1px solid #ece4d9; }
+    }
+
+    @media print {
+      .topbar,
+      .sidebar,
+      .pv-head,
+      .mob-tabs,
+      .warn-long,
+      .long-warn {
+        display: none !important;
+      }
+
+      .workspace {
+        display: block;
+        margin: 0;
+      }
+
+      .preview {
+        height: auto;
+        overflow: visible;
+        padding: 20px 28px;
+        background: #fff;
+      }
+
+      .paper,
+      .tpl1,
+      .tpl2,
+      .tpl3 {
+        box-shadow: none !important;
+        border-top: 0 !important;
+        border-image: none !important;
+        border-radius: 0;
+        max-width: none;
+        min-height: auto;
+        padding: 0;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">CareReady <span class="acc">Pro</span></div>
+      <div class="tb-center">
+        <div class="prog-wrap">
+          <div class="prog"><span id="progFill"></span></div>
+          <div class="prog-txt" id="progTxt">0%</div>
+          <div class="long-warn" id="longWarn">⚠ Long</div>
+        </div>
+        <button class="btn" id="exampleBtn">⚡ Example Data</button>
+        <button class="btn" id="undoBtn">↩ Undo</button>
+        <button class="btn" id="darkBtn">🌙 Dark Mode</button>
+        <button class="btn" id="dysBtn">Aa Dyslexic</button>
+        <button class="btn" id="resBtn">📚 Resources</button>
+        <button class="btn" id="exportBtn">📋 Text Export</button>
+        <button class="btn teal" id="printTopBtn">⬇ Print/PDF</button>
+      </div>
+    </header>
+
+    <div class="mob-tabs" id="mobTabs">
+      <button class="mob-tab on" id="mEdit">Edit</button>
+      <button class="mob-tab" id="mPrev">Preview</button>
+    </div>
+
+    <div class="workspace">
+      <aside class="sidebar" id="sbEl">
+        <div class="stab-wrap" id="sideTabs">
+          <button class="tab on" data-pane="resumePane">📄 Resume</button>
+          <button class="tab" data-pane="coverPane">✉ Cover Letter</button>
+          <button class="tab" data-pane="emailPane">📧 Email Draft</button>
+          <button class="tab" data-pane="refPane">🤝 Referral Letter</button>
+        </div>
+
+        <div class="autosave">
+          <span class="dot"></span>
+          <span>Auto-saved</span>
+          <span class="muted" id="saveTs">—</span>
+        </div>
+
+        <section class="pane on" id="resumePane">
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 1 — Version History</button>
+            <div class="acc-b">
+              <div id="verSlots" class="grid2"></div>
+              <div style="display:flex; gap:8px; margin-top:10px;">
+                <button class="btn" id="saveVerBtn" type="button">Save Version</button>
+                <button class="btn amber" id="clearAllBtn" type="button">Clear All</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 2 — Personal Details</button>
+            <div class="acc-b">
+              <div class="banner" id="nameBanner">Great start — your profile is taking shape.</div>
+              <div class="grid2">
+                <div class="field">
+                  <label for="firstName">First Name</label>
+                  <input id="firstName" type="text" />
+                </div>
+                <div class="field">
+                  <label for="lastName">Last Name</label>
+                  <input id="lastName" type="text" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="jobTitle">Job Title</label>
+                <select id="jobTitle">
+                  <option value="">Select role</option>
+                  <option>Aged Care Worker</option>
+                  <option>Personal Care Worker</option>
+                  <option>Home Care Worker</option>
+                  <option>Support Worker (NDIS)</option>
+                  <option>Disability Support Worker</option>
+                  <option>Community Care Worker</option>
+                  <option>Enrolled Nurse – Aged Care</option>
+                  <option>Care Coordinator</option>
+                  <option>Dementia Care Specialist</option>
+                  <option>Residential Care Worker</option>
+                  <option>Palliative Care Worker</option>
+                  <option>Respite Care Worker</option>
+                </select>
+              </div>
+
+              <div class="grid2">
+                <div class="field">
+                  <label for="phone">Phone</label>
+                  <input id="phone" type="text" />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input id="email" type="email" />
+                </div>
+              </div>
+
+              <div class="grid2">
+                <div class="field">
+                  <label for="suburb">Suburb</label>
+                  <input id="suburb" type="text" />
+                </div>
+                <div class="field">
+                  <label for="state">State</label>
+                  <select id="state">
+                    <option value="">State</option>
+                    <option>NSW</option><option>VIC</option><option>QLD</option><option>SA</option>
+                    <option>WA</option><option>TAS</option><option>ACT</option><option>NT</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="linkedin">LinkedIn URL</label>
+                <input id="linkedin" type="url" />
+              </div>
+              <div class="field">
+                <label for="languages">Languages Spoken
+                  <span class="tip">ℹ<span class="tipbox">Multilingual carers are highly valued</span></span>
+                </label>
+                <input id="languages" type="text" />
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 3 — Availability & Preferences</button>
+            <div class="acc-b">
+              <div class="grid2">
+                <div class="field">
+                  <label for="employmentType">Employment Type</label>
+                  <select id="employmentType">
+                    <option value="">Select</option>
+                    <option>Full-time</option>
+                    <option>Part-time</option>
+                    <option>Casual</option>
+                    <option>Full-time or Part-time</option>
+                    <option>Any</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="preferredSetting">Preferred Setting</label>
+                  <select id="preferredSetting">
+                    <option value="">Select</option>
+                    <option>Residential Aged Care</option>
+                    <option>Home Care / Community</option>
+                    <option>Both</option>
+                    <option>Hospital</option>
+                    <option>Disability (NDIS)</option>
+                    <option>Any setting</option>
+                  </select>
+                </div>
+              </div>
+
+              <label>Shift Preferences</label>
+              <div class="chips" id="shiftWrap"></div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 4 — Professional Summary</button>
+            <div class="acc-b">
+              <div class="banner" id="sumBanner">Strong detail — this is reading well.</div>
+              <div class="field">
+                <label for="summary">Professional Summary
+                  <span class="tip">ℹ<span class="tipbox">Aim for 80–120 words. Don't start with 'I'.</span></span>
+                </label>
+                <textarea id="summary"></textarea>
+                <div class="hint" id="sumCount">0 words — aim for 80–120</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 5 — Compliance & Checks</button>
+            <div class="acc-b">
+              <div class="comp-grid">
+                <div class="field"><label for="compNdis">NDIS Worker Check</label><select id="compNdis"><option value="">Select</option><option>Not held</option><option>Current</option><option>In Progress</option></select></div>
+                <div class="field"><label for="compPolice">Police Check</label><select id="compPolice"><option value="">Select</option><option>Not held</option><option>Current</option><option>In Progress</option></select></div>
+                <div class="field"><label for="compWWC">Working With Children</label><select id="compWWC"><option value="">Select</option><option>Not held</option><option>Current</option><option>Exempt</option></select></div>
+                <div class="field"><label for="compAid">First Aid (HLTAID011)</label><select id="compAid"><option value="">Select</option><option>Not held</option><option>Current</option><option>Expired</option></select></div>
+                <div class="field"><label for="compLicence">Driver's Licence</label><select id="compLicence"><option value="">Select</option><option>None</option><option>Full + own car</option><option>Full licence</option></select></div>
+                <div class="field"><label for="compCovid">COVID Vaccination</label><select id="compCovid"><option value="">Select</option><option>Not stated</option><option>Up to date</option><option>Triple vaccinated</option></select></div>
+                <div class="field"><label for="compFood">Food Safety Certificate</label><select id="compFood"><option value="">Select</option><option>Not held</option><option>Current</option></select></div>
+                <div class="field"><label for="compManual">Manual Handling Certificate</label><select id="compManual"><option value="">Select</option><option>Not held</option><option>Current</option></select></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 6 — Qualifications</button>
+            <div class="acc-b">
+              <div class="warn" id="qualDupWarn">Duplicate qualification selected. Keep each qualification unique.</div>
+              <div id="qualList"></div>
+              <button class="btn" type="button" id="addQualBtn">+ Add Qualification</button>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 7 — Work Experience</button>
+            <div class="acc-b">
+              <div class="banner" id="expBanner">Add your first role to showcase your practical experience.</div>
+              <div id="expList"></div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn" type="button" id="addExpBtn">+ Add Role</button>
+                <button class="btn" type="button" id="gapBtn">✍ Gap Explainer Helper</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 8 — Key Skills</button>
+            <div class="acc-b">
+              <div class="chips" id="skillWrap"></div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 9 — Volunteer & Community</button>
+            <div class="acc-b">
+              <div class="field">
+                <label for="volunteer">Volunteer Work
+                  <span class="tip">ℹ<span class="tipbox">Community involvement is highly valued — Meals on Wheels, hospital visiting, church groups</span></span>
+                </label>
+                <textarea id="volunteer"></textarea>
+              </div>
+              <div class="field">
+                <label for="hobbies">Hobbies & Interests</label>
+                <input id="hobbies" type="text" />
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 10 — Custom Section</button>
+            <div class="acc-b">
+              <div class="field">
+                <label for="customTitle">Section Title</label>
+                <input id="customTitle" type="text" />
+              </div>
+              <div class="field">
+                <label for="customContent">Content</label>
+                <textarea id="customContent"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Section 11 — References</button>
+            <div class="acc-b">
+              <div class="field">
+                <label for="refMode">References</label>
+                <select id="refMode">
+                  <option>Available upon request</option>
+                  <option>Include named references</option>
+                </select>
+              </div>
+              <div id="namedRefs" class="hide">
+                <div class="field">
+                  <label for="ref1">Reference 1</label>
+                  <input id="ref1" type="text" />
+                </div>
+                <div class="field">
+                  <label for="ref2">Reference 2</label>
+                  <input id="ref2" type="text" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane" id="coverPane">
+          <div class="field"><label for="clEmployer">Employer</label><input id="clEmployer" type="text" /></div>
+          <div class="field"><label for="clManager">Hiring Manager (optional)</label><input id="clManager" type="text" /></div>
+          <div class="field"><label for="clPosition">Position Applying For</label><input id="clPosition" type="text" /></div>
+          <div class="field"><label for="clWhere">Where Advertised</label><input id="clWhere" type="text" /></div>
+
+          <label>Tone</label>
+          <div class="chips" id="clToneWrap" style="margin-bottom:10px;">
+            <button class="tone-pill on" data-tone="Warm & Compassionate" type="button">Warm & Compassionate</button>
+            <button class="tone-pill" data-tone="Professional" type="button">Professional</button>
+            <button class="tone-pill" data-tone="Concise" type="button">Concise</button>
+          </div>
+
+          <label>Starter Templates</label>
+          <div style="display:flex; flex-wrap: wrap; gap:8px; margin-bottom: 10px;">
+            <button class="btn" type="button" data-starter="entry">📘 Entry-Level Starter</button>
+            <button class="btn" type="button" data-starter="exp">📗 Experienced Worker Starter</button>
+            <button class="btn" type="button" data-starter="change">📙 Career-Changer Starter</button>
+          </div>
+
+          <div class="field">
+            <label for="clBody">Letter Body</label>
+            <textarea id="clBody" style="min-height:180px;"></textarea>
+          </div>
+
+          <div class="acc op">
+            <button class="acc-h" type="button">Job Ad Matcher</button>
+            <div class="acc-b">
+              <div class="field">
+                <label for="jobAdText">Paste Job Ad</label>
+                <textarea id="jobAdText" style="min-height:120px;"></textarea>
+              </div>
+              <button class="btn" id="matchBtn" type="button">🔍 Match My Profile</button>
+              <pre id="matchOut" style="white-space:pre-wrap; margin:10px 0 0; font-size:.82rem;"></pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane" id="emailPane">
+          <div class="field"><label for="emEmployer">Employer name</label><input id="emEmployer" type="text" /></div>
+          <div class="field"><label for="emPosition">Position</label><input id="emPosition" type="text" /></div>
+          <div class="field">
+            <label for="emTone">Tone</label>
+            <select id="emTone">
+              <option>Professional</option>
+              <option>Warm & Friendly</option>
+              <option>Brief & Direct</option>
+            </select>
+          </div>
+          <button class="btn" id="genEmailBtn" type="button">✨ Generate Email</button>
+          <div class="field" style="margin-top:10px;">
+            <label for="emBody">Email Body</label>
+            <textarea id="emBody" style="min-height:220px;"></textarea>
+          </div>
+        </section>
+
+        <section class="pane" id="refPane">
+          <div class="field"><label for="rfName">Referee Name & Title</label><input id="rfName" type="text" /></div>
+          <div class="field"><label for="rfOrg">Organisation</label><input id="rfOrg" type="text" /></div>
+          <div class="field"><label for="rfApplicant">Applicant Name</label><input id="rfApplicant" type="text" /></div>
+          <div class="field"><label for="rfRole">Role/Context</label><input id="rfRole" type="text" /></div>
+          <div class="field"><label for="rfDuration">Duration</label><input id="rfDuration" type="text" /></div>
+          <button class="btn" id="genRefBtn" type="button">✨ Generate Referral Letter</button>
+          <div class="field" style="margin-top:10px;">
+            <label for="rfBody">Referral Letter</label>
+            <textarea id="rfBody" style="min-height:220px;"></textarea>
+          </div>
+        </section>
+
+        <div class="ai-panel">
+          <div class="ai-title">✨ AI Tools (all free)</div>
+          <div class="ai-grid">
+            <button class="btn" type="button" id="aiCoverBtn">Generate Cover Letter</button>
+            <button class="btn" type="button" id="aiScoreBtn">Score My Resume</button>
+            <button class="btn" type="button" id="aiInterviewBtn">Interview Prep</button>
+            <button class="btn amber" type="button" id="aiChecklistBtn">Pre-Apply Checklist</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="preview" id="pvEl">
+        <div class="pv-head" id="pvToolbar">
+          <div class="pv-lbl">Live Preview</div>
+          <div class="pv-tools">
+            <button class="btn" id="tplBtn" type="button">Template 1</button>
+            <button class="btn teal" id="printBtn" type="button">Print</button>
+          </div>
+        </div>
+
+        <div class="warn-long" id="lenWarn">⚠ Resume is getting long. Consider trimming.</div>
+
+        <div id="previewBody"></div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal" id="gapModal">
+    <div class="modal-card small">
+      <button class="x" data-close="gapModal">✕</button>
+      <h3 class="serif" style="margin:0 0 10px;">Gap Explainer</h3>
+      <div class="field">
+        <label for="gapPlain">Describe the gap in plain language</label>
+        <textarea id="gapPlain" style="min-height:120px;"></textarea>
+      </div>
+      <button class="btn" id="gapGenBtn" type="button">✨ Write It Professionally</button>
+      <div class="field" style="margin-top:10px;">
+        <label for="gapOut">Professional wording</label>
+        <textarea id="gapOut" style="min-height:90px;"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="scoreModal">
+    <div class="modal-card small">
+      <button class="x" data-close="scoreModal">✕</button>
+      <h3 class="serif" style="margin-top:0;">Resume Score</h3>
+      <div id="scoreLoad" class="muted"><span class="spin"></span>Generating score...</div>
+      <p id="scoreValue" class="score"></p>
+      <ol id="scoreTips" class="list"></ol>
+    </div>
+  </div>
+
+  <div class="modal" id="interviewModal">
+    <div class="modal-card">
+      <button class="x" data-close="interviewModal">✕</button>
+      <h3 class="serif" style="margin-top:0;">Interview Prep</h3>
+      <div id="interviewLoad" class="muted"><span class="spin"></span>Preparing questions...</div>
+      <div id="interviewOut" style="font-size:.9rem; line-height:1.55;"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="checkModal">
+    <div class="modal-card small">
+      <button class="x" data-close="checkModal">✕</button>
+      <h3 class="serif" style="margin-top:0;">Pre-Apply Checklist</h3>
+      <div id="checkList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="resModal">
+    <div class="modal-card small">
+      <button class="x" data-close="resModal">✕</button>
+      <h3 class="serif" style="margin-top:0;">Care Career Resources</h3>
+      <div class="res-links">
+        <a href="https://www.tafensw.edu.au" target="_blank" rel="noopener">TAFE NSW</a>
+        <a href="https://www.seek.com.au/aged-care-jobs" target="_blank" rel="noopener">Seek Aged Care Jobs</a>
+        <a href="https://mable.com.au" target="_blank" rel="noopener">Mable</a>
+        <a href="https://www.hireup.com.au" target="_blank" rel="noopener">Hireup</a>
+        <a href="https://www.fairwork.gov.au" target="_blank" rel="noopener">Fair Work (SCHADS Award)</a>
+        <a href="https://www.ndiscommission.gov.au" target="_blank" rel="noopener">NDIS Quality & Safeguards Commission</a>
+        <a href="https://www.myagedcare.gov.au" target="_blank" rel="noopener">My Aged Care</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="exportModal">
+    <div class="modal-card">
+      <button class="x" data-close="exportModal">✕</button>
+      <h3 class="serif" style="margin-top:0;">Plain Text Export</h3>
+      <textarea id="plainOut" style="min-height:280px;"></textarea>
+      <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+        <button class="btn" id="copyPlainBtn" type="button">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SKILLS = [
+      'Personal care & hygiene', 'Medication administration', 'Mobility & transfers', 'Dementia care', 'Palliative care', 'Wound care',
+      'Bowel & continence care', 'Meal prep & feeding', 'Mental health support', 'NDIS plan implementation', 'Documentation & reporting',
+      'Manual handling', 'Behaviour support', 'Community access', 'Household assistance', 'Transport assistance', 'Communication support',
+      'Cultural sensitivity', 'Infection control', 'Emergency response', 'Client advocacy', 'Family liaison', 'Person-centred care',
+      'Respite support', 'Pain management support', 'Hoist & sling operation', 'PEG feeding support', 'Epilepsy management'
+    ];
+
+    const SHIFTS = ['Morning', 'Afternoon', 'Night', 'Weekends', 'Public Holidays', 'On-Call', 'Sleepovers'];
+
+    const QUAL_OPTIONS = [
+      'Certificate III in Individual Support (CHC33021)',
+      'Certificate IV in Ageing Support (CHC43015)',
+      'Certificate III in Home and Community Care',
+      'Diploma of Community Services (CHC52021)',
+      'Bachelor of Nursing',
+      'Diploma of Nursing',
+      'Certificate IV in Disability (CHC43121)',
+      'Certificate III in Disability (CHC33015)',
+      'HLTAID011 – Provide First Aid',
+      'HLTAID009 – Provide CPR',
+      'Manual Handling Certificate',
+      'Medication Administration Certificate',
+      'Dementia Care Training (CHCAGE005)',
+      'Palliative Care (CHCPAL001)',
+      'Infection Control Certificate',
+      'Mental Health First Aid',
+      'Behaviour Support Training',
+      'Positive Behaviour Support (PBS)',
+      'Wound Care Certificate',
+      'Continence Management Certificate',
+      'Food Safety Certificate',
+      'Certificate IV in Mental Health (CHC43315)',
+      'Other'
+    ];
+
+    const $ = (s, p = document) => p.querySelector(s);
+    const $$ = (s, p = document) => [...p.querySelectorAll(s)];
+
+    let template = 1;
+    let activePane = 'resumePane';
+    let saveDebounce;
+    let previousState = '';
+    let lastSavedState = '';
+    let draggedEl = null;
+
+    function nowStamp() {
+      return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function esc(v = '') {
+      return String(v)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function words(t) {
+      return (t || '').trim().split(/\s+/).filter(Boolean).length;
+    }
+
+    function lineItems(text) {
+      return (text || '').split('\n').map(s => s.trim()).filter(Boolean);
+    }
+
+    function toggleAccordion(ev) {
+      if (!ev.target.classList.contains('acc-h')) return;
+      ev.target.closest('.acc').classList.toggle('op');
+    }
+
+    function buildChips() {
+      const skillWrap = $('#skillWrap');
+      const shiftWrap = $('#shiftWrap');
+      skillWrap.innerHTML = SKILLS.map((s, i) => `<button type="button" class="chip" data-sidx="${i}">${esc(s)}</button>`).join('');
+      shiftWrap.innerHTML = SHIFTS.map((s, i) => `<button type="button" class="chip" data-shift="${i}">${esc(s)}</button>`).join('');
+    }
+
+    function makeSelect(options, value = '') {
+      return `<option value="">Select</option>${options.map(o => `<option ${o === value ? 'selected' : ''}>${esc(o)}</option>`).join('')}`;
+    }
+
+    function addQualCard(data = {}) {
+      const card = document.createElement('div');
+      card.className = 'entry-card';
+      card.draggable = true;
+      card.dataset.type = 'qual';
+      card.innerHTML = `
+        <span class="drag">⠿</span>
+        <div class="entry-row">
+          <div class="field">
+            <label>Certificate/Course</label>
+            <select class="q-name">${makeSelect(QUAL_OPTIONS, data.qualification || '')}</select>
+          </div>
+          <div class="field">
+            <label>Institution</label>
+            <input class="q-inst" type="text" value="${esc(data.institution || '')}" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Year</label>
+          <input class="q-year" type="text" value="${esc(data.year || '')}" />
+        </div>
+      `;
+      addDragHandlers(card);
+      $('#qualList').appendChild(card);
+      detectQualDupes();
+    }
+
+    function addExpCard(data = {}) {
+      const card = document.createElement('div');
+      card.className = 'entry-card';
+      card.draggable = true;
+      card.dataset.type = 'exp';
+      card.innerHTML = `
+        <span class="drag">⠿</span>
+        <div class="entry-row">
+          <div class="field">
+            <label>Job Title <span class="tip">ℹ<span class="tipbox">Use action verbs like 'Provided', 'Assisted', 'Managed'</span></span></label>
+            <input class="e-title" type="text" value="${esc(data.title || '')}" />
+          </div>
+          <div class="field">
+            <label>Organisation</label>
+            <input class="e-org" type="text" value="${esc(data.organisation || '')}" />
+          </div>
+        </div>
+        <div class="entry-row">
+          <div class="field"><label>From</label><input class="e-from" type="text" value="${esc(data.from || '')}" /></div>
+          <div class="field"><label>To</label><input class="e-to" type="text" value="${esc(data.to || '')}" /></div>
+        </div>
+        <div class="field">
+          <label>Gap Reason (optional) <span class="tip">ℹ<span class="tipbox">Brief professional reason if there's a gap</span></span></label>
+          <input class="e-gap" type="text" value="${esc(data.gapReason || '')}" />
+        </div>
+        <div class="field">
+          <label>Key Duties (one per line)</label>
+          <textarea class="e-duties" style="min-height:90px;">${esc(data.duties || '')}</textarea>
+        </div>
+      `;
+      addDragHandlers(card);
+      $('#expList').appendChild(card);
+      updateExperienceBanner();
+    }
+
+    function addDragHandlers(el) {
+      el.addEventListener('dragstart', () => {
+        draggedEl = el;
+        el.classList.add('dg');
+      });
+      el.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        el.classList.add('do');
+      });
+      el.addEventListener('dragleave', () => el.classList.remove('do'));
+      el.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (!draggedEl || draggedEl === el || draggedEl.parentElement !== el.parentElement) return;
+        const rect = el.getBoundingClientRect();
+        const after = e.clientY > rect.top + rect.height / 2;
+        el.parentElement.insertBefore(draggedEl, after ? el.nextSibling : el);
+        renderEverything();
+      });
+      el.addEventListener('dragend', () => {
+        draggedEl = null;
+        $$('.entry-card').forEach(c => c.classList.remove('dg', 'do'));
+      });
+    }
+
+    function detectQualDupes() {
+      const vals = $$('#qualList .q-name').map(s => s.value).filter(Boolean);
+      const hasDup = vals.some((v, i) => vals.indexOf(v) !== i);
+      $('#qualDupWarn').style.display = hasDup ? 'block' : 'none';
+    }
+
+    function updateSummaryCount() {
+      const n = words($('#summary').value);
+      const el = $('#sumCount');
+      el.textContent = `${n} words — aim for 80–120`;
+      el.classList.remove('ok', 'bad');
+      if (n >= 80 && n <= 120) el.classList.add('ok');
+      if (n > 120) el.classList.add('bad');
+      $('#sumBanner').style.display = $('#summary').value.trim().length > 60 ? 'block' : 'none';
+    }
+
+    function updateNameBanner() {
+      $('#nameBanner').style.display = $('#firstName').value.trim() ? 'block' : 'none';
+    }
+
+    function updateExperienceBanner() {
+      const entries = collectExperience();
+      const firstFilled = entries.some(e => e.title || e.organisation || e.duties);
+      const b = $('#expBanner');
+      if (!firstFilled) {
+        b.textContent = 'Add your first role to showcase your practical experience.';
+        b.style.display = 'block';
+        return;
+      }
+      if (entries.length >= 2) {
+        b.textContent = 'Excellent depth — your multi-role experience stands out.';
+      } else {
+        b.textContent = 'Great start — this role is demonstrating your hands-on strengths.';
+      }
+      b.style.display = 'block';
+    }
+
+    function selectedSkills() {
+      return $$('#skillWrap .chip.on').map(c => c.textContent.trim());
+    }
+
+    function selectedShifts() {
+      return $$('#shiftWrap .chip.on').map(c => c.textContent.trim());
+    }
+
+    function collectQualifications() {
+      return $$('#qualList .entry-card').map(card => ({
+        qualification: $('.q-name', card)?.value || '',
+        institution: $('.q-inst', card)?.value || '',
+        year: $('.q-year', card)?.value || ''
+      }));
+    }
+
+    function collectExperience() {
+      return $$('#expList .entry-card').map(card => ({
+        title: $('.e-title', card)?.value || '',
+        organisation: $('.e-org', card)?.value || '',
+        from: $('.e-from', card)?.value || '',
+        to: $('.e-to', card)?.value || '',
+        gapReason: $('.e-gap', card)?.value || '',
+        duties: $('.e-duties', card)?.value || ''
+      }));
+    }
+
+    function complianceMap() {
+      return {
+        'NDIS Worker Check': $('#compNdis').value,
+        'Police Check': $('#compPolice').value,
+        'Working With Children': $('#compWWC').value,
+        'First Aid (HLTAID011)': $('#compAid').value,
+        "Driver's Licence": $('#compLicence').value,
+        'COVID Vaccination': $('#compCovid').value,
+        'Food Safety Certificate': $('#compFood').value,
+        'Manual Handling Certificate': $('#compManual').value
+      };
+    }
+
+    function progressValue() {
+      const checks = [
+        !!$('#firstName').value.trim(),
+        !!$('#jobTitle').value,
+        !!$('#phone').value.trim(),
+        !!$('#email').value.trim(),
+        !!$('#summary').value.trim(),
+        collectQualifications().some(q => q.qualification || q.institution || q.year),
+        collectExperience().some(e => e.title || e.organisation || e.duties),
+        selectedSkills().length >= 5,
+        Object.values(complianceMap()).every(Boolean),
+        !!$('#suburb').value.trim() && !!$('#state').value
+      ];
+      const passed = checks.filter(Boolean).length;
+      return Math.round((passed / 10) * 100);
+    }
+
+    function updateProgress() {
+      const pct = progressValue();
+      $('#progFill').style.width = `${pct}%`;
+      $('#progTxt').textContent = `${pct}%`;
+      const longNow = collectExperience().length > 4 || words($('#summary').value) > 150;
+      $('#longWarn').style.display = longNow ? 'inline' : 'none';
+      $('#lenWarn').style.display = longNow ? 'block' : 'none';
+    }
+
+    function formatPara(text) {
+      const p = (text || '').split(/\n{2,}/).map(x => x.trim()).filter(Boolean);
+      return p.map(t => `<p>${esc(t).replaceAll('\n', '<br>')}</p>`).join('');
+    }
+
+    function contactBits(data) {
+      const bits = [
+        data.phone,
+        data.email,
+        [data.suburb, data.state].filter(Boolean).join(', '),
+        data.linkedin,
+        data.languages ? `Languages: ${data.languages}` : ''
+      ].filter(Boolean);
+      return bits.map(b => `<span>${esc(b)}</span>`).join('');
+    }
+
+    function renderResume(data) {
+      const quals = collectQualifications().filter(q => q.qualification || q.institution || q.year);
+      const exps = collectExperience().filter(e => e.title || e.organisation || e.duties);
+      const skills = selectedSkills();
+      const comp = complianceMap();
+      const compEntries = Object.entries(comp).filter(([, v]) => v);
+      const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Your Name';
+
+      const summarySec = data.summary ? `
+        <h3 class="sec-h">Professional Summary</h3>
+        <div class="letter">${formatPara(data.summary)}</div>
+      ` : '';
+
+      const compSec = compEntries.length ? `
+        <h3 class="sec-h">Compliance & Checks</h3>
+        <div class="comp-cards">${compEntries.map(([k, v]) => `<div class="cc">✓ <strong>${esc(k)}:</strong> ${esc(v)}</div>`).join('')}</div>
+      ` : '';
+
+      const expSec = exps.length ? `
+        <h3 class="sec-h">Work Experience</h3>
+        ${exps.map(e => `
+          <div class="item">
+            <div class="it-h">${esc(e.title || 'Role')}</div>
+            <div class="it-sub">${esc(e.organisation || '')} ${e.from || e.to ? `| ${esc(e.from)} - ${esc(e.to || 'Present')}` : ''}</div>
+            ${e.gapReason ? `<div class="it-sub"><em>Gap note:</em> ${esc(e.gapReason)}</div>` : ''}
+            ${lineItems(e.duties).length ? `<ul class="duties">${lineItems(e.duties).map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
+          </div>
+        `).join('')}
+      ` : '';
+
+      const qualSec = quals.length ? `
+        <h3 class="sec-h">Qualifications</h3>
+        ${quals.map(q => `<div class="item"><div class="it-h">${esc(q.qualification || 'Qualification')}</div><div class="it-sub">${esc(q.institution || '')} ${q.year ? `| ${esc(q.year)}` : ''}</div></div>`).join('')}
+      ` : '';
+
+      const skillSec = skills.length ? `
+        <h3 class="sec-h">Key Skills</h3>
+        <div class="skills-badges">${skills.map(s => `<span class="sb">${esc(s)}</span>`).join('')}</div>
+      ` : '';
+
+      const volunteerSec = (data.volunteer || data.hobbies) ? `
+        <h3 class="sec-h">Volunteer & Community</h3>
+        ${data.volunteer ? `<div class="item"><div class="it-h">Volunteer Work</div><div class="letter">${formatPara(data.volunteer)}</div></div>` : ''}
+        ${data.hobbies ? `<div class="item"><div class="it-h">Hobbies & Interests</div><div>${esc(data.hobbies)}</div></div>` : ''}
+      ` : '';
+
+      const customSec = (data.customTitle || data.customContent) ? `
+        <h3 class="sec-h">${esc(data.customTitle || 'Custom Section')}</h3>
+        <div class="letter">${formatPara(data.customContent)}</div>
+      ` : '';
+
+      let refSec = '<h3 class="sec-h">References</h3><div>Available upon request</div>';
+      if (data.refMode === 'Include named references') {
+        refSec = `
+          <h3 class="sec-h">References</h3>
+          <div>${esc(data.ref1 || 'Reference 1')}</div>
+          <div>${esc(data.ref2 || 'Reference 2')}</div>
+        `;
+      }
+
+      if (template === 1) {
+        return `
+          <article class="paper tpl1">
+            <h1 class="r-name">${esc(fullName)}</h1>
+            <div class="r-role">${esc(data.jobTitle || 'Care Worker')}</div>
+            <div class="r-contact">${contactBits(data)}</div>
+            ${summarySec}
+            ${compSec}
+            ${expSec}
+            ${qualSec}
+            ${skillSec}
+            ${volunteerSec}
+            ${customSec}
+            ${refSec}
+          </article>
+        `;
+      }
+
+      if (template === 2) {
+        return `
+          <article class="paper tpl2">
+            <section class="tpl2-left">
+              <h1 class="r-name" style="margin-top:0; color:#fff;">${esc(fullName)}</h1>
+              <div class="r-role" style="color:#d6f1e8;">${esc(data.jobTitle || 'Care Worker')}</div>
+              <div class="side-h">Contact</div>
+              <div class="side-txt">${contactBits(data).replaceAll('<span>', '<div>').replaceAll('</span>', '</div>')}</div>
+              <div class="side-h">Availability</div>
+              <div class="side-txt">${esc(data.employmentType || '—')}<br>${esc(data.preferredSetting || '')}<br>${esc(selectedShifts().join(', ') || '')}</div>
+              <div class="side-h">Compliance</div>
+              <div class="side-txt">${compEntries.map(([k, v]) => `${esc(k)}: ${esc(v)}`).join('<br>')}</div>
+              <div class="side-h">Skills</div>
+              <div>${skills.map(s => `<span class="side-skill">• ${esc(s)}</span>`).join('')}</div>
+            </section>
+            <section class="tpl2-right">
+              ${summarySec}
+              ${expSec}
+              ${qualSec}
+              ${volunteerSec}
+              ${customSec}
+              ${refSec}
+            </section>
+          </article>
+        `;
+      }
+
+      return `
+        <article class="paper tpl3">
+          <h1 class="r-name">${esc(fullName)}</h1>
+          <div class="r-role">${esc(data.jobTitle || 'Care Worker')}</div>
+          <div class="r-contact">${contactBits(data)}</div>
+          ${summarySec}
+          ${compSec}
+          ${expSec}
+          ${qualSec}
+          ${skillSec}
+          ${volunteerSec}
+          ${customSec}
+          ${refSec}
+        </article>
+      `;
+    }
+
+    function renderCover(data) {
+      const name = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Your Name';
+      const manager = $('#clManager').value.trim();
+      return `
+        <article class="paper letter">
+          <div><strong>${esc(name)}</strong></div>
+          <div>${esc(data.phone || '')} | ${esc(data.email || '')}</div>
+          <div>${esc([data.suburb, data.state].filter(Boolean).join(', '))}</div>
+          <div style="margin-top:10px;">${new Date().toLocaleDateString('en-AU')}</div>
+          <br>
+          <div><strong>${esc($('#clEmployer').value || 'Employer')}</strong></div>
+          ${manager ? `<div>${esc(manager)}</div>` : ''}
+          <div class="subject">Re: ${esc($('#clPosition').value || 'Position Application')}</div>
+          ${formatPara($('#clBody').value || 'Your cover letter will appear here.')}
+          <p>Kind regards,<br>${esc(name)}</p>
+        </article>
+      `;
+    }
+
+    function renderEmail() {
+      return `
+        <article class="paper email">
+          <div class="mail-head">
+            <div class="mail-row"><div class="mail-k">To</div><div class="mail-v">${esc($('#emEmployer').value || 'Employer')}</div></div>
+            <div class="mail-row"><div class="mail-k">Subject</div><div class="mail-v">Application: ${esc($('#emPosition').value || 'Position')}</div></div>
+          </div>
+          ${formatPara($('#emBody').value || 'Your generated email draft will appear here.')}
+        </article>
+      `;
+    }
+
+    function renderReferral() {
+      return `
+        <article class="paper ref">
+          <div><strong>${esc($('#rfName').value || 'Referee Name')}</strong></div>
+          <div>${esc($('#rfOrg').value || 'Organisation')}</div>
+          <div>${new Date().toLocaleDateString('en-AU')}</div>
+          <p>To Whom It May Concern,</p>
+          ${formatPara($('#rfBody').value || 'Referral letter content will appear here.')}
+          <p>Sincerely,<br>${esc($('#rfName').value || 'Referee Name')}</p>
+        </article>
+      `;
+    }
+
+    function getData() {
+      const ids = [
+        'firstName','lastName','jobTitle','phone','email','suburb','state','linkedin','languages','employmentType','preferredSetting',
+        'summary','volunteer','hobbies','customTitle','customContent','refMode','ref1','ref2',
+        'compNdis','compPolice','compWWC','compAid','compLicence','compCovid','compFood','compManual'
+      ];
+      const out = {};
+      ids.forEach(id => out[id] = $(`#${id}`)?.value || '');
+      return out;
+    }
+
+    function renderPreview() {
+      const data = getData();
+      let html = '';
+      if (activePane === 'resumePane') html = renderResume(data);
+      if (activePane === 'coverPane') html = renderCover(data);
+      if (activePane === 'emailPane') html = renderEmail();
+      if (activePane === 'refPane') html = renderReferral();
+      $('#previewBody').innerHTML = html;
+      $('#tplBtn').style.display = activePane === 'resumePane' ? 'inline-block' : 'none';
+      $('#lenWarn').style.display = activePane === 'resumePane' && (collectExperience().length > 4 || words($('#summary').value) > 150) ? 'block' : 'none';
+    }
+
+    function plainExportText() {
+      const d = getData();
+      const fullName = [d.firstName, d.lastName].filter(Boolean).join(' ') || 'YOUR NAME';
+      const quals = collectQualifications().filter(q => q.qualification || q.institution || q.year);
+      const exps = collectExperience().filter(e => e.title || e.organisation || e.duties);
+      const skillList = selectedSkills();
+      const comp = complianceMap();
+      const lines = [];
+      lines.push(`**${fullName.toUpperCase()}**`);
+      lines.push(`${d.jobTitle}`);
+      lines.push(`${[d.phone, d.email, [d.suburb, d.state].filter(Boolean).join(', ')].filter(Boolean).join(' | ')}`);
+      lines.push('');
+      lines.push('PROFESSIONAL SUMMARY');
+      lines.push(d.summary || '');
+      lines.push('');
+      lines.push('COMPLIANCE & CHECKS');
+      Object.entries(comp).forEach(([k, v]) => { if (v) lines.push(`- ${k}: ${v}`); });
+      lines.push('');
+      lines.push('WORK EXPERIENCE');
+      exps.forEach(e => {
+        lines.push(`- ${e.title} | ${e.organisation} (${e.from} - ${e.to || 'Present'})`);
+        lineItems(e.duties).forEach(duty => lines.push(`  * ${duty}`));
+      });
+      lines.push('');
+      lines.push('QUALIFICATIONS');
+      quals.forEach(q => lines.push(`- ${q.qualification} | ${q.institution} ${q.year ? `(${q.year})` : ''}`));
+      lines.push('');
+      lines.push('KEY SKILLS');
+      skillList.forEach(s => lines.push(`- ${s}`));
+      lines.push('');
+      lines.push('VOLUNTEER & COMMUNITY');
+      if (d.volunteer) lines.push(d.volunteer);
+      if (d.hobbies) lines.push(`Hobbies & Interests: ${d.hobbies}`);
+      lines.push('');
+      if (d.customTitle || d.customContent) {
+        lines.push((d.customTitle || 'CUSTOM SECTION').toUpperCase());
+        lines.push(d.customContent || '');
+        lines.push('');
+      }
+      lines.push('REFERENCES');
+      if (d.refMode === 'Include named references') {
+        lines.push(d.ref1 || 'Reference 1');
+        lines.push(d.ref2 || 'Reference 2');
+      } else {
+        lines.push('Available upon request');
+      }
+      return lines.join('\n');
+    }
+
+    function colState() {
+      const fields = {};
+      $$('input[id], select[id], textarea[id]').forEach(el => {
+        fields[el.id] = el.value;
+      });
+      const skills = $$('#skillWrap .chip').map(c => c.classList.contains('on'));
+      const shifts = $$('#shiftWrap .chip').map(c => c.classList.contains('on'));
+      const qualifications = collectQualifications();
+      const experience = collectExperience();
+      return JSON.stringify({ fields, skills, shifts, qualifications, experience, template, activePane });
+    }
+
+    function appState(str) {
+      try {
+        const state = typeof str === 'string' ? JSON.parse(str) : str;
+        if (!state) return;
+        if (state.fields) {
+          Object.entries(state.fields).forEach(([id, val]) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val;
+          });
+        }
+
+        $('#qualList').innerHTML = '';
+        $('#expList').innerHTML = '';
+
+        (state.qualifications || []).forEach(q => addQualCard(q));
+        (state.experience || []).forEach(e => addExpCard(e));
+
+        if (!state.qualifications || !state.qualifications.length) addQualCard({});
+        if (!state.experience || !state.experience.length) addExpCard({});
+
+        if (Array.isArray(state.skills)) {
+          $$('#skillWrap .chip').forEach((c, i) => c.classList.toggle('on', !!state.skills[i]));
+        }
+
+        if (Array.isArray(state.shifts)) {
+          $$('#shiftWrap .chip').forEach((c, i) => c.classList.toggle('on', !!state.shifts[i]));
+        }
+
+        template = Number(state.template) || 1;
+        $('#tplBtn').textContent = `Template ${template}`;
+
+        if (state.activePane) switchPane(state.activePane);
+
+        syncRefMode();
+        detectQualDupes();
+        renderEverything(false);
+      } catch (e) {
+        console.error('Failed to restore state:', e);
+      }
+    }
+
+    function queueSave() {
+      clearTimeout(saveDebounce);
+      saveDebounce = setTimeout(() => {
+        previousState = lastSavedState || localStorage.getItem('cr_auto') || '';
+        const next = colState();
+        localStorage.setItem('cr_auto', next);
+        lastSavedState = next;
+        $('#saveTs').textContent = nowStamp();
+      }, 1200);
+    }
+
+    function renderVersions() {
+      const versions = JSON.parse(localStorage.getItem('cr_v') || '[]');
+      const slots = [0, 1, 2].map(i => versions[i] || null);
+      $('#verSlots').innerHTML = slots.map((slot, idx) => `
+        <button class="btn" type="button" data-vslot="${idx}" style="text-align:left;">
+          ${slot ? `${esc(slot.name)}<br><span class='muted'>${esc(slot.date)}</span>` : `Empty Slot ${idx + 1}`}
+        </button>
+      `).join('');
+    }
+
+    function saveVersion() {
+      const name = prompt('Version name:');
+      if (!name) return;
+      const versions = JSON.parse(localStorage.getItem('cr_v') || '[]');
+      versions.unshift({ name: name.trim(), state: colState(), date: new Date().toLocaleString() });
+      localStorage.setItem('cr_v', JSON.stringify(versions.slice(0, 3)));
+      renderVersions();
+    }
+
+    function loadVersion(idx) {
+      const versions = JSON.parse(localStorage.getItem('cr_v') || '[]');
+      if (!versions[idx]) return;
+      appState(versions[idx].state);
+      lastSavedState = colState();
+    }
+
+    function resetAll() {
+      if (!confirm('Clear all data, local save, and versions?')) return;
+      localStorage.removeItem('cr_auto');
+      localStorage.removeItem('cr_v');
+      $$('input, textarea').forEach(el => { if (el.type !== 'button') el.value = ''; });
+      $$('select').forEach(sel => sel.selectedIndex = 0);
+      $$('.chip').forEach(c => c.classList.remove('on'));
+      $('#qualList').innerHTML = '';
+      $('#expList').innerHTML = '';
+      addQualCard({});
+      addExpCard({});
+      renderVersions();
+      renderEverything(false);
+      $('#saveTs').textContent = '—';
+    }
+
+    function switchPane(paneId) {
+      activePane = paneId;
+      $$('.pane').forEach(p => p.classList.toggle('on', p.id === paneId));
+      $$('#sideTabs .tab').forEach(t => t.classList.toggle('on', t.dataset.pane === paneId));
+      renderPreview();
+    }
+
+    function syncRefMode() {
+      $('#namedRefs').classList.toggle('hide', $('#refMode').value !== 'Include named references');
+    }
+
+    function checklistItems() {
+      return [
+        ['Full name entered', !!$('#firstName').value.trim() && !!$('#lastName').value.trim()],
+        ['Phone added', !!$('#phone').value.trim()],
+        ['Email added', !!$('#email').value.trim()],
+        ['Job title selected', !!$('#jobTitle').value],
+        ['Summary ≥50 words', words($('#summary').value) >= 50],
+        ['≥1 experience entry', collectExperience().some(e => e.title || e.organisation || e.duties)],
+        ['≥1 qualification', collectQualifications().some(q => q.qualification || q.institution || q.year)],
+        ['≥5 skills selected', selectedSkills().length >= 5],
+        ['NDIS check entered', !!$('#compNdis').value],
+        ['Police check entered', !!$('#compPolice').value],
+        ['First aid entered', !!$('#compAid').value],
+        ['Location added', !!$('#suburb').value.trim() && !!$('#state').value],
+      ];
+    }
+
+    function renderChecklist() {
+      const html = checklistItems().map(([txt, ok]) =>
+        `<div class="chk ${ok ? 'ok' : 'bad'}"><span>${esc(txt)}</span><strong>${ok ? '✅' : '❌'}</strong></div>`
+      ).join('');
+      $('#checkList').innerHTML = html;
+    }
+
+    function renderEverything(save = true) {
+      updateNameBanner();
+      updateSummaryCount();
+      updateExperienceBanner();
+      detectQualDupes();
+      syncRefMode();
+      updateProgress();
+      renderPreview();
+      if (save) queueSave();
+    }
+
+    function toneValue() {
+      return $('#clToneWrap .tone-pill.on')?.dataset.tone || 'Warm & Compassionate';
+    }
+
+    function starterText(type) {
+      const employer = $('#clEmployer').value.trim() || '[Employer Name]';
+      const position = $('#clPosition').value.trim() || '[Position]';
+      if (type === 'entry') {
+        return `Dear Hiring Team at ${employer},\n\nI am excited to apply for the ${position} position. I bring a caring approach, strong communication skills, and a clear commitment to supporting older Australians and people living with disability.\n\nDuring my training and practical placements, I developed confidence in personal care support, documentation, and building trust with clients and families. I consistently follow safety, dignity, and person-centred care principles in daily work.\n\nThank you for considering my application. I would welcome the opportunity to discuss how I can contribute to your team.`;
+      }
+      if (type === 'exp') {
+        return `Dear Hiring Team at ${employer},\n\nI am applying for the ${position} role and bring solid experience in delivering respectful, person-centred care across community and residential settings.\n\nIn recent roles, I have supported clients with personal care, mobility, medication prompts, and detailed reporting while maintaining high standards of safety and dignity. I am confident collaborating with multidisciplinary teams and adapting to changing client needs.\n\nI would value the chance to contribute my practical expertise and compassionate approach to your service.`;
+      }
+      return `Dear Hiring Team at ${employer},\n\nI am writing to apply for the ${position} opportunity. While transitioning into care, I bring transferable strengths in communication, reliability, and supporting people through challenging situations.\n\nI have completed relevant training and have developed a strong understanding of person-centred care, professional boundaries, and safe work practices. I am motivated to build a long-term career in this sector with empathy and accountability.\n\nThank you for your time. I would appreciate the opportunity to discuss my suitability further.`;
+    }
+
+    async function callClaude(prompt) {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 900,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      return data.content[0].text;
+    }
+
+    function resumeProfileText() {
+      const d = getData();
+      const quals = collectQualifications().map(q => `${q.qualification} | ${q.institution} | ${q.year}`).join('\n');
+      const exps = collectExperience().map(e => `${e.title} @ ${e.organisation} (${e.from}-${e.to})\n${e.duties}`).join('\n\n');
+      return `Name: ${d.firstName} ${d.lastName}\nRole: ${d.jobTitle}\nSummary: ${d.summary}\nLocation: ${d.suburb}, ${d.state}\nCompliance: ${JSON.stringify(complianceMap())}\nSkills: ${selectedSkills().join(', ')}\nQualifications:\n${quals}\nExperience:\n${exps}`;
+    }
+
+    async function runAICover() {
+      const prompt = `Write a 3-4 paragraph Australian cover letter body for an aged care/disability support role. Tone: ${toneValue()}. Employer: ${$('#clEmployer').value}. Position: ${$('#clPosition').value}. Where advertised: ${$('#clWhere').value}. Use this profile:\n${resumeProfileText()}`;
+      const txt = await callClaude(prompt);
+      $('#clBody').value = txt.trim();
+      switchPane('coverPane');
+      renderEverything();
+    }
+
+    async function runAIEmail() {
+      const prompt = `Write a 3-paragraph application email for Australian care work. Employer: ${$('#emEmployer').value}. Position: ${$('#emPosition').value}. Tone: ${$('#emTone').value}. Include a clear subject line opening and polite close.`;
+      const txt = await callClaude(prompt);
+      $('#emBody').value = txt.trim();
+      renderEverything();
+    }
+
+    async function runAIReferral() {
+      const prompt = `Write a formal 3-paragraph referral letter for care sector. Referee: ${$('#rfName').value}, Organisation: ${$('#rfOrg').value}, Applicant: ${$('#rfApplicant').value}, Context/Role: ${$('#rfRole').value}, Duration: ${$('#rfDuration').value}. Australian professional style.`;
+      const txt = await callClaude(prompt);
+      $('#rfBody').value = txt.trim();
+      renderEverything();
+    }
+
+    async function runAIGap() {
+      const prompt = `Rewrite this employment gap explanation into 1-2 professional, positive sentences for a resume: ${$('#gapPlain').value}`;
+      const txt = await callClaude(prompt);
+      $('#gapOut').value = txt.trim();
+      const firstGap = $('#expList .e-gap');
+      if (firstGap && !firstGap.value.trim()) firstGap.value = txt.trim();
+      renderEverything();
+    }
+
+    async function runMatcher() {
+      $('#matchOut').textContent = 'Matching...';
+      const prompt = `Compare this job ad against my profile and return:\n✅ Matching Skills:\n- ...\n⚠️ Gaps:\n- ...\n📝 Suggested Sentence:\n...\n\nJob Ad:\n${$('#jobAdText').value}\n\nProfile:\n${resumeProfileText()}`;
+      const txt = await callClaude(prompt);
+      $('#matchOut').textContent = txt.trim();
+    }
+
+    async function runScorer() {
+      openModal('scoreModal');
+      $('#scoreLoad').style.display = 'block';
+      $('#scoreValue').textContent = '';
+      $('#scoreTips').innerHTML = '';
+      const prompt = `Score this resume for Australian aged care/disability support roles. Output exactly:\nScore: X/10\n- Tip 1\n- Tip 2\n- Tip 3\n- Tip 4\n\nResume:\n${resumeProfileText()}`;
+      const txt = await callClaude(prompt);
+      const lines = txt.trim().split('\n').map(l => l.trim()).filter(Boolean);
+      $('#scoreLoad').style.display = 'none';
+      $('#scoreValue').textContent = (lines[0] || 'Score: ?/10').replace('Score:', '').trim();
+      const tips = lines.slice(1).slice(0, 4);
+      $('#scoreTips').innerHTML = tips.map(t => `<li>${esc(t.replace(/^[-*]\s*/, ''))}</li>`).join('');
+    }
+
+    async function runInterview() {
+      openModal('interviewModal');
+      $('#interviewLoad').style.display = 'block';
+      $('#interviewOut').innerHTML = '';
+      const prompt = `Create 5 numbered interview questions for ${$('#jobTitle').value || 'Aged Care Worker'} and after each include a line starting with \"Tip:\".`;
+      const txt = await callClaude(prompt);
+      $('#interviewLoad').style.display = 'none';
+      $('#interviewOut').innerHTML = `<pre style="white-space:pre-wrap; margin:0; font:inherit;">${esc(txt.trim())}</pre>`;
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add('on');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('on');
+    }
+
+    function fillExampleData() {
+      const summary = `Compassionate Disability Support Worker with hands-on experience supporting clients in community and home settings across Sydney. Skilled in personal care, medication support, mobility assistance, behaviour support, and clear incident documentation. Recognised for building trusted relationships with participants, families, and allied health teams while promoting dignity, choice, and independence. Confident delivering person-centred routines, transport and community access, meal preparation, and safe manual handling. Holds current compliance checks, First Aid, and practical knowledge of NDIS plan goals. Committed to culturally safe care and consistent, reliable support that improves everyday quality of life.`;
+      $('#firstName').value = 'Sarah';
+      $('#lastName').value = 'Mitchell';
+      $('#jobTitle').value = 'Disability Support Worker';
+      $('#phone').value = '0412 345 678';
+      $('#email').value = 'sarah.mitchell@email.com';
+      $('#suburb').value = 'Parramatta';
+      $('#state').value = 'NSW';
+      $('#linkedin').value = 'https://www.linkedin.com/in/sarah-mitchell-care';
+      $('#languages').value = 'English, Filipino';
+      $('#employmentType').value = 'Full-time or Part-time';
+      $('#preferredSetting').value = 'Disability (NDIS)';
+      $('#summary').value = summary;
+
+      $('#compNdis').value = 'Current';
+      $('#compPolice').value = 'Current';
+      $('#compWWC').value = 'Current';
+      $('#compAid').value = 'Current';
+      $('#compLicence').value = 'Full + own car';
+      $('#compCovid').value = 'Up to date';
+      $('#compFood').value = 'Current';
+      $('#compManual').value = 'Current';
+
+      $('#volunteer').value = 'Volunteer support worker at local community food pantry, assisting older residents with weekly deliveries and check-ins.';
+      $('#hobbies').value = 'Bushwalking, meal prep, community choir';
+      $('#customTitle').value = 'Professional Strengths';
+      $('#customContent').value = 'Calm under pressure, strong documentation habits, and trusted client rapport across culturally diverse households.';
+      $('#refMode').value = 'Include named references';
+      $('#ref1').value = 'Priya Nair — Team Leader, BrightPath Support, 0400 234 111';
+      $('#ref2').value = 'Jason Cole — Care Coordinator, HomeWell Services, 0401 765 223';
+
+      $('#qualList').innerHTML = '';
+      addQualCard({ qualification: 'Certificate III in Individual Support (CHC33021)', institution: 'TAFE NSW', year: '2022' });
+      addQualCard({ qualification: 'Certificate IV in Disability (CHC43121)', institution: 'TAFE NSW', year: '2024' });
+
+      $('#expList').innerHTML = '';
+      addExpCard({
+        title: 'Disability Support Worker',
+        organisation: 'BrightPath Support Services',
+        from: 'Jan 2024',
+        to: 'Present',
+        gapReason: '',
+        duties: 'Provided personal care and daily living support\nSupported community access and transport plans\nDocumented progress notes and incidents\nAssisted with medication prompts and routine monitoring'
+      });
+      addExpCard({
+        title: 'Home Care Assistant',
+        organisation: 'HomeWell Community Care',
+        from: 'Mar 2022',
+        to: 'Dec 2023',
+        gapReason: '',
+        duties: 'Assisted clients with hygiene, meal prep, and mobility\nMaintained infection control and household safety\nLiaised with families and coordinators for care updates'
+      });
+
+      const onSkills = [0,1,2,9,10,11,13,16,18,20,22,25];
+      $$('#skillWrap .chip').forEach((c, i) => c.classList.toggle('on', onSkills.includes(i)));
+      const onShifts = [0,1,4,6];
+      $$('#shiftWrap .chip').forEach((c, i) => c.classList.toggle('on', onShifts.includes(i)));
+
+      $('#clEmployer').value = 'Harbour Care Group';
+      $('#clPosition').value = 'Disability Support Worker';
+      $('#clWhere').value = 'SEEK';
+      $('#clBody').value = starterText('exp');
+      $('#emEmployer').value = 'Harbour Care Group';
+      $('#emPosition').value = 'Disability Support Worker';
+      $('#emTone').value = 'Professional';
+      $('#emBody').value = 'Dear Hiring Team,\n\nPlease find attached my application for the Disability Support Worker role. I bring current compliance, practical support experience, and a person-centred approach.\n\nI would welcome the opportunity to discuss how I can support your clients and team.\n\nKind regards,\nSarah Mitchell';
+      $('#rfName').value = 'Priya Nair, Team Leader';
+      $('#rfOrg').value = 'BrightPath Support Services';
+      $('#rfApplicant').value = 'Sarah Mitchell';
+      $('#rfRole').value = 'Disability Support Worker';
+      $('#rfDuration').value = '2 years';
+
+      renderEverything();
+    }
+
+    function initEvents() {
+      document.addEventListener('click', (e) => {
+        const acc = e.target.closest('.acc-h');
+        if (acc) {
+          toggleAccordion({ target: acc });
+          return;
+        }
+
+        const chip = e.target.closest('.chip');
+        if (chip && (chip.closest('#skillWrap') || chip.closest('#shiftWrap'))) {
+          chip.classList.toggle('on');
+          renderEverything();
+          return;
+        }
+
+        const tone = e.target.closest('.tone-pill');
+        if (tone) {
+          $$('#clToneWrap .tone-pill').forEach(t => t.classList.remove('on'));
+          tone.classList.add('on');
+          renderEverything();
+          return;
+        }
+
+        const tab = e.target.closest('#sideTabs .tab');
+        if (tab) {
+          switchPane(tab.dataset.pane);
+          queueSave();
+          return;
+        }
+
+        const starter = e.target.closest('[data-starter]');
+        if (starter) {
+          $('#clBody').value = starterText(starter.dataset.starter);
+          renderEverything();
+          return;
+        }
+
+        const slot = e.target.closest('[data-vslot]');
+        if (slot) {
+          loadVersion(Number(slot.dataset.vslot));
+          return;
+        }
+      });
+
+      document.addEventListener('input', (e) => {
+        if (e.target.closest('#qualList')) detectQualDupes();
+        renderEverything();
+      });
+
+      document.addEventListener('change', () => renderEverything());
+
+      $('#addQualBtn').addEventListener('click', () => { addQualCard({}); renderEverything(); });
+      $('#addExpBtn').addEventListener('click', () => { addExpCard({}); renderEverything(); });
+      $('#saveVerBtn').addEventListener('click', saveVersion);
+      $('#clearAllBtn').addEventListener('click', resetAll);
+      $('#undoBtn').addEventListener('click', () => {
+        if (!previousState) return;
+        appState(previousState);
+        lastSavedState = colState();
+      });
+      $('#exampleBtn').addEventListener('click', fillExampleData);
+
+      $('#darkBtn').addEventListener('click', () => document.documentElement.classList.toggle('dk'));
+      $('#dysBtn').addEventListener('click', () => document.documentElement.classList.toggle('dy'));
+
+      $('#resBtn').addEventListener('click', () => openModal('resModal'));
+      $('#exportBtn').addEventListener('click', () => {
+        $('#plainOut').value = plainExportText();
+        openModal('exportModal');
+      });
+
+      $('#copyPlainBtn').addEventListener('click', async () => {
+        await navigator.clipboard.writeText($('#plainOut').value || '');
+        $('#copyPlainBtn').textContent = 'Copied!';
+        setTimeout(() => $('#copyPlainBtn').textContent = 'Copy to Clipboard', 1200);
+      });
+
+      $('#printBtn').addEventListener('click', () => window.print());
+      $('#printTopBtn').addEventListener('click', () => window.print());
+
+      $('#tplBtn').addEventListener('click', () => {
+        template = (template % 3) + 1;
+        $('#tplBtn').textContent = `Template ${template}`;
+        renderEverything();
+      });
+
+      $('#mEdit').addEventListener('click', () => {
+        $('#mEdit').classList.add('on');
+        $('#mPrev').classList.remove('on');
+        $('#sbEl').classList.remove('hide-mobile');
+        $('#pvEl').classList.add('hide-mobile');
+      });
+      $('#mPrev').addEventListener('click', () => {
+        $('#mPrev').classList.add('on');
+        $('#mEdit').classList.remove('on');
+        $('#pvEl').classList.remove('hide-mobile');
+        $('#sbEl').classList.add('hide-mobile');
+      });
+
+      $('#gapBtn').addEventListener('click', () => openModal('gapModal'));
+      $('#gapGenBtn').addEventListener('click', async () => {
+        $('#gapGenBtn').disabled = true;
+        try { await runAIGap(); } finally { $('#gapGenBtn').disabled = false; }
+      });
+
+      $('#matchBtn').addEventListener('click', async () => {
+        $('#matchBtn').disabled = true;
+        try { await runMatcher(); } catch (e) { $('#matchOut').textContent = 'Unable to match right now.'; }
+        finally { $('#matchBtn').disabled = false; }
+      });
+
+      $('#genEmailBtn').addEventListener('click', async () => {
+        $('#genEmailBtn').disabled = true;
+        try { await runAIEmail(); } catch (e) { alert('Email generation failed.'); }
+        finally { $('#genEmailBtn').disabled = false; }
+      });
+
+      $('#genRefBtn').addEventListener('click', async () => {
+        $('#genRefBtn').disabled = true;
+        try { await runAIReferral(); } catch (e) { alert('Referral letter generation failed.'); }
+        finally { $('#genRefBtn').disabled = false; }
+      });
+
+      $('#aiCoverBtn').addEventListener('click', async () => {
+        $('#aiCoverBtn').disabled = true;
+        try { await runAICover(); } catch (e) { alert('Cover letter generation failed.'); }
+        finally { $('#aiCoverBtn').disabled = false; }
+      });
+
+      $('#aiScoreBtn').addEventListener('click', async () => {
+        $('#aiScoreBtn').disabled = true;
+        try { await runScorer(); } catch (e) {
+          $('#scoreLoad').style.display = 'none';
+          $('#scoreValue').textContent = 'Unavailable';
+        } finally { $('#aiScoreBtn').disabled = false; }
+      });
+
+      $('#aiInterviewBtn').addEventListener('click', async () => {
+        $('#aiInterviewBtn').disabled = true;
+        try { await runInterview(); } catch (e) {
+          $('#interviewLoad').style.display = 'none';
+          $('#interviewOut').textContent = 'Unable to generate questions now.';
+        } finally { $('#aiInterviewBtn').disabled = false; }
+      });
+
+      $('#aiChecklistBtn').addEventListener('click', () => {
+        renderChecklist();
+        openModal('checkModal');
+      });
+
+      $$('.x').forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.close)));
+      $$('.modal').forEach(mod => mod.addEventListener('click', (e) => { if (e.target === mod) mod.classList.remove('on'); }));
+    }
+
+    function init() {
+      buildChips();
+      addQualCard({});
+      addExpCard({});
+      initEvents();
+      renderVersions();
+
+      const saved = localStorage.getItem('cr_auto');
+      if (saved) {
+        appState(saved);
+        lastSavedState = saved;
+        $('#saveTs').textContent = nowStamp();
+      } else {
+        renderEverything(false);
+      }
+
+      if (window.matchMedia('(max-width: 860px)').matches) {
+        $('#pvEl').classList.add('hide-mobile');
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
