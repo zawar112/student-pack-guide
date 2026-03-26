@@ -100,6 +100,130 @@
       flex-wrap: wrap;
     }
 
+    .font-size-wrap {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .font-size-wrap .btn {
+      padding: 6px 8px;
+      font-size: .78rem;
+      min-width: 2.1rem;
+    }
+
+    .draft-chk-item {
+      padding: 8px 10px;
+      margin: 6px 0;
+      border-radius: 8px;
+      font-size: .86rem;
+      line-height: 1.4;
+    }
+
+    .draft-chk-item.warn {
+      border-left: 3px solid var(--amber);
+      background: var(--amber-pale);
+    }
+
+    .draft-chk-item.ok {
+      border-left: 3px solid var(--ok);
+      background: var(--teal-pale);
+    }
+
+    .interview-prompt-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .interview-prompt-row:last-child {
+      border-bottom: 0;
+    }
+
+    .job-ad-extract-panel {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--teal-pale);
+    }
+
+    .job-ad-sug-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      font-size: .86rem;
+    }
+
+    .job-ad-sug-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .job-ad-sug-lbl {
+      font-weight: 600;
+      min-width: 5.5rem;
+      color: #2d4a42;
+    }
+
+    .job-ad-sug-val {
+      flex: 1;
+      min-width: 10rem;
+      line-height: 1.4;
+    }
+
+    .job-ad-sug-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .job-ad-sug-actions .btn {
+      font-size: .74rem;
+      padding: 4px 8px;
+    }
+
+    .li-snippet-block {
+      margin-bottom: 14px;
+    }
+
+    .li-snippet-block textarea {
+      width: 100%;
+      min-height: 4.5rem;
+      font-size: .84rem;
+      margin-top: 6px;
+    }
+
+    .kbd-hint {
+      font-size: .82rem;
+      color: var(--muted);
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    .kbd-hint kbd {
+      display: inline-block;
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: .76rem;
+      font-family: inherit;
+      background: var(--canvas);
+    }
+
+    .res-modal-scroll {
+      max-height: min(58vh, 420px);
+      overflow-y: auto;
+      margin-top: 4px;
+      padding-right: 4px;
+    }
+
     .prog-stack {
       display: flex;
       flex-direction: column;
@@ -205,6 +329,11 @@
       right: 0;
       top: calc(100% + 6px);
       min-width: 200px;
+      max-height: min(70vh, 520px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
       background: var(--white);
       border: 1.5px solid var(--border);
       border-radius: 10px;
@@ -798,6 +927,65 @@
       min-height: 82vh;
     }
 
+    /* Cover letter — edit in preview (syncs to sidebar fields) */
+    .pv-ce {
+      border-radius: 4px;
+      min-height: 1.15em;
+      outline: none;
+      transition: background .12s ease, box-shadow .12s ease;
+    }
+
+    .pv-ce[contenteditable="true"]:focus {
+      background: rgba(46, 168, 140, 0.08);
+      box-shadow: 0 0 0 2px rgba(46, 168, 140, 0.35);
+    }
+
+    .pv-ce-body[contenteditable="true"] {
+      margin: 8px 0 12px;
+    }
+
+    .pv-ce-body[contenteditable="true"]:focus {
+      background: rgba(46, 168, 140, 0.06);
+      box-shadow: inset 0 0 0 2px rgba(46, 168, 140, 0.3);
+    }
+
+    .paper.letter .subject .pv-ce {
+      font-weight: 600;
+    }
+
+    .paper.email .mail-v .pv-ce {
+      display: inline-block;
+      min-width: 0.5ch;
+      vertical-align: top;
+    }
+
+    .paper.ref > div:first-of-type .pv-ce {
+      font-size: inherit;
+    }
+
+    .r-c-sep {
+      opacity: 0.45;
+      user-select: none;
+    }
+
+    .resume-sec-title-edit {
+      display: inline-block;
+      min-width: 0.25ch;
+    }
+
+    .tpl2-left .side-txt .pv-ce {
+      color: inherit;
+    }
+
+    .tpl2-left .pv-ce[contenteditable="true"]:focus {
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+    }
+
+    .side-contact-sep {
+      height: 4px;
+    }
+
     .tpl1 { border-top: 4px solid transparent; border-image: linear-gradient(90deg, var(--teal), var(--amber)) 1; }
 
     .r-name {
@@ -974,6 +1162,169 @@
     }
 
     .tpl3 .skills-badges .sb::before { content: '— '; }
+
+    /* Template 4 — Executive (banner header, corporate) */
+    .paper.tpl4 {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .tpl4-head {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 48%, #1a365d 100%);
+      color: #fff;
+      padding: 26px 32px 22px;
+    }
+
+    .tpl4-head .r-name {
+      color: #fff;
+      margin: 0;
+    }
+
+    .tpl4-head .r-role {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 6px 0 0;
+    }
+
+    .tpl4-head .pv-ce[contenteditable="true"]:focus {
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
+    }
+
+    .tpl4-contact-bar {
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 32px;
+    }
+
+    .tpl4-contact-bar .r-contact {
+      margin-bottom: 0;
+      color: #334155;
+    }
+
+    .tpl4-body {
+      padding: 22px 32px 28px;
+    }
+
+    /* Template 5 — Minimal (light type, centered header band) */
+    .paper.tpl5 {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      border: 1px solid #e8e4dc;
+    }
+
+    .tpl5-header {
+      text-align: center;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid #d4cfc4;
+    }
+
+    .tpl5-header .r-contact {
+      margin-top: 12px;
+      margin-bottom: 0;
+      justify-content: center;
+    }
+
+    .tpl5 .r-name {
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 1.55rem;
+      color: #2c2925;
+    }
+
+    .tpl5 .r-role {
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      color: #6b6560;
+      margin-top: 10px;
+    }
+
+    .tpl5 .r-contact {
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #5c574f;
+    }
+
+    .tpl5 .sec-h {
+      border: 0;
+      border-left: 3px solid #3d3a36;
+      padding: 0 0 0 12px;
+      margin-top: 22px;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      color: #4a4640;
+    }
+
+    .tpl5 .item {
+      border-bottom-color: #ebe7df;
+    }
+
+    .tpl5 .sb {
+      background: #faf9f6;
+      border-color: #d9d4ca;
+      color: #3d3a36;
+    }
+
+    /* Template 6 — Structured (ATS-friendly blocks, strong hierarchy) */
+    .paper.tpl6 {
+      border: 1px solid #cbd5e1;
+      box-shadow: var(--shadow);
+    }
+
+    .tpl6-top {
+      padding-bottom: 12px;
+      margin-bottom: 6px;
+      border-bottom: 3px solid #1e293b;
+    }
+
+    .tpl6-top .r-contact {
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+
+    .tpl6 .r-name {
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .tpl6 .r-role {
+      color: #334155;
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .tpl6 .r-contact {
+      color: #475569;
+      font-size: 0.82rem;
+    }
+
+    .tpl6 .sec-h {
+      border: 0;
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 7px 12px;
+      border-radius: 4px;
+      margin-top: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tpl6 .cc {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+    }
+
+    .tpl6 .sb {
+      background: #fff;
+      border-color: #94a3b8;
+      color: #1e293b;
+      border-radius: 4px;
+    }
 
     .letter, .email, .ref {
       line-height: 1.55;
@@ -1362,6 +1713,15 @@
       color: #111827;
     }
 
+    .dk .paper.tpl4 .tpl4-contact-bar {
+      background: #1e293b;
+      border-color: #334155;
+    }
+
+    .dk .paper.tpl4 .tpl4-contact-bar .r-contact {
+      color: #e2e8f0;
+    }
+
     .dk .workspace,
     .dk .preview { background: #1a2520; }
 
@@ -1561,6 +1921,39 @@
     html.theme-future .paper .r-role,
     html.theme-future .paper .sec-h {
       color: #0d9488;
+    }
+
+    html.theme-future .paper.tpl4 .tpl4-head .r-name,
+    html.theme-future .paper.tpl4 .tpl4-head .r-role {
+      color: #fff;
+    }
+
+    html.theme-future .paper.tpl4 .tpl4-head .r-role {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    html.theme-future .paper.tpl4 .tpl4-contact-bar {
+      background: #e2e8f0;
+      border-color: #cbd5e1;
+    }
+
+    html.theme-future .paper.tpl4 .tpl4-contact-bar .r-contact {
+      color: #1e293b;
+    }
+
+    html.theme-future .paper.tpl5 .r-name,
+    html.theme-future .paper.tpl5 .r-role,
+    html.theme-future .paper.tpl5 .sec-h {
+      color: #0f172a;
+    }
+
+    html.theme-future .paper.tpl5 .r-role {
+      color: #475569;
+    }
+
+    html.theme-future .paper.tpl6 .sec-h {
+      background: #e2e8f0;
+      color: #0f172a;
     }
 
     html.theme-future input,
@@ -1794,6 +2187,7 @@
       .mob-sheet,
       .mob-sheet-backdrop,
       .backup-reminder,
+      .renewal-banner,
       .warn-long,
       .long-warn {
         display: none !important;
@@ -1855,6 +2249,23 @@
         padding: 34px 40px !important;
       }
 
+      .paper.tpl4 {
+        padding: 0 !important;
+        overflow: visible !important;
+      }
+
+      .paper.tpl4 .tpl4-body {
+        padding: 18px 24px 22px !important;
+      }
+
+      .paper.tpl5 {
+        padding: 22px 26px !important;
+      }
+
+      .paper.tpl6 {
+        padding: 22px 28px !important;
+      }
+
       /* Print-safe top accent (border-image is unreliable in print) */
       .paper.tpl1 {
         border-top: 4px solid #2d7a6a !important;
@@ -1874,6 +2285,16 @@
       .paper .item {
         break-inside: avoid;
         page-break-inside: avoid;
+      }
+
+      .paper .sec-h {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      .paper .letter p {
+        orphans: 3;
+        widows: 3;
       }
     }
 
@@ -1933,6 +2354,11 @@
           <option value="future">Futuristic</option>
           <option value="highcontrast">High contrast</option>
         </select>
+        <div class="font-size-wrap" role="group" aria-label="Text size">
+          <button type="button" class="btn" id="fsDownBtn" title="Smaller text" aria-label="Smaller text">A−</button>
+          <button type="button" class="btn" id="fsResetBtn" title="Default text size" aria-label="Default text size">100%</button>
+          <button type="button" class="btn" id="fsUpBtn" title="Larger text" aria-label="Larger text">A+</button>
+        </div>
         <button type="button" class="btn teal" id="printTopBtn" aria-label="Print or save as PDF">Print / PDF</button>
         <div class="more-wrap" id="moreWrap">
           <button type="button" class="btn more-btn" id="moreBtn" aria-expanded="false" aria-haspopup="true" aria-controls="moreMenu">More</button>
@@ -1942,6 +2368,13 @@
             <button type="button" class="more-item" id="redoBtn" role="menuitem">Redo</button>
             <button type="button" class="more-item" id="verCompareMenuBtn" role="menuitem">Compare saved versions</button>
             <button type="button" class="more-item" id="dysBtn" role="menuitem">Dyslexic font</button>
+            <button type="button" class="more-item" id="readAloudBtn" role="menuitem">Read preview aloud</button>
+            <button type="button" class="more-item" id="stopReadAloudBtn" role="menuitem">Stop read-aloud</button>
+            <button type="button" class="more-item" id="draftCheckBtn" role="menuitem">Check cover &amp; email</button>
+            <button type="button" class="more-item" id="linkedinBtn" role="menuitem">LinkedIn headline &amp; About</button>
+            <button type="button" class="more-item" id="interviewBankBtn" role="menuitem">Interview question prompts</button>
+            <button type="button" class="more-item" id="shortcutsMenuBtn" role="menuitem">Keyboard shortcuts</button>
+            <button type="button" class="more-item" id="jobAdHelpMenuBtn" role="menuitem">Job ad paste (Key Skills)</button>
             <button type="button" class="more-item" id="resBtn" role="menuitem">Resources</button>
             <button type="button" class="more-item" id="exportBtn" role="menuitem">Text export</button>
             <button type="button" class="more-item" id="importBtn" role="menuitem">Import backup…</button>
@@ -2077,6 +2510,7 @@
                 <div class="flex-row-gap" style="margin-top:8px; flex-wrap:wrap;">
                   <button type="button" class="btn teal" id="addLogBtn">Add to log</button>
                   <button type="button" class="btn" id="exportLogCsvBtn">Download log as CSV</button>
+                  <button type="button" class="btn" id="exportLogIcsBtn">Download follow-ups (.ics)</button>
                 </div>
               </div>
               <div id="empSnapSection" style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
@@ -2303,10 +2737,15 @@
               <div class="skill-many-warn" id="skillManyWarn" role="status">You have selected many skills—consider keeping the strongest 8–12 for readability and ATS. Use search above to trim.</div>
               <div class="chips" id="skillWrap"></div>
               <div class="field" style="margin-top:14px;">
-                <label for="jobAdPaste">Job ad (paste text to match your selected skills)</label>
-                <textarea id="jobAdPaste" class="textarea-md" spellcheck="true" placeholder="Paste the job posting here, then run a simple keyword match (no AI)."></textarea>
-                <button type="button" class="btn" id="jobAdMatchBtn" style="margin-top:6px;">Match skills to job ad</button>
+                <label for="jobAdPaste">Job ad (paste text — all processing stays on your device)</label>
+                <textarea id="jobAdPaste" class="textarea-md" spellcheck="true" placeholder="Paste the full posting. Use the buttons below to match skills, pull out simple fields (e.g. Role: …), or add bullet points to Criteria. No AI, no upload."></textarea>
+                <div class="flex-row-gap" style="margin-top:8px; flex-wrap:wrap;">
+                  <button type="button" class="btn" id="jobAdMatchBtn">Match selected skills to ad</button>
+                  <button type="button" class="btn teal" id="jobAdSelectSkillsBtn">Turn on skills mentioned in ad</button>
+                  <button type="button" class="btn" id="jobAdParseBtn">Parse fields &amp; bullets (local)</button>
+                </div>
                 <div id="jobAdMatchOut" class="prog-hint" style="margin-top:8px;" role="status"></div>
+                <div id="jobAdExtractPanel" class="job-ad-extract-panel" style="display:none;" role="region" aria-label="Extracted job ad hints"></div>
               </div>
             </div>
           </div>
@@ -2415,6 +2854,9 @@
             <label for="clBody">Letter Body</label>
             <textarea id="clBody" class="textarea-lg" spellcheck="true"></textarea>
             <p id="clBodyCount" class="prog-hint" style="margin-top:4px;">0 words · 0 characters</p>
+            <div class="flex-row-gap" style="flex-wrap:wrap;margin-top:8px;">
+              <button type="button" class="btn" id="coverDraftCheckBtn">Quick check cover</button>
+            </div>
           </div>
         </section>
 
@@ -2432,6 +2874,10 @@
           <div class="field field-mt">
             <label for="emBody">Email Body</label>
             <textarea id="emBody" class="textarea-xl" spellcheck="true"></textarea>
+          </div>
+          <div class="flex-row-gap" style="flex-wrap:wrap;margin-top:8px;">
+            <button type="button" class="btn teal" id="thankYouEmailBtn">Insert thank-you after interview</button>
+            <button type="button" class="btn" id="emailDraftCheckBtn">Quick check email</button>
           </div>
         </section>
 
@@ -2456,7 +2902,8 @@
           <button type="button" class="btn" id="addCritBtn">+ Add response block</button>
 
           <h3 class="prompt-list-h">Interview prep — STAR stories</h3>
-          <p class="prog-hint" style="margin:0 0 8px;">Situation, Task, Action, Result — use these when employers ask for examples. Suggested prompts: handling a difficult shift; teamwork; participant safety; documentation; cultural respect.</p>
+          <p class="prog-hint" style="margin:0 0 8px;">Situation, Task, Action, Result — use these when employers ask for examples.</p>
+          <button type="button" class="btn" id="interviewBankInlineBtn" style="margin-bottom:10px;">Interview question prompts (copy)</button>
           <div id="starList"></div>
           <button type="button" class="btn" id="addStarBtn">+ Add STAR story</button>
         </section>
@@ -2467,10 +2914,11 @@
           <div class="pv-lbl">Live Preview</div>
           <div class="pv-tools">
             <div>
-              <button class="btn" id="tplBtn" type="button">Template 1</button>
-              <p class="pv-ats-hint" id="pvAtsHint">Template 2 uses two columns. Some employer ATS tools read single-column layouts more reliably—try Template 1 or 3 if you upload a PDF.</p>
+              <button class="btn" id="tplBtn" type="button" title="Cycle through 6 resume layouts">Template 1</button>
+              <p class="pv-ats-hint" id="pvAtsHint">Template 2 is two columns. Templates 4–6 add distinct professional styles. For strict ATS uploads, single-column layouts (1, 3, 4, 5, or 6) are often safest.</p>
             </div>
             <button class="btn teal" id="printBtn" type="button">Print</button>
+            <button type="button" class="btn" id="readAloudPvBtn" aria-label="Read preview aloud">Read aloud</button>
             <button type="button" class="btn" id="copyHtmlBtn" aria-label="Copy preview as rich text for pasting">Copy preview</button>
           </div>
         </div>
@@ -2499,6 +2947,10 @@
       <button type="button" class="mob-sheet-item" data-mob-sheet="undo">Undo</button>
       <button type="button" class="mob-sheet-item" data-mob-sheet="redo">Redo</button>
       <button type="button" class="mob-sheet-item" data-mob-sheet="verCompare">Compare versions</button>
+      <button type="button" class="mob-sheet-item" data-mob-sheet="readAloud">Read preview aloud</button>
+      <button type="button" class="mob-sheet-item" data-mob-sheet="stopRead">Stop read-aloud</button>
+      <button type="button" class="mob-sheet-item" data-mob-sheet="shortcuts">Keyboard shortcuts</button>
+      <button type="button" class="mob-sheet-item" data-mob-sheet="jobAdHelp">Job ad paste (Key Skills)</button>
       <button type="button" class="mob-sheet-item" data-mob-sheet="dys">Dyslexic font</button>
       <button type="button" class="mob-sheet-item" data-mob-sheet="res">Resources</button>
       <button type="button" class="mob-sheet-item" data-mob-sheet="export">Text export</button>
@@ -2549,15 +3001,82 @@
       <button type="button" class="x" data-close="resModal" aria-label="Close dialog">✕</button>
       <h3 id="resModalTitle" class="serif modal-h">Care career resources</h3>
       <p class="prog-hint" style="margin:0 0 12px;">After you export or print: update your SEEK or employer portal profile, attach documents they request, and follow up politely within a week if you have not heard back.</p>
+      <div class="res-modal-scroll">
+      <p class="prog-hint" style="margin:0 0 6px; font-weight:600;">Working With Children Check (by state)</p>
+      <div class="res-links" style="margin-bottom:12px;">
+        <a href="https://www.kidsguardian.nsw.gov.au/child-safe-organisations/working-with-children-check" target="_blank" rel="noopener">NSW WWCC</a>
+        <a href="https://www.workingwithchildren.vic.gov.au" target="_blank" rel="noopener">VIC WWCC</a>
+        <a href="https://www.bluecard.qld.gov.au" target="_blank" rel="noopener">QLD Blue Card</a>
+        <a href="https://www.cbs.sa.gov.au/services/working-with-children-checks" target="_blank" rel="noopener">SA WWCC</a>
+        <a href="https://www.wa.gov.au/service/working-with-children-check" target="_blank" rel="noopener">WA WWCC</a>
+        <a href="https://www.consumer.tas.gov.au/occupations-locations-and-industries/registration-and-licensing/working-with-children-registration" target="_blank" rel="noopener">TAS</a>
+        <a href="https://www.accesscanberra.act.gov.au/s/article/working-with-vulnerable-people-registration" target="_blank" rel="noopener">ACT WwVP</a>
+        <a href="https://nt.gov.au/law/business/working-with-children" target="_blank" rel="noopener">NT</a>
+      </div>
+      <p class="prog-hint" style="margin:0 0 6px; font-weight:600;">Jobs, training &amp; awards</p>
       <div class="res-links">
         <a href="https://www.tafensw.edu.au" target="_blank" rel="noopener">TAFE NSW</a>
-        <a href="https://www.seek.com.au/aged-care-jobs" target="_blank" rel="noopener">Seek Aged Care Jobs</a>
+        <a href="https://www.seek.com.au/aged-care-jobs" target="_blank" rel="noopener">SEEK Aged Care</a>
+        <a href="https://www.seek.com.au/disability-support-jobs" target="_blank" rel="noopener">SEEK Disability Support</a>
         <a href="https://mable.com.au" target="_blank" rel="noopener">Mable</a>
         <a href="https://www.hireup.com.au" target="_blank" rel="noopener">Hireup</a>
-        <a href="https://www.fairwork.gov.au" target="_blank" rel="noopener">Fair Work (SCHADS Award)</a>
-        <a href="https://www.ndiscommission.gov.au" target="_blank" rel="noopener">NDIS Quality & Safeguards Commission</a>
+        <a href="https://www.fairwork.gov.au/employment-conditions/awards/list-of-awards" target="_blank" rel="noopener">Fair Work — Award list</a>
+        <a href="https://www.fairwork.gov.au/employment-conditions/awards/awards-summary/ma000100-summary" target="_blank" rel="noopener">SCHADS Award summary</a>
+        <a href="https://www.ndiscommission.gov.au" target="_blank" rel="noopener">NDIS Commission</a>
         <a href="https://www.myagedcare.gov.au" target="_blank" rel="noopener">My Aged Care</a>
+        <a href="https://www.servicesaustralia.gov.au/" target="_blank" rel="noopener">Services Australia</a>
       </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="draftCheckModal" class="modal" role="presentation">
+    <div class="modal-card small" role="dialog" aria-modal="true" aria-labelledby="draftCheckTitle">
+      <button type="button" class="x" data-close="draftCheckModal" aria-label="Close dialog">✕</button>
+      <h3 id="draftCheckTitle" class="serif modal-h">Cover &amp; email checks</h3>
+      <p class="prog-hint" style="margin:0 0 10px;">Simple checks only—not a substitute for proofreading. No AI.</p>
+      <div id="draftCheckList"></div>
+    </div>
+  </div>
+
+  <div id="linkedinModal" class="modal" role="presentation">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="linkedinModalTitle">
+      <button type="button" class="x" data-close="linkedinModal" aria-label="Close dialog">✕</button>
+      <h3 id="linkedinModalTitle" class="serif modal-h">LinkedIn ideas (templates)</h3>
+      <p class="prog-hint" style="margin:0 0 12px;">Edit to match your voice. Built from your job title, summary, and selected skills.</p>
+      <div id="linkedinModalBody"></div>
+    </div>
+  </div>
+
+  <div id="interviewModal" class="modal" role="presentation">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="interviewModalTitle">
+      <button type="button" class="x" data-close="interviewModal" aria-label="Close dialog">✕</button>
+      <h3 id="interviewModalTitle" class="serif modal-h">Interview question prompts</h3>
+      <p class="prog-hint" style="margin:0 0 8px;">Common aged care / NDIS-style questions. Copy into a STAR story or your notes.</p>
+      <div id="interviewModalBody" class="res-modal-scroll" style="max-height:min(60vh,400px);"></div>
+    </div>
+  </div>
+
+  <div id="shortcutsModal" class="modal" role="presentation">
+    <div class="modal-card small" role="dialog" aria-modal="true" aria-labelledby="shortcutsModalTitle">
+      <button type="button" class="x" data-close="shortcutsModal" aria-label="Close dialog">✕</button>
+      <h3 id="shortcutsModalTitle" class="serif modal-h">Keyboard shortcuts</h3>
+      <p class="prog-hint" style="margin:0 0 8px;">Use when not typing in a field (or shortcuts may not run).</p>
+      <div id="shortcutsModalBody" class="kbd-hint"></div>
+    </div>
+  </div>
+
+  <div id="jobAdHelpModal" class="modal" role="presentation">
+    <div class="modal-card small" role="dialog" aria-modal="true" aria-labelledby="jobAdHelpModalTitle">
+      <button type="button" class="x" data-close="jobAdHelpModal" aria-label="Close dialog">✕</button>
+      <h3 id="jobAdHelpModalTitle" class="serif modal-h">Job ad paste (local only)</h3>
+      <p class="prog-hint" style="margin:0 0 10px;">In <strong>Resume → Section 8 — Key Skills</strong>, paste a full job ad into the box at the bottom. Nothing is uploaded or sent to a server; matching and parsing run in your browser.</p>
+      <ul class="prog-hint" style="margin:0 0 10px; padding-left:1.2rem;">
+        <li><strong>Match selected skills</strong> — highlights which chosen chips appear as plain text in the ad.</li>
+        <li><strong>Turn on skills mentioned in ad</strong> — enables chips whose labels match text in the paste.</li>
+        <li><strong>Parse fields &amp; bullets</strong> — reads lines like <code>Role:</code> or <code>Company – …</code>, bullet lists, emails/phones/URLs (for copy). Use <strong>Cover</strong> / <strong>Email</strong> to fill drafts — always double-check before you apply.</li>
+      </ul>
+      <p class="prog-hint" style="margin:0;">Works best when the paste includes headings (e.g. from SEEK or similar). If a field is missing, copy it manually.</p>
     </div>
   </div>
 
@@ -2672,6 +3191,21 @@
 
     const SHIFTS = ['Morning', 'Afternoon', 'Night', 'Weekends', 'Public Holidays', 'On-Call', 'Sleepovers'];
 
+    const INTERVIEW_PROMPTS = [
+      'Tell us about a time you dealt with a difficult situation on shift.',
+      'How do you support a client who is distressed or anxious?',
+      'Describe how you document care and report incidents appropriately.',
+      'How do you work with families and other staff as part of a care team?',
+      'What does person-centred care mean in your daily work?',
+      'Tell us about a time you supported someone with dementia or confusion.',
+      'How do you manage manual handling and infection control?',
+      'Describe a situation where you advocated for a client’s needs.',
+      'How do you respect cultural and religious preferences in care?',
+      'What would you do if you were running late for a community visit?',
+      'How do you stay calm and professional under pressure?',
+      'Why do you want to work in this setting (aged care, NDIS, or community)?'
+    ];
+
     const QUAL_OPTIONS = [
       'Certificate III in Individual Support (CHC33021)',
       'Certificate IV in Ageing Support (CHC43015)',
@@ -2705,7 +3239,11 @@
     const ACCORDION_IDS = ['acc-ver', 'acc-personal', 'acc-avail', 'acc-summary', 'acc-comp', 'acc-qual', 'acc-exp', 'acc-skills', 'acc-vol', 'acc-custom', 'acc-ref'];
     const UNDO_MAX = 5;
     const REDO_MAX = 5;
+    const FONT_SCALE_MIN = 85;
+    const FONT_SCALE_MAX = 130;
+    const FONT_SCALE_STEP = 5;
 
+    const RESUME_TEMPLATE_COUNT = 6;
     let template = 1;
     let activePane = 'resumePane';
     let saveDebounce;
@@ -2786,6 +3324,273 @@
       t.classList.add('on');
       clearTimeout(showToast._tm);
       showToast._tm = setTimeout(() => t.classList.remove('on'), 2800);
+    }
+
+    function getFontScale() {
+      let n = parseInt(localStorage.getItem('cr_font_scale') || '100', 10);
+      if (Number.isNaN(n)) n = 100;
+      return Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, n));
+    }
+
+    function applyFontScale(pct) {
+      const v = Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, pct));
+      document.documentElement.style.fontSize = `${v}%`;
+      localStorage.setItem('cr_font_scale', String(v));
+      const rb = $('#fsResetBtn');
+      if (rb) rb.textContent = `${v}%`;
+    }
+
+    function adjustFontScale(delta) {
+      applyFontScale(getFontScale() + delta);
+    }
+
+    function stopReadAloud() {
+      try { window.speechSynthesis.cancel(); } catch (_) {}
+    }
+
+    function readAloudActivePreview() {
+      stopReadAloud();
+      const el = $('#previewBody');
+      if (!el) return;
+      const t = (el.innerText || '').trim();
+      if (!t || el.querySelector('.preview-empty')) {
+        showToast('Nothing to read—open Preview with content.');
+        return;
+      }
+      if (!window.speechSynthesis) {
+        showToast('Read-aloud not supported in this browser.');
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(t);
+      u.lang = 'en-AU';
+      window.speechSynthesis.speak(u);
+      showToast('Reading preview…');
+    }
+
+    function runCoverEmailChecks() {
+      const items = [];
+      const ce = ($('#clEmployer').value || '').trim();
+      const cb = $('#clBody').value || '';
+      const cw = words(cb);
+      if (cb.trim() && !ce) items.push({ ok: false, text: 'Cover letter: employer name is empty.' });
+      if (cb.trim() && cw > 0 && cw < 100) items.push({ ok: false, text: 'Cover body is quite short for many roles (under ~100 words). Add a concrete example if you can.' });
+      if (cb.trim() && cw > 480) items.push({ ok: false, text: 'Cover body is very long—consider trimming for busy recruiters.' });
+      if (cb.trim() && !/kind regards|sincerely|yours sincerely|best regards|warm regards/i.test(cb)) {
+        items.push({ ok: false, text: 'Cover: add a clear professional sign-off (e.g. Kind regards).' });
+      }
+
+      const em = ($('#emEmployer').value || '').trim();
+      const eb = $('#emBody').value || '';
+      const ew = words(eb);
+      if (eb.trim() && !em) items.push({ ok: false, text: 'Email: employer name is empty.' });
+      if (eb.trim() && ew > 0 && ew < 30) items.push({ ok: false, text: 'Email body is very short—add a line about fit and availability.' });
+      if (eb.trim() && !/kind regards|sincerely|best regards|thanks,|thank you,/i.test(eb)) {
+        items.push({ ok: false, text: 'Email: consider ending with Kind regards or Thanks.' });
+      }
+
+      if (!cb.trim() && !eb.trim()) items.push({ ok: false, text: 'No cover or email body yet—fill those first.' });
+      if (items.length === 0) items.push({ ok: true, text: 'No major issues flagged—still proofread before sending.' });
+      return items;
+    }
+
+    function openDraftCheckModal() {
+      syncAllCoverPreviewFromPreview();
+      updateCoverBodyCount();
+      const items = runCoverEmailChecks();
+      const wrap = $('#draftCheckList');
+      if (wrap) {
+        wrap.innerHTML = items.map(it =>
+          `<div class="draft-chk-item ${it.ok ? 'ok' : 'warn'}">${esc(it.text)}</div>`
+        ).join('');
+      }
+      openModal('draftCheckModal');
+    }
+
+    function buildLinkedInSnippets() {
+      const d = getData();
+      const title = displayJobTitle(d);
+      const skills = selectedSkills();
+      const top = skills.slice(0, 4).join(' · ');
+      const sumWords = (d.summary || '').trim().split(/\s+/).filter(Boolean);
+      const sumShort = sumWords.slice(0, 28).join(' ');
+      const h1 = `${title}${top ? ` | ${top}` : ''}`;
+      const h2 = top ? `${title} — ${skills.slice(0, 2).join(' & ')}` : `${title} | Person-centred care`;
+      const h3 = `Support professional · ${title}`;
+      const about = `I work as a ${title}. ${sumShort ? sumShort + (sumWords.length > 28 ? '…' : '') : 'I focus on safe, respectful, person-centred support.'} ${skills.length ? `Key strengths include ${skills.slice(0, 5).join(', ')}.` : ''} I'm committed to clear communication, documentation, and teamwork.`;
+      return { headlines: [h1, h2, h3], about };
+    }
+
+    function openLinkedinModal() {
+      const sn = buildLinkedInSnippets();
+      const body = $('#linkedinModalBody');
+      if (!body) return;
+      body.innerHTML = sn.headlines.map((h, i) => `
+        <div class="li-snippet-block">
+          <label for="liHead${i}">Headline idea ${i + 1}</label>
+          <textarea readonly id="liHead${i}" class="textarea-duties" spellcheck="false" aria-label="Headline idea ${i + 1}"></textarea>
+          <button type="button" class="btn teal li-copy-btn" data-li-copy="liHead${i}">Copy</button>
+        </div>
+      `).join('') + `
+        <div class="li-snippet-block">
+          <label for="liAbout">About section starter</label>
+          <textarea readonly id="liAbout" class="textarea-duties" spellcheck="false" aria-label="About section starter"></textarea>
+          <button type="button" class="btn teal li-copy-btn" data-li-copy="liAbout">Copy</button>
+        </div>`;
+      sn.headlines.forEach((h, i) => {
+        const ta = document.getElementById(`liHead${i}`);
+        if (ta) ta.value = h;
+      });
+      const ab = $('#liAbout');
+      if (ab) ab.value = sn.about;
+      openModal('linkedinModal');
+    }
+
+    function renderInterviewModal() {
+      const body = $('#interviewModalBody');
+      if (!body) return;
+      body.innerHTML = INTERVIEW_PROMPTS.map((p, i) => `
+        <div class="interview-prompt-row">
+          <span style="flex:1; min-width:12rem; font-size:.88rem;">${esc(p)}</span>
+          <button type="button" class="btn" style="font-size:.75rem;" data-ip-copy="${i}">Copy</button>
+        </div>
+      `).join('');
+    }
+
+    function openInterviewModal() {
+      renderInterviewModal();
+      openModal('interviewModal');
+    }
+
+    function insertThankYouEmail() {
+      const d = getData();
+      const emp = ($('#emEmployer').value || '').trim() || 'your team';
+      const pos = ($('#emPosition').value || '').trim() || 'the role';
+      const name = [d.firstName, d.lastName].filter(Boolean).join(' ');
+      const lines = [
+        'Dear Hiring Team,',
+        '',
+        `Thank you for taking the time to speak with me about the ${pos} opportunity${emp ? ` with ${emp}` : ''}. I appreciated learning more about the team and the way you support clients.`,
+        '',
+        'I remain very interested in the position and would welcome the chance to contribute.',
+        '',
+        name ? `Kind regards,\n${name}` : 'Kind regards,'
+      ];
+      const ta = $('#emBody');
+      if (!ta) return;
+      const cur = ta.value.trim();
+      ta.value = cur ? `${cur}\n\n${lines.join('\n')}` : lines.join('\n');
+      switchPane('emailPane');
+      renderEverything();
+      showToast('Thank-you paragraph added to email draft.');
+    }
+
+    function icsEscape(s) {
+      return String(s || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/\n/g, '\\n')
+        .replace(/;/g, '\\;')
+        .replace(/,/g, '\\,');
+    }
+
+    function icsDateOnly(iso) {
+      const x = (iso || '').trim().replace(/-/g, '');
+      return x.length >= 8 ? x.slice(0, 8) : '';
+    }
+
+    function logRowToIcsEvent(row, idx) {
+      const dt = icsDateOnly(row.followUpDate);
+      if (!dt) return '';
+      const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z/, 'Z');
+      const uid = `cr-${idx}-${dt}-${Date.now()}@care-ready.local`;
+      const title = `Follow up: ${row.employer || 'Application'}`.slice(0, 200);
+      const desc = ['Applied: ' + (row.dateApplied || ''), row.portal || '', row.outcome || '', row.followUpNote || ''].filter(Boolean).join('\\n');
+      return [
+        'BEGIN:VEVENT',
+        `UID:${uid}`,
+        `DTSTAMP:${stamp}`,
+        `DTSTART;VALUE=DATE:${dt}`,
+        `SUMMARY:${icsEscape(title)}`,
+        `DESCRIPTION:${icsEscape(desc)}`,
+        'END:VEVENT'
+      ].join('\r\n');
+    }
+
+    function downloadIcsString(icsBody, filename) {
+      const cal = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//CareReady Pro//EN', 'CALSCALE:GREGORIAN', icsBody, 'END:VCALENDAR'].join('\r\n');
+      downloadTextFile(filename, cal, 'text/calendar;charset=utf-8');
+    }
+
+    function downloadLogRowIcs(idx) {
+      const row = applicationLog[idx];
+      if (!row || !row.followUpDate) {
+        showToast('This row has no follow-up date.');
+        return;
+      }
+      const ev = logRowToIcsEvent(row, idx);
+      downloadIcsString(ev, `${exportFilenameBase()}-followup-${idx}.ics`);
+      recordExportActivity();
+      showToast('Calendar file download started.');
+    }
+
+    function downloadAllFollowUpIcs() {
+      const parts = [];
+      applicationLog.forEach((row, i) => {
+        if (row.followUpDate) {
+          const ev = logRowToIcsEvent(row, i);
+          if (ev) parts.push(ev);
+        }
+      });
+      if (!parts.length) {
+        showToast('No entries with follow-up dates.');
+        return;
+      }
+      downloadIcsString(parts.join('\r\n'), `${exportFilenameBase()}-followups.ics`);
+      recordExportActivity();
+      showToast('Combined .ics download started.');
+    }
+
+    function fillShortcutsModal() {
+      const el = $('#shortcutsModalBody');
+      if (!el) return;
+      el.innerHTML = `
+        <p class="kbd-hint"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd>–<kbd>5</kbd> Switch editor tabs (Resume, Cover, Email, Referral, Criteria)</p>
+        <p class="kbd-hint"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>P</kbd> Print / PDF</p>
+        <p class="kbd-hint"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> Read preview aloud</p>
+        <p class="kbd-hint"><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>.</kbd> Stop read-aloud</p>
+      `;
+    }
+
+    function isShortcutFormTarget(el) {
+      return el && el.closest && el.closest('input, textarea, select, [contenteditable="true"]');
+    }
+
+    function handleGlobalShortcuts(e) {
+      if (!e.ctrlKey || !e.altKey || e.shiftKey || e.metaKey) return;
+      if (isShortcutFormTarget(e.target)) return;
+      const k = e.key;
+      if (k === 'p' || k === 'P') {
+        e.preventDefault();
+        window.print();
+        return;
+      }
+      if (k === 'r' || k === 'R') {
+        e.preventDefault();
+        readAloudActivePreview();
+        return;
+      }
+      if (k === '.' || k === '>') {
+        e.preventDefault();
+        stopReadAloud();
+        showToast('Read-aloud stopped.');
+        return;
+      }
+      const panes = ['resumePane', 'coverPane', 'emailPane', 'refPane', 'responsesPane'];
+      const n = parseInt(k, 10);
+      if (n >= 1 && n <= 5) {
+        e.preventDefault();
+        switchPane(panes[n - 1]);
+        queueSave();
+      }
     }
 
     function scrollIntoViewOpt(el, block = 'nearest') {
@@ -2899,6 +3704,7 @@
             <div class="flex-row-gap" style="margin-top:6px; flex-wrap:wrap;">
               <button type="button" class="btn" style="font-size:.72rem;padding:4px 8px;" data-log-follow-copy="${i}">Copy follow-up text</button>
               <button type="button" class="btn" style="font-size:.72rem;padding:4px 8px;" data-log-follow-email="${i}">Load into email draft</button>
+              ${row.followUpDate ? `<button type="button" class="btn" style="font-size:.72rem;padding:4px 8px;" data-log-ics="${i}">Reminder .ics</button>` : ''}
             </div>
           </div>
           <button type="button" class="btn" style="font-size:.72rem;padding:4px 8px;align-self:flex-start;" data-log-del="${i}" aria-label="Remove log entry">Remove</button>
@@ -3017,9 +3823,26 @@
       updateRenewalBanner();
     }
 
+    const PV_EDIT_PANES = new Set(['resumePane', 'coverPane', 'emailPane', 'refPane']);
+
+    function previewHasActiveEditableFocus() {
+      const ae = document.activeElement;
+      const pb = $('#previewBody');
+      if (!pb || !ae || ae.nodeType !== 1 || typeof ae.closest !== 'function' || !pb.contains(ae)) return false;
+      return !!(ae.closest('[data-pv-edit]') || ae.closest('[data-pv-card]'));
+    }
+
+    function shouldSkipCoverPreviewRender() {
+      if (!PV_EDIT_PANES.has(activePane)) return false;
+      return previewHasActiveEditableFocus();
+    }
+
     function schedulePreview() {
       clearTimeout(previewDebounce);
-      previewDebounce = setTimeout(() => { renderPreview(); }, 100);
+      previewDebounce = setTimeout(() => {
+        if (shouldSkipCoverPreviewRender()) return;
+        renderPreviewCore();
+      }, 100);
     }
 
     function nowStamp() {
@@ -3460,6 +4283,132 @@
       return p.map(t => `<p>${esc(t).replaceAll('\n', '<br>')}</p>`).join('');
     }
 
+    function coverPreviewBodyToPlain(el) {
+      const ps = el.querySelectorAll(':scope > p');
+      if (ps.length) {
+        return Array.from(ps)
+          .map(p => (p.textContent || '').replace(/\u00a0/g, ' ').trim())
+          .filter(Boolean)
+          .join('\n\n');
+      }
+      return (el.textContent || '').replace(/\u00a0/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+    }
+
+    const PV_BLOCK_FIELDS = new Set(['clBody', 'emBody', 'rfBody', 'summary', 'volunteer', 'customContent']);
+
+    function listItemsFromUl(ul) {
+      if (!ul) return '';
+      return [...ul.querySelectorAll(':scope > li')]
+        .map(li => (li.textContent || '').replace(/\u00a0/g, ' ').trim())
+        .filter(Boolean)
+        .join('\n');
+    }
+
+    function syncResumeRoleLine(el) {
+      const text = (el.textContent || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      const sel = $('#jobTitle');
+      const custom = $('#jobTitleCustom');
+      if (!sel) {
+        if (custom) custom.value = text;
+        return;
+      }
+      let matched = false;
+      for (let i = 0; i < sel.options.length; i++) {
+        const o = sel.options[i];
+        if (o.value === '__other__') continue;
+        if (o.textContent.trim() === text) {
+          sel.value = o.value;
+          matched = true;
+          break;
+        }
+      }
+      if (matched) {
+        if (custom) custom.value = '';
+      } else {
+        sel.value = '__other__';
+        if (custom) custom.value = text;
+      }
+      syncJobTitleCustom();
+    }
+
+    function syncExpPreviewFromEl(el) {
+      const idx = Number(el.dataset.pvIndex);
+      const field = el.dataset.pvField;
+      if (Number.isNaN(idx) || !field) return;
+      const cards = $$('#expList .entry-card');
+      const card = cards[idx];
+      if (!card) return;
+      let val;
+      if (field === 'duties' || field === 'achievements') {
+        const ul = el.querySelector(':scope ul.duties');
+        val = listItemsFromUl(ul);
+      } else {
+        val = (el.textContent || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      }
+      const map = { title: '.e-title', organisation: '.e-org', from: '.e-from', to: '.e-to', gapReason: '.e-gap', duties: '.e-duties', achievements: '.e-achieve' };
+      const inp = $(map[field], card);
+      if (inp && inp.value !== val) inp.value = val;
+    }
+
+    function syncQualPreviewFromEl(el) {
+      const idx = Number(el.dataset.pvIndex);
+      const field = el.dataset.pvField;
+      if (Number.isNaN(idx) || !field) return;
+      const cards = $$('#qualList .entry-card');
+      const card = cards[idx];
+      if (!card) return;
+      const val = (el.textContent || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      const map = { institution: '.q-inst', year: '.q-year', expectNote: '.q-expect' };
+      const inp = $(map[field], card);
+      if (inp && inp.value !== val) inp.value = val;
+    }
+
+    function syncCoverPreviewField(el) {
+      if (el.dataset.pvCard === 'exp') {
+        syncExpPreviewFromEl(el);
+        return;
+      }
+      if (el.dataset.pvCard === 'qual') {
+        syncQualPreviewFromEl(el);
+        return;
+      }
+      const id = el.dataset?.pvEdit;
+      if (!id) return;
+      if (id === '_role') {
+        syncResumeRoleLine(el);
+        return;
+      }
+      const target = document.getElementById(id);
+      if (!target) return;
+      let val;
+      if (PV_BLOCK_FIELDS.has(id)) val = coverPreviewBodyToPlain(el);
+      else val = (el.textContent || '').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      if (target.value !== val) target.value = val;
+    }
+
+    function syncAllCoverPreviewFromPreview() {
+      $('#previewBody')?.querySelectorAll('[data-pv-edit], [data-pv-card]').forEach(syncCoverPreviewField);
+    }
+
+    function coverPreviewPlainPaste(e) {
+      const ed = e.target.closest?.('[data-pv-edit]') || e.target.closest?.('[data-pv-card]');
+      if (!ed || !$('#previewBody')?.contains(ed)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const text = e.clipboardData?.getData('text/plain') ?? '';
+      const sel = window.getSelection();
+      if (!sel?.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      range.deleteContents();
+      const tn = document.createTextNode(text);
+      range.insertNode(tn);
+      range.setStartAfter(tn);
+      range.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(range);
+      ed.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
     function contactBits(data) {
       const loc = [data.suburb, data.postcode, data.state].filter(Boolean).join(', ');
       const parts = [];
@@ -3471,6 +4420,151 @@
       if (data.linkedin) parts.push(`<span>${linkifyLinkedin(data.linkedin)}</span>`);
       if (data.languages) parts.push(`<span>${esc(`Languages: ${data.languages}`)}</span>`);
       return parts.join('');
+    }
+
+    /*
+     * Resume preview editing contract (reuse in new templates):
+     * - data-pv-edit="fieldId" → syncs to #fieldId (textarea/input). Block text: summary, volunteer, customContent.
+     * - data-pv-edit="_role" → job title line (select + jobTitleCustom).
+     * - data-pv-card="exp"|"qual" + data-pv-index (DOM index in #expList / #qualList) + data-pv-field → card inputs.
+     * - Experience duties/achievements: contenteditable wrapper with ul.duties inside; listItemsFromUl on sync.
+     */
+    function renderExpItemEditable(e, domIdx) {
+      const dutiesInner = lineItems(e.duties).length
+        ? lineItems(e.duties).map(d => `<li>${esc(d)}</li>`).join('')
+        : '<li></li>';
+      const achInner = lineItems(e.achievements).length
+        ? lineItems(e.achievements).map(d => `<li>${esc(d)}</li>`).join('')
+        : '<li></li>';
+      return `
+          <div class="item resume-exp-pv">
+            <div class="it-h"><span class="pv-ce" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="title" contenteditable="true" aria-label="Job title">${esc(e.title || 'Role')}</span></div>
+            <div class="it-sub">
+              <span class="pv-ce" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="organisation" contenteditable="true" aria-label="Organisation">${esc(e.organisation)}</span>
+              <span aria-hidden="true"> | </span>
+              <span class="pv-ce" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="from" contenteditable="true" aria-label="From date">${esc(e.from)}</span>
+              <span aria-hidden="true"> — </span>
+              <span class="pv-ce" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="to" contenteditable="true" aria-label="To date">${esc(e.to)}</span>
+            </div>
+            <div class="it-sub"><em>Gap note:</em> <span class="pv-ce" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="gapReason" contenteditable="true" aria-label="Gap reason">${esc(e.gapReason)}</span></div>
+            <div class="duty-edit-wrap"><div class="pv-ce-body letter" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="duties" contenteditable="true" aria-label="Key duties"><ul class="duties">${dutiesInner}</ul></div></div>
+            <div class="it-sub"><strong>Key achievements</strong><div class="pv-ce-body" data-pv-card="exp" data-pv-index="${domIdx}" data-pv-field="achievements" contenteditable="true" aria-label="Key achievements"><ul class="duties">${achInner}</ul></div></div>
+          </div>`;
+    }
+
+    function renderQualItemEditable(q, domIdx) {
+      return `
+          <div class="item resume-qual-pv">
+            <div class="it-h">${esc(q.qualification || 'Qualification')}</div>
+            <div class="it-sub">
+              <span class="pv-ce" data-pv-card="qual" data-pv-index="${domIdx}" data-pv-field="institution" contenteditable="true" aria-label="Institution">${esc(q.institution)}</span>
+              <span aria-hidden="true"> | </span>
+              <span class="pv-ce" data-pv-card="qual" data-pv-index="${domIdx}" data-pv-field="year" contenteditable="true" aria-label="Year">${esc(q.year)}</span>
+              <span aria-hidden="true"> · </span>
+              <span class="pv-ce" data-pv-card="qual" data-pv-index="${domIdx}" data-pv-field="expectNote" contenteditable="true" aria-label="Qualification status">${esc(q.expectNote)}</span>
+            </div>
+          </div>`;
+    }
+
+    function resumeContactPreviewHtml(data, forTpl2) {
+      const T = forTpl2 ? 'div' : 'span';
+      const sep = forTpl2 ? '<div class="side-contact-sep"></div>' : '<span class="r-c-sep"> | </span>';
+      const seg = (id, label, val) => `<${T} class="pv-ce" data-pv-edit="${id}" contenteditable="true" role="textbox" aria-label="${label}">${esc(val || '')}</${T}>`;
+      const bits = [
+        seg('phone', 'Phone', data.phone), sep,
+        seg('email', 'Email', data.email), sep,
+        seg('suburb', 'Suburb', data.suburb), '<span aria-hidden="true">, </span>', seg('postcode', 'Postcode', data.postcode), ' ', seg('state', 'State', data.state), sep,
+        seg('workRights', 'Work rights', (data.workRights || '').replace(/^Work rights:\s*/i, '')), sep,
+        seg('ahpra', 'AHPRA', (data.ahpra || '').replace(/^AHPRA:\s*/i, '')), sep,
+        seg('linkedin', 'LinkedIn', data.linkedin), sep,
+        seg('languages', 'Languages', (data.languages || '').replace(/^Languages:\s*/i, ''))
+      ];
+      return bits.join('');
+    }
+
+    function resumeNameHtml(data, tplNum) {
+      let h1Style = '';
+      if (tplNum === 2 || tplNum === 4) h1Style = ' style="margin-top:0; color:#fff;"';
+      if (tplNum === 5) h1Style = ' style="margin-top:0;"';
+      if (tplNum === 6) h1Style = ' style="margin-top:0;"';
+      return `<h1 class="r-name"${h1Style}><span class="pv-ce" data-pv-edit="firstName" contenteditable="true" role="textbox" aria-label="First name">${esc(data.firstName)}</span> <span class="pv-ce" data-pv-edit="lastName" contenteditable="true" role="textbox" aria-label="Last name">${esc(data.lastName)}</span></h1>`;
+    }
+
+    function resumeRoleHtml(data, tplNum) {
+      let roleStyle = '';
+      if (tplNum === 2) roleStyle = ' style="color:#d6f1e8;"';
+      if (tplNum === 4) roleStyle = ' style="color:rgba(255,255,255,.92); margin-top:6px;"';
+      if (tplNum === 5) roleStyle = ' style="margin-top:10px;"';
+      if (tplNum === 6) roleStyle = ' style="margin-top:6px;"';
+      const roleLine = displayJobTitle(data);
+      return `<div class="r-role"${roleStyle}><span class="pv-ce" data-pv-edit="_role" contenteditable="true" role="textbox" aria-label="Job title line">${esc(roleLine)}</span></div>`;
+    }
+
+    function resumeSummarySectionEditable(data) {
+      if (!(data.summary || '').trim()) return '';
+      return `
+        <h3 class="sec-h">Professional Summary</h3>
+        <div class="letter pv-ce-body" data-pv-edit="summary" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Professional summary">${formatPara(data.summary)}</div>`;
+    }
+
+    function resumeExperienceSectionHtml() {
+      const cards = $$('#expList .entry-card');
+      const ex = collectExperience();
+      const parts = [];
+      cards.forEach((card, domIdx) => {
+        const e = ex[domIdx];
+        if (!e || (!e.title && !e.organisation && !e.duties)) return;
+        parts.push(renderExpItemEditable(e, domIdx));
+      });
+      if (!parts.length) return '';
+      return `<h3 class="sec-h">Work Experience</h3>${parts.join('')}`;
+    }
+
+    function resumeQualificationsSectionHtml() {
+      const cards = $$('#qualList .entry-card');
+      const parts = [];
+      cards.forEach((card, domIdx) => {
+        const q = {
+          qualification: $('.q-name', card)?.value || '',
+          institution: $('.q-inst', card)?.value || '',
+          year: $('.q-year', card)?.value || '',
+          expectNote: $('.q-expect', card)?.value || ''
+        };
+        if (!q.qualification && !q.institution && !q.year) return;
+        parts.push(renderQualItemEditable(q, domIdx));
+      });
+      if (!parts.length) return '';
+      return `<h3 class="sec-h">Qualifications</h3>${parts.join('')}`;
+    }
+
+    function resumeVolunteerSectionEditable(data) {
+      const bits = [];
+      if ($('#incVolunteer')?.checked && (data.volunteer || '').trim()) {
+        bits.push(`<div class="item"><div class="it-h">Volunteer Work</div><div class="letter pv-ce-body" data-pv-edit="volunteer" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Volunteer work">${formatPara(data.volunteer)}</div></div>`);
+      }
+      if ($('#incHobbies')?.checked && (data.hobbies || '').trim()) {
+        bits.push(`<div class="item"><div class="it-h">Hobbies & Interests</div><div class="pv-ce" data-pv-edit="hobbies" contenteditable="true" role="textbox" aria-label="Hobbies">${esc(data.hobbies)}</div></div>`);
+      }
+      if (!bits.length) return '';
+      return `<h3 class="sec-h">Volunteer & Community</h3>${bits.join('')}`;
+    }
+
+    function resumeCustomSectionEditable(data) {
+      if (!$('#incCustom')?.checked || (!(data.customTitle || '').trim() && !(data.customContent || '').trim())) return '';
+      return `
+        <h3 class="sec-h"><span class="pv-ce resume-sec-title-edit" data-pv-edit="customTitle" contenteditable="true" role="textbox" aria-label="Custom section title">${esc(data.customTitle || 'Custom Section')}</span></h3>
+        <div class="letter pv-ce-body" data-pv-edit="customContent" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Custom section body">${formatPara(data.customContent)}</div>`;
+    }
+
+    function resumeReferencesSectionEditable(data) {
+      if (data.refMode !== 'Include named references') {
+        return '<h3 class="sec-h">References</h3><div>Available upon request</div>';
+      }
+      return `
+        <h3 class="sec-h">References</h3>
+        <div class="ref-line"><span class="pv-ce" data-pv-edit="ref1" contenteditable="true" role="textbox" aria-label="Reference 1">${esc(data.ref1 || '')}</span></div>
+        <div class="ref-line"><span class="pv-ce" data-pv-edit="ref2" contenteditable="true" role="textbox" aria-label="Reference 2">${esc(data.ref2 || '')}</span></div>
+        <div class="ref-line"><span class="pv-ce" data-pv-edit="ref3" contenteditable="true" role="textbox" aria-label="Reference 3 (optional)">${esc(data.ref3 || '')}</span></div>`;
     }
 
     const EXP_MONTH_MAP = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11 };
@@ -3656,6 +4750,194 @@
       if (matches.length) parts.push(`Found in ad (${matches.length}): ${matches.join(', ')}.`);
       if (misses.length) parts.push(`Not found as plain text (${misses.length}): ${misses.join(', ')}—still consider synonyms.`);
       out.textContent = parts.join(' ') || 'No selected skills to check.';
+    }
+
+    let lastJobAdParse = { employer: '', position: '', where: '' };
+    let lastJobAdBullets = [];
+
+    function splitJobAdLabelValue(line) {
+      const idx = line.indexOf(':');
+      if (idx >= 2 && idx <= 48) {
+        const key = line.slice(0, idx).trim();
+        const val = line.slice(idx + 1).trim();
+        if (val.length >= 2) return { key, val };
+      }
+      const dashM = String(line).match(/^(.{2,42})\s+[–—-]\s+(.+)$/);
+      if (dashM) {
+        const key = dashM[1].trim();
+        const val = dashM[2].trim();
+        if (val.length >= 2) return { key, val };
+      }
+      return null;
+    }
+
+    function parseJobAdFields(text) {
+      const out = { employer: '', position: '', where: '' };
+      const lines = String(text || '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      const labelRules = [
+        {
+          field: 'employer',
+          test: (key) => /^(employer|company|organisation|organization|org\b|client|provider|posted\s*by|recruiter|agency|business(\s*name)?|hiring\s*(organisation|organization)|facility)\b/i.test(key)
+        },
+        {
+          field: 'position',
+          test: (key) => /^(position|role|job\s*title|title|vacancy|opportunity|classification|sub\s*-?\s*classification)\b/i.test(key)
+        },
+        {
+          field: 'where',
+          test: (key) => /^(location|work\s*location|site|based(\s+in)?|where|address|suburb|workplace|region|state|area)\b/i.test(key)
+        }
+      ];
+      const twoLineHeaders = [
+        { field: 'employer', re: /^(organisation|organization|company|employer|business(\s*name)?|posted\s*by|recruiter|agency|hiring\s*(organisation|organization))$/i },
+        { field: 'position', re: /^(role|position|job\s*title|title|vacancy|classification|sub\s*-?\s*classification)$/i },
+        { field: 'where', re: /^(location|work\s*location|where|address)$/i }
+      ];
+      for (const line of lines) {
+        if (/https?:\/\//i.test(line)) continue;
+        const pair = splitJobAdLabelValue(line);
+        if (!pair || pair.val.length > 200) continue;
+        const key = pair.key;
+        for (const { field, test } of labelRules) {
+          if (test(key)) {
+            if (!out[field]) out[field] = pair.val.slice(0, 120);
+            break;
+          }
+        }
+      }
+      for (let i = 0; i < lines.length - 1; i++) {
+        const cur = lines[i];
+        if (/https?:\/\//i.test(cur)) continue;
+        const next = lines[i + 1];
+        if (!next || /https?:\/\//i.test(next)) continue;
+        if (splitJobAdLabelValue(next)) continue;
+        if (next.length > 120) continue;
+        if (/^[-•*\d]/.test(next)) continue;
+        for (const { field, re } of twoLineHeaders) {
+          if (out[field]) continue;
+          if (!re.test(cur)) continue;
+          if (twoLineHeaders.some(h => h.re.test(next))) continue;
+          out[field] = next.slice(0, 120);
+          break;
+        }
+      }
+      return out;
+    }
+
+    function extractJobAdBullets(text) {
+      return String(text || '')
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(l => /^[-•*]\s+/.test(l) || /^\d+[\.)]\s+/.test(l))
+        .map(l => l.replace(/^[-•*\d.)]+\s*/, '').trim())
+        .filter(Boolean);
+    }
+
+    function extractJobAdContacts(text) {
+      const raw = String(text || '');
+      const emails = [...new Set(raw.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g) || [])].slice(0, 6);
+      const phones = [...new Set(raw.match(/(?:\+?61|0)[\s.-]?\d(?:[\s.-]?\d){7,}/g) || [])].slice(0, 4);
+      const urls = [...new Set((raw.match(/https?:\/\/[^\s<>"')]+/gi) || []).map(u => u.replace(/[.,;]+$/, '')))].slice(0, 6);
+      return { emails, phones, urls };
+    }
+
+    function applyJobAdField(field, target) {
+      const v = (lastJobAdParse[field] || '').trim();
+      if (!v) return;
+      const cover = target === 'cover' || target === 'both';
+      const email = target === 'email' || target === 'both';
+      if (field === 'employer') {
+        if (cover) $('#clEmployer').value = v;
+        if (email) $('#emEmployer').value = v;
+      } else if (field === 'position') {
+        if (cover) $('#clPosition').value = v;
+        if (email) $('#emPosition').value = v;
+      } else if (field === 'where' && cover) {
+        $('#clWhere').value = v;
+      }
+    }
+
+    function selectSkillsFromJobAd() {
+      const adRaw = ($('#jobAdPaste')?.value || '');
+      const adNorm = normalizeSkillForAdMatch(adRaw);
+      const out = $('#jobAdMatchOut');
+      if (!adNorm) {
+        if (out) out.textContent = 'Paste a job ad first.';
+        return;
+      }
+      let n = 0;
+      $$('#skillWrap .chip').forEach(chip => {
+        const label = chip.textContent || '';
+        const needle = normalizeSkillForAdMatch(label);
+        if (needle.length < 3 || !adNorm.includes(needle)) return;
+        chip.classList.add('on');
+        chip.setAttribute('aria-pressed', 'true');
+        n++;
+      });
+      renderEverything();
+      if (out) {
+        out.textContent = n
+          ? `Turned on ${n} skill chip(s) whose labels appear as plain text in the ad. Use “Match selected skills” to highlight matches/misses.`
+          : 'No skill chip labels matched as plain text — try synonyms or select skills manually.';
+      }
+    }
+
+    function runJobAdParse() {
+      const raw = ($('#jobAdPaste')?.value || '').trim();
+      const out = $('#jobAdMatchOut');
+      const panel = $('#jobAdExtractPanel');
+      if (!raw) {
+        if (out) out.textContent = 'Paste a job ad first.';
+        if (panel) {
+          panel.style.display = 'none';
+          panel.innerHTML = '';
+        }
+        return;
+      }
+      lastJobAdParse = parseJobAdFields(raw);
+      lastJobAdBullets = extractJobAdBullets(raw);
+      const contacts = extractJobAdContacts(raw);
+      if (out) out.textContent = 'Parsed on this device only — verify every field before you send anything.';
+
+      if (!panel) return;
+      panel.style.display = 'block';
+
+      function sugRow(field, label) {
+        const v = lastJobAdParse[field];
+        if (!v) return '';
+        const whereOnly = field === 'where';
+        const btns = whereOnly
+          ? `<button type="button" class="btn teal" data-jad-apply="${field}" data-jad-target="cover">Cover (where advertised)</button>`
+          : `<button type="button" class="btn" data-jad-apply="${field}" data-jad-target="cover">Cover</button>
+<button type="button" class="btn" data-jad-apply="${field}" data-jad-target="email">Email</button>
+<button type="button" class="btn teal" data-jad-apply="${field}" data-jad-target="both">Both</button>`;
+        return `<div class="job-ad-sug-row"><span class="job-ad-sug-lbl">${label}</span><span class="job-ad-sug-val">${esc(v)}</span><span class="job-ad-sug-actions">${btns}</span></div>`;
+      }
+
+      const rows = [sugRow('employer', 'Employer'), sugRow('position', 'Position'), sugRow('where', 'Where')].filter(Boolean);
+
+      let bulletHtml = '';
+      if (lastJobAdBullets.length) {
+        const preview = lastJobAdBullets.slice(0, 3).map(b => esc(b)).join(' · ');
+        bulletHtml = `<div class="job-ad-sug-row"><span class="job-ad-sug-lbl">Bullets</span><span class="job-ad-sug-val">${lastJobAdBullets.length} line(s) — ${preview}${lastJobAdBullets.length > 3 ? '…' : ''}</span><span class="job-ad-sug-actions">
+<button type="button" class="btn teal" id="jobAdBulletsToCritBtn">New criterion</button>
+<button type="button" class="btn" id="jobAdBulletsCopyBtn">Copy list</button>
+</span></div>`;
+      }
+
+      let contactHtml = '';
+      const bits = [];
+      if (contacts.emails.length) bits.push(contacts.emails.map(e => esc(e)).join(', '));
+      if (contacts.phones.length) bits.push(contacts.phones.map(p => esc(p)).join(', '));
+      if (contacts.urls.length) bits.push(contacts.urls.map(u => esc(u)).join(' '));
+      if (bits.length) {
+        contactHtml = `<div class="job-ad-sug-row"><span class="job-ad-sug-lbl">Detected</span><span class="job-ad-sug-val" style="word-break:break-word;">${bits.join('<br>')}</span><span class="job-ad-sug-actions"><button type="button" class="btn" id="jobAdContactsCopyBtn">Copy plain text</button></span></div>`;
+      }
+
+      const html = rows.join('') + bulletHtml + contactHtml;
+      panel.innerHTML = html.trim()
+        ? html
+        : '<p class="prog-hint" style="margin:0;">No lines like <strong>Role:</strong> or bullet lists found. Try labelled lines from the ad, or use skill matching above.</p>';
     }
 
     const TOUR_STEPS = [
@@ -3850,18 +5132,11 @@
     }
 
     function renderResume(data) {
-      const quals = collectQualifications().filter(q => q.qualification || q.institution || q.year);
-      const exps = collectExperience().filter(e => e.title || e.organisation || e.duties);
       const skills = selectedSkills();
       const comp = complianceMap();
       const compEntries = Object.entries(comp).filter(([, v]) => v);
-      const fullName = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Your Name';
 
-      const summarySec = data.summary ? `
-        <h3 class="sec-h">Professional Summary</h3>
-        <div class="letter">${formatPara(data.summary)}</div>
-      ` : '';
-
+      const summarySec = resumeSummarySectionEditable(data);
       const compSec = compEntries.length ? `
         <h3 class="sec-h">Compliance & Checks</h3>
         <div class="comp-cards">${compEntries.map(([k, v]) => {
@@ -3870,52 +5145,26 @@
         }).join('')}</div>
       ` : '';
 
-      const expSec = exps.length ? `
-        <h3 class="sec-h">Work Experience</h3>
-        ${exps.map(e => `
-          <div class="item">
-            <div class="it-h">${esc(e.title || 'Role')}</div>
-            <div class="it-sub">${esc(e.organisation || '')} ${e.from || e.to ? `| ${esc(e.from)} - ${esc(e.to || 'Present')}` : ''}</div>
-            ${e.gapReason ? `<div class="it-sub"><em>Gap note:</em> ${esc(e.gapReason)}</div>` : ''}
-            ${lineItems(e.duties).length ? `<ul class="duties">${lineItems(e.duties).map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
-            ${e.achievements && lineItems(e.achievements).length ? `<div class="it-sub"><strong>Key achievements</strong><ul class="duties">${lineItems(e.achievements).map(d => `<li>${esc(d)}</li>`).join('')}</ul></div>` : ''}
-          </div>
-        `).join('')}
-      ` : '';
-
-      const qualSec = quals.length ? `
-        <h3 class="sec-h">Qualifications</h3>
-        ${quals.map(q => `<div class="item"><div class="it-h">${esc(q.qualification || 'Qualification')}</div><div class="it-sub">${esc(q.institution || '')} ${q.year ? `| ${esc(q.year)}` : ''}${q.expectNote ? ` · ${esc(q.expectNote)}` : ''}</div></div>`).join('')}
-      ` : '';
+      const expSec = resumeExperienceSectionHtml();
+      const qualSec = resumeQualificationsSectionHtml();
 
       const skillSec = skills.length ? `
         <h3 class="sec-h">Key Skills</h3>
         <div class="skills-badges">${skills.map(s => `<span class="sb">${esc(s)}</span>`).join('')}</div>
       ` : '';
 
-      const volunteerSec = buildVolunteerCommunityHtml(data);
-      const customSec = buildCustomSectionHtml(data);
+      const volunteerSec = resumeVolunteerSectionEditable(data);
+      const customSec = resumeCustomSectionEditable(data);
       const qrSec = buildPrintQrHtml();
-
-      let refSec = '<h3 class="sec-h">References</h3><div>Available upon request</div>';
-      if (data.refMode === 'Include named references') {
-        refSec = `
-          <h3 class="sec-h">References</h3>
-          <div class="ref-line">${esc(data.ref1 || 'Reference 1')}</div>
-          <div class="ref-line">${esc(data.ref2 || 'Reference 2')}</div>
-          ${data.ref3 ? `<div class="ref-line">${esc(data.ref3)}</div>` : ''}
-        `;
-      }
-
+      const refSec = resumeReferencesSectionEditable(data);
       const availSec = availabilitySectionHtml(data);
-      const roleLine = displayJobTitle(data);
 
       if (template === 1) {
         return `
           <article class="paper tpl1">
-            <h1 class="r-name">${esc(fullName)}</h1>
-            <div class="r-role">${esc(roleLine)}</div>
-            <div class="r-contact">${contactBits(data)}</div>
+            ${resumeNameHtml(data, 1)}
+            ${resumeRoleHtml(data, 1)}
+            <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
             ${availSec}
             ${summarySec}
             ${compSec}
@@ -3934,10 +5183,10 @@
         return `
           <article class="paper tpl2">
             <section class="tpl2-left">
-              <h1 class="r-name" style="margin-top:0; color:#fff;">${esc(fullName)}</h1>
-              <div class="r-role" style="color:#d6f1e8;">${esc(roleLine)}</div>
+              ${resumeNameHtml(data, 2)}
+              ${resumeRoleHtml(data, 2)}
               <div class="side-h">Contact</div>
-              <div class="side-txt">${contactBits(data).replaceAll('<span>', '<div>').replaceAll('</span>', '</div>')}</div>
+              <div class="side-txt">${resumeContactPreviewHtml(data, true)}</div>
               <div class="side-h">Availability</div>
               <div class="side-txt">${esc(data.employmentType || '—')}<br>${esc(data.preferredSetting || '')}<br>${esc(selectedShifts().join(', ') || '')}</div>
               <div class="side-h">Compliance</div>
@@ -3958,11 +5207,101 @@
         `;
       }
 
+      if (template === 3) {
+        return `
+        <article class="paper tpl3">
+          ${resumeNameHtml(data, 3)}
+          ${resumeRoleHtml(data, 3)}
+          <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
+          ${availSec}
+          ${summarySec}
+          ${compSec}
+          ${expSec}
+          ${qualSec}
+          ${skillSec}
+          ${volunteerSec}
+          ${customSec}
+          ${refSec}
+          ${qrSec}
+        </article>
+      `;
+      }
+
+      if (template === 4) {
+        return `
+        <article class="paper tpl4">
+          <header class="tpl4-head">
+            ${resumeNameHtml(data, 4)}
+            ${resumeRoleHtml(data, 4)}
+          </header>
+          <div class="tpl4-contact-bar">
+            <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
+          </div>
+          <div class="tpl4-body">
+            ${availSec}
+            ${summarySec}
+            ${compSec}
+            ${expSec}
+            ${qualSec}
+            ${skillSec}
+            ${volunteerSec}
+            ${customSec}
+            ${refSec}
+            ${qrSec}
+          </div>
+        </article>
+      `;
+      }
+
+      if (template === 5) {
+        return `
+        <article class="paper tpl5">
+          <div class="tpl5-header">
+            ${resumeNameHtml(data, 5)}
+            ${resumeRoleHtml(data, 5)}
+            <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
+          </div>
+          ${availSec}
+          ${summarySec}
+          ${compSec}
+          ${expSec}
+          ${qualSec}
+          ${skillSec}
+          ${volunteerSec}
+          ${customSec}
+          ${refSec}
+          ${qrSec}
+        </article>
+      `;
+      }
+
+      if (template === 6) {
+        return `
+        <article class="paper tpl6">
+          <div class="tpl6-top">
+            ${resumeNameHtml(data, 6)}
+            ${resumeRoleHtml(data, 6)}
+            <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
+          </div>
+          ${availSec}
+          ${summarySec}
+          ${compSec}
+          ${expSec}
+          ${qualSec}
+          ${skillSec}
+          ${volunteerSec}
+          ${customSec}
+          ${refSec}
+          ${qrSec}
+        </article>
+      `;
+      }
+
       return `
         <article class="paper tpl3">
-          <h1 class="r-name">${esc(fullName)}</h1>
-          <div class="r-role">${esc(roleLine)}</div>
-          <div class="r-contact">${contactBits(data)}</div>
+          ${resumeNameHtml(data, 3)}
+          ${resumeRoleHtml(data, 3)}
+          <div class="r-contact">${resumeContactPreviewHtml(data, false)}</div>
           ${availSec}
           ${summarySec}
           ${compSec}
@@ -3979,9 +5318,10 @@
 
     function renderCover(data) {
       const name = [data.firstName, data.lastName].filter(Boolean).join(' ') || 'Your Name';
-      const manager = $('#clManager').value.trim();
+      const manager = ($('#clManager').value || '').trim();
       const addrLine = [data.suburb, data.postcode, data.state].filter(Boolean).join(', ');
       const clWhere = ($('#clWhere').value || '').trim();
+      const bodyInner = formatPara($('#clBody').value);
       return `
         <article class="paper letter">
           <div><strong>${esc(name)}</strong></div>
@@ -3989,37 +5329,40 @@
           <div>${esc(addrLine)}</div>
           <div style="margin-top:10px;">${new Date().toLocaleDateString('en-AU')}</div>
           <br>
-          <div><strong>${esc($('#clEmployer').value || 'Employer')}</strong></div>
-          ${manager ? `<div>${esc(manager)}</div>` : ''}
-          <div class="subject">Re: ${esc($('#clPosition').value || 'Position Application')}</div>
-          ${clWhere ? `<div class="muted" style="margin:4px 0 8px;">Where advertised: ${esc(clWhere)}</div>` : ''}
-          ${formatPara($('#clBody').value || 'Your cover letter will appear here.')}
+          <div><strong>To </strong><span class="pv-ce" data-pv-edit="clEmployer" contenteditable="true" role="textbox" aria-label="Employer name">${esc($('#clEmployer').value)}</span></div>
+          <div class="muted" style="font-size:.92rem; margin-top:4px;">Hiring manager (optional): <span class="pv-ce" data-pv-edit="clManager" contenteditable="true" role="textbox" aria-label="Hiring manager">${esc(manager)}</span></div>
+          <div class="subject">Re: <span class="pv-ce" data-pv-edit="clPosition" contenteditable="true" role="textbox" aria-label="Position applying for">${esc($('#clPosition').value)}</span></div>
+          <div class="muted" style="margin:4px 0 8px;">Where advertised: <span class="pv-ce" data-pv-edit="clWhere" contenteditable="true" role="textbox" aria-label="Where advertised">${esc(clWhere)}</span></div>
+          <div class="letter pv-ce-body" data-pv-edit="clBody" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Letter body">${bodyInner}</div>
           <p>Kind regards,<br>${esc(name)}</p>
         </article>
       `;
     }
 
     function renderEmail() {
+      const bodyInner = formatPara($('#emBody').value);
       return `
         <article class="paper email">
           <div class="mail-head">
-            <div class="mail-row"><div class="mail-k">To</div><div class="mail-v">${esc($('#emEmployer').value || 'Employer')}</div></div>
-            <div class="mail-row"><div class="mail-k">Subject</div><div class="mail-v">Application: ${esc($('#emPosition').value || 'Position')}</div></div>
+            <div class="mail-row"><div class="mail-k">To</div><div class="mail-v"><span class="pv-ce" data-pv-edit="emEmployer" contenteditable="true" role="textbox" aria-label="Email recipient">${esc($('#emEmployer').value)}</span></div></div>
+            <div class="mail-row"><div class="mail-k">Subject</div><div class="mail-v">Application: <span class="pv-ce" data-pv-edit="emPosition" contenteditable="true" role="textbox" aria-label="Position in subject line">${esc($('#emPosition').value)}</span></div></div>
           </div>
-          ${formatPara($('#emBody').value || 'Your generated email draft will appear here.')}
+          <div class="email letter pv-ce-body" data-pv-edit="emBody" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Email body">${bodyInner}</div>
         </article>
       `;
     }
 
     function renderReferral() {
+      const rfName = ($('#rfName').value || '').trim();
+      const bodyInner = formatPara($('#rfBody').value);
       return `
         <article class="paper ref">
-          <div><strong>${esc($('#rfName').value || 'Referee Name')}</strong></div>
-          <div>${esc($('#rfOrg').value || 'Organisation')}</div>
+          <div><strong><span class="pv-ce" data-pv-edit="rfName" contenteditable="true" role="textbox" aria-label="Referee name and title">${esc(rfName)}</span></strong></div>
+          <div><span class="pv-ce" data-pv-edit="rfOrg" contenteditable="true" role="textbox" aria-label="Organisation">${esc($('#rfOrg').value)}</span></div>
           <div>${new Date().toLocaleDateString('en-AU')}</div>
           <p>To Whom It May Concern,</p>
-          ${formatPara($('#rfBody').value || 'Referral letter content will appear here.')}
-          <p>Sincerely,<br>${esc($('#rfName').value || 'Referee Name')}</p>
+          <div class="letter pv-ce-body" data-pv-edit="rfBody" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Referral letter body">${bodyInner}</div>
+          <p>Sincerely,<br>${esc(rfName || 'Referee Name')}</p>
         </article>
       `;
     }
@@ -4065,17 +5408,17 @@
       return out;
     }
 
-    function renderPreview() {
+    function renderPreviewCore() {
       const data = getData();
       let html = '';
       if (activePane === 'resumePane') {
         html = isResumeSparse()
-          ? `<div class="preview-empty" role="note"><strong>Start your resume here</strong><br />Use the sidebar to add your name, role, and summary. This preview updates as you type.</div>`
+          ? `<div class="preview-empty" role="note"><strong>Start your resume here</strong><br />Use the sidebar to add your name, role, and summary. Once the preview shows your resume, teal-outlined areas (name, contact, summary, experience, etc.) can be edited in the preview and stay in sync with the form.</div>`
           : renderResume(data);
       }
       if (activePane === 'coverPane') {
         html = !($('#clBody').value || '').trim()
-          ? `<div class="preview-empty" role="note"><strong>Cover letter preview</strong><br />Choose a starter template or paste text into Letter Body. Your formatted letter will show here.</div>`
+          ? `<div class="preview-empty" role="note"><strong>Cover letter preview</strong><br />Choose a starter template or paste text into Letter Body. When there is a body, you can also edit employer, position, and paragraphs directly in the preview (changes sync to the form).</div>`
           : renderCover(data);
       }
       if (activePane === 'emailPane') html = renderEmail();
@@ -4084,6 +5427,16 @@
       $('#previewBody').innerHTML = html;
       $('#tplBtn').style.display = activePane === 'resumePane' ? 'inline-block' : 'none';
       $('#lenWarn').style.display = activePane === 'resumePane' && (collectExperience().length > 4 || words($('#summary').value) > 150) ? 'block' : 'none';
+      const pvh = $('#printScopeHint');
+      if (pvh) {
+        const base = 'Print and PDF use what you see here—switch Resume / Cover / Email / Referral / Criteria & prep above to print the right draft.';
+        pvh.textContent = base + (PV_EDIT_PANES.has(activePane) ? ' Teal-outlined areas in the preview are editable (Resume, Cover, Email, Referral) and stay in sync with the form—except compliance blocks and skills chips, which you change in the sidebar.' : '');
+      }
+    }
+
+    function renderPreview() {
+      if (shouldSkipCoverPreviewRender()) return;
+      renderPreviewCore();
     }
 
     function plainCoverExportAppend(d) {
@@ -4669,7 +6022,7 @@
           }
         }
 
-        template = Number(state.template) || 1;
+        template = Math.min(RESUME_TEMPLATE_COUNT, Math.max(1, Number(state.template) || 1));
         $('#tplBtn').textContent = `Template ${template}`;
 
         if (state.activePane) switchPane(state.activePane);
@@ -4803,6 +6156,10 @@
     }
 
     function switchPane(paneId) {
+      if (PV_EDIT_PANES.has(activePane) && paneId !== activePane) {
+        syncAllCoverPreviewFromPreview();
+        updateCoverBodyCount();
+      }
       activePane = paneId;
       $$('.pane').forEach(p => p.classList.toggle('on', p.id === paneId));
       $$('#sideTabs .tab').forEach(t => t.classList.toggle('on', t.dataset.pane === paneId));
@@ -5109,6 +6466,31 @@
           return;
         }
 
+        const logIcs = e.target.closest('[data-log-ics]');
+        if (logIcs && logIcs.dataset.logIcs !== undefined) {
+          const idx = Number(logIcs.dataset.logIcs);
+          if (!Number.isNaN(idx)) downloadLogRowIcs(idx);
+          return;
+        }
+
+        const liCb = e.target.closest('.li-copy-btn');
+        if (liCb && liCb.dataset.liCopy) {
+          const ta = document.getElementById(liCb.dataset.liCopy);
+          const v = ta?.value || '';
+          if (v) {
+            navigator.clipboard.writeText(v).then(() => showToast('Copied.')).catch(() => showToast('Copy failed.'));
+          }
+          return;
+        }
+
+        const ipCp = e.target.closest('[data-ip-copy]');
+        if (ipCp && ipCp.dataset.ipCopy !== undefined) {
+          const i = Number(ipCp.dataset.ipCopy);
+          const t = INTERVIEW_PROMPTS[i];
+          if (t) navigator.clipboard.writeText(t).then(() => showToast('Prompt copied.')).catch(() => showToast('Copy failed.'));
+          return;
+        }
+
         const snapApply = e.target.closest('[data-snap-apply]');
         if (snapApply && snapApply.dataset.snapApply !== undefined) {
           const idx = Number(snapApply.dataset.snapApply);
@@ -5211,15 +6593,54 @@
       const ws = $('#workspaceRoot');
       if (ws) {
         ws.addEventListener('input', (e) => {
+          const pc = e.target.closest?.('[data-pv-card]');
+          if (pc && $('#previewBody')?.contains(pc)) {
+            syncCoverPreviewField(pc);
+            if (pc.dataset.pvCard === 'exp') updateExperienceDateWarnings();
+            if (pc.dataset.pvCard === 'qual') detectQualDupes();
+            updateCoverBodyCount();
+          } else {
+            const pv = e.target.closest?.('[data-pv-edit]');
+            if (pv && $('#previewBody')?.contains(pv)) {
+              syncCoverPreviewField(pv);
+              updateCoverBodyCount();
+            }
+          }
           if (e.target.closest('#qualList')) detectQualDupes();
           refreshEditorChrome();
           schedulePreview();
           queueSave();
         });
+        ws.addEventListener('paste', (e) => {
+          const t = e.target.closest?.('[data-pv-edit]') || e.target.closest?.('[data-pv-card]');
+          if (t && $('#previewBody')?.contains(t)) coverPreviewPlainPaste(e);
+        }, true);
         ws.addEventListener('change', () => {
           renderEverything();
         });
       }
+
+      document.addEventListener('focusout', (e) => {
+        if (!PV_EDIT_PANES.has(activePane)) return;
+        const t = e.target;
+        if (!t || typeof t.closest !== 'function') return;
+        if (!t.closest('[data-pv-edit]') && !t.closest('[data-pv-card]')) return;
+        const pb = $('#previewBody');
+        if (!pb || !pb.contains(t)) return;
+        setTimeout(() => {
+          const ae = document.activeElement;
+          if (ae && pb.contains(ae) && (ae.closest('[data-pv-edit]') || ae.closest('[data-pv-card]'))) return;
+          syncAllCoverPreviewFromPreview();
+          updateCoverBodyCount();
+          queueSave();
+          renderPreviewCore();
+        }, 0);
+      }, true);
+
+      window.addEventListener('beforeprint', () => {
+        syncAllCoverPreviewFromPreview();
+        updateCoverBodyCount();
+      });
 
       $('#addQualBtn').addEventListener('click', () => { addQualCard({}); renderEverything(); });
       $('#addExpBtn').addEventListener('click', () => { addExpCard({}); renderEverything(); });
@@ -5290,6 +6711,23 @@
         localStorage.setItem('cr_dys', on ? '1' : '0');
         showToast(on ? 'Dyslexic-friendly font on' : 'Dyslexic-friendly font off');
       });
+
+      $('#fsDownBtn')?.addEventListener('click', () => { adjustFontScale(-FONT_SCALE_STEP); });
+      $('#fsUpBtn')?.addEventListener('click', () => { adjustFontScale(FONT_SCALE_STEP); });
+      $('#fsResetBtn')?.addEventListener('click', () => { applyFontScale(100); });
+
+      $('#readAloudBtn')?.addEventListener('click', () => { readAloudActivePreview(); });
+      $('#readAloudPvBtn')?.addEventListener('click', () => { readAloudActivePreview(); });
+      $('#stopReadAloudBtn')?.addEventListener('click', () => { stopReadAloud(); showToast('Read-aloud stopped.'); });
+      $('#draftCheckBtn')?.addEventListener('click', () => openDraftCheckModal());
+      $('#coverDraftCheckBtn')?.addEventListener('click', () => openDraftCheckModal());
+      $('#emailDraftCheckBtn')?.addEventListener('click', () => openDraftCheckModal());
+      $('#linkedinBtn')?.addEventListener('click', () => openLinkedinModal());
+      $('#interviewBankBtn')?.addEventListener('click', () => openInterviewModal());
+      $('#interviewBankInlineBtn')?.addEventListener('click', () => openInterviewModal());
+      $('#shortcutsMenuBtn')?.addEventListener('click', () => { fillShortcutsModal(); openModal('shortcutsModal'); });
+      $('#jobAdHelpMenuBtn')?.addEventListener('click', () => openModal('jobAdHelpModal'));
+      $('#thankYouEmailBtn')?.addEventListener('click', () => insertThankYouEmail());
 
       $('#skillFilter').addEventListener('input', () => applySkillFilter());
 
@@ -5392,6 +6830,8 @@
       });
 
       $('#copyHtmlBtn')?.addEventListener('click', async () => {
+        syncAllCoverPreviewFromPreview();
+        updateCoverBodyCount();
         const pb = $('#previewBody');
         const html = pb?.innerHTML?.trim() || '';
         const plain = pb?.innerText?.trim() || '';
@@ -5426,7 +6866,7 @@
       $('#printTopBtn').addEventListener('click', () => window.print());
 
       $('#tplBtn').addEventListener('click', () => {
-        template = (template % 3) + 1;
+        template = (template % RESUME_TEMPLATE_COUNT) + 1;
         $('#tplBtn').textContent = `Template ${template}`;
         renderEverything();
       });
@@ -5492,6 +6932,8 @@
         showToast('CSV download started.');
       });
 
+      $('#exportLogIcsBtn')?.addEventListener('click', () => downloadAllFollowUpIcs());
+
       $('#addCritBtn')?.addEventListener('click', () => { addCritCard({}); renderEverything(); });
       $('#addStarBtn')?.addEventListener('click', () => { addStarCard({}); renderEverything(); });
 
@@ -5515,6 +6957,42 @@
 
       $('#jobAdMatchBtn')?.addEventListener('click', () => {
         runJobAdSkillMatch();
+      });
+      $('#jobAdSelectSkillsBtn')?.addEventListener('click', () => selectSkillsFromJobAd());
+      $('#jobAdParseBtn')?.addEventListener('click', () => runJobAdParse());
+
+      $('#jobAdExtractPanel')?.addEventListener('click', (ev) => {
+        const applyBtn = ev.target.closest('[data-jad-apply]');
+        if (applyBtn) {
+          applyJobAdField(applyBtn.dataset.jadApply, applyBtn.dataset.jadTarget);
+          renderEverything();
+          showToast('Applied — check Cover letter / Email tabs.');
+          return;
+        }
+        if (ev.target.id === 'jobAdBulletsToCritBtn') {
+          if (!lastJobAdBullets.length) return;
+          addCritCard({
+            question: 'Requirements from job ad (edit to your voice)',
+            answer: lastJobAdBullets.map(b => `• ${b}`).join('\n')
+          });
+          renderEverything();
+          showToast('Added a criterion block — open Criteria & prep.');
+          return;
+        }
+        if (ev.target.id === 'jobAdBulletsCopyBtn') {
+          const t = lastJobAdBullets.join('\n');
+          if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(t).then(() => showToast('Bullet list copied.')).catch(() => showToast('Copy failed.'));
+          } else showToast('Copy not available in this browser.');
+          return;
+        }
+        if (ev.target.id === 'jobAdContactsCopyBtn') {
+          const c = extractJobAdContacts($('#jobAdPaste')?.value || '');
+          const t = [...c.emails, ...c.phones, ...c.urls].join('\n');
+          if (t && navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(t).then(() => showToast('Contacts copied.')).catch(() => showToast('Copy failed.'));
+          } else showToast('Nothing to copy.');
+        }
       });
 
       $('#tourNextBtn')?.addEventListener('click', () => tourAdvance());
@@ -5553,6 +7031,10 @@
           else if (act === 'undo') $('#undoBtn')?.click();
           else if (act === 'redo') $('#redoBtn')?.click();
           else if (act === 'verCompare') openVerCompareModal();
+          else if (act === 'readAloud') readAloudActivePreview();
+          else if (act === 'stopRead') { stopReadAloud(); showToast('Read-aloud stopped.'); }
+          else if (act === 'shortcuts') { fillShortcutsModal(); openModal('shortcutsModal'); }
+          else if (act === 'jobAdHelp') openModal('jobAdHelpModal');
           else if (act === 'dys') $('#dysBtn')?.click();
           else if (act === 'res') openModal('resModal');
           else if (act === 'export') {
@@ -5577,6 +7059,8 @@
         if (e.key !== 'Escape' || !mobSheetOpen || activeModalId) return;
         closeMobSheet();
       });
+
+      document.addEventListener('keydown', handleGlobalShortcuts);
 
       $('#printChecklistBtn')?.addEventListener('click', () => {
         renderChecklist();
@@ -5624,6 +7108,7 @@
       if (!initTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) initTheme = 'dark';
       applyTheme(initTheme || 'classic');
       if (localStorage.getItem('cr_dys') === '1') document.documentElement.classList.add('dy');
+      applyFontScale(getFontScale());
 
       buildChips();
       addQualCard({});
